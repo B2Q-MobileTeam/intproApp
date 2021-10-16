@@ -218,6 +218,14 @@ class _CartState extends State<Cart> {
 
 
 
+  void cleardataprocess() {
+    selectedvalue=null;
+    typevalue=null;
+    totalprice="0";
+    _count=1;
+  }
+
+
   //cart api
   Future<String> fetchpro() async {
     var url = 'https://www.binary2quantumsolutions.com/intpro/add_cart.php';
@@ -246,12 +254,37 @@ class _CartState extends State<Cart> {
     print('count changed $count_changed');
     //int count_changed = count_changedd;
 
+
     Fluttertoast.showToast(
         msg: "Added to Cart",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
         fontSize: 16.0);
+
+    cleardataprocess();
+  }
+
+  void validateprocess() {
+    if(typevalue==null){
+      Fluttertoast.showToast(
+          msg: "Please select product type",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          fontSize: 16.0);
+
+    }else if(selectedvalue == null){
+      Fluttertoast.showToast(
+          msg: "Please select product thickness",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          fontSize: 16.0);
+    }else{
+      fetchpro();
+
+    }
   }
 
   //endn cart api
@@ -259,8 +292,6 @@ class _CartState extends State<Cart> {
   @override
   void initState() {
     fetchcart();
-
-
     super.initState();
   }
 
@@ -290,10 +321,7 @@ class _CartState extends State<Cart> {
   }
 
   Widget build(BuildContext context) {
-
-    return
-
-      Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -316,8 +344,9 @@ class _CartState extends State<Cart> {
                       // myModel.doaddproduct();
                     //  DashboardFragment.of(context).cartcount="34";
 
-
-                      fetchpro();
+validateprocess();
+                      // fetchpro();
+                      // cleardataprocess();
                      // checkprocess("23");
                     },
                   ),
@@ -491,9 +520,7 @@ class _CartState extends State<Cart> {
             ]),
           ),
         )
-      )
-    ;
+      );
   }
-
-
 }
+

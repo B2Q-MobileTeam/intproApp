@@ -183,14 +183,19 @@ class JsonImageListWidget extends State {
                     return new GestureDetector(
                         child: Cell(snapshot.data[index]),
                         onTap: () =>
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Listbrands(
-                                    indexvalue: snapshot.data[index].cid,
-                                    catname: snapshot.data[index].title,
-                                    brandnamee:
-                                    snapshot.data[index].catergoryname)))
+                            // Navigator.push(
+                            // context,
+                            // MaterialPageRoute(
+                            //     builder: (context) => Listbrands(
+                            //         indexvalue: snapshot.data[index].cid,
+                            //         catname: snapshot.data[index].title,
+                            //         brandnamee:
+                            //         snapshot.data[index].catergoryname)))
+
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage()))
                     );
                   }));
         });
