@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'addtocart.dart';
+import 'brands.dart';
 import 'listofbrands.dart';
 
 
@@ -41,35 +42,50 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Column(
-        children: [
-          ListTile(
-
-            title: Text('${user.brandname}'),
-            subtitle: Text(user.title),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cart(
-                          carttid:user.id,
-                        title:user.title
-                      )));
-
-
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => UserDetailsPage(user: user)));
-            },
+    return
+      Center(
+        child: Card(
+          clipBehavior: Clip.hardEdge,
+          elevation: 10.0,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  user.brandname,
+                  textAlign: TextAlign.start,
+                ),
+                trailing:
+                IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
+                onTap: (){
+    if (user.title == "plywoods") {
+                  Navigator.push(
+context,
+MaterialPageRoute(
+builder: (context) => Cart(
+carttid:user.id,
+title:user.title
+)));}else{
+      Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Brands(
+                                                    brandid:
+                                                    user.id,
+                                                    brandname:user.brandname)));
+    }
+                },
+              )
+            ],
           ),
-          Divider(
-            thickness: 2.0,
-          ),
-        ],
-      ),
+        )
     );
   }
 }
+
+// Navigator.push(
+// context,
+// MaterialPageRoute(
+// builder: (context) => Cart(
+// carttid:user.id,
+// title:user.title
+// )));

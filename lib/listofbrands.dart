@@ -335,25 +335,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intpro_final/brands.dart';
-import 'package:intpro_final/subbrands.dart';
+import 'brands.dart';
+import 'drawer.dart';
+import 'subbrands.dart';
 
-Future<List<User>> fetchStudent() async {
-  var url = 'https://www.binary2quantumsolutions.com/intpro/brands.php';
-  print('brand $url');
-  //print('iddd ${widget.indexvalue}');
-  final http.Response response = await http.post(
-    Uri.parse(url),
-    body: {
-      'cid':"1",
-    },
-  );
 
-  var resJson = json.decode(response.body);
-  print('object $resJson');
-  final items = resJson['brand_list'].cast<Map<String, dynamic>>();
-  return items.map<User>((j) => User.fromJson(j)).toList();
-}
 class User {
   String id;
   String brandname;
@@ -366,16 +352,39 @@ class User {
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePageSub extends StatefulWidget {
+  static const String routeName = '/productone';
+    final String indexvalue, catname, brandnamee;
+  HomePageSub({Key key, this.indexvalue, this.catname, this.brandnamee})
+      : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageSubState createState() => _HomePageSubState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageSubState extends State<HomePageSub> {
+  String catename;
+  String brandename;
   List<User> _users = <User>[];
   List<User> _usersDisplay = <User>[];
 
   bool _isLoading = true;
+
+  Future<List<User>> fetchStudent() async {
+    var url = 'https://www.binary2quantumsolutions.com/intpro/brands.php';
+    print('brand $url');
+    //print('iddd ${widget.indexvalue}');
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'cid':widget.indexvalue,
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print('object $resJson');
+    final items = resJson['brand_list'].cast<Map<String, dynamic>>();
+    return items.map<User>((j) => User.fromJson(j)).toList();
+  }
 
   @override
   void initState() {
@@ -392,52 +401,106 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      SafeArea(
-        child: Container(
+    var cartcount;
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text('Products',
+              style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 22.0,
+                  color: Colors.white)),
+          actions: [
+            Stack(
+              children: <Widget>[
+                new IconButton(icon: new Icon(Icons.shopping_cart,
+                  color: Colors.white,),
+                  onPressed: () {
+
+                  },
+                ),
+                cartcount == 0 ? new Container() :
+                new Positioned(
+
+                    child: new Stack(
+                      children: <Widget>[
+                        new Icon(
+                            Icons.brightness_1,
+                            size: 20.0, color: Colors.red[800]),
+                        new Positioned(
+                            top: 3.0,
+                            right: 4.0,
+                            child: new Center(
+                              child:
+                              Text(cartcount.toString(), style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.0,
+                                  fontWeight: FontWeight.w500
+                              ),),
+
+                            )),
+                      ],
+                    )),
+
+              ],
+            )
+          ],
+          centerTitle: true,
+        ),
+        drawer:Drawer_main(),
+    body:
+      Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/bg1.jpg"),
                       colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5),
+                          Colors.white.withOpacity(0.9),
                           BlendMode.dstATop),
                       fit: BoxFit.cover,
                     )),
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              if (!_isLoading) {
-                return index == 0 ? _searchBar() : UserTile(user: this._usersDisplay[index - 1]);
-              } else {
-                return LoadingView();
-              }
-            },
-            itemCount: _usersDisplay.length + 1,
-          ),
-        ),
-      );
+          child:Container(
+            padding: EdgeInsets.only(left: 10,right: 10),
+            child:  ListView.builder(
+              itemBuilder: (context, index) {
+                if (!_isLoading) {
+                  return index == 0 ? _searchBar() : UserTile(user: this._usersDisplay[index - 1]);
+                } else {
+                  return LoadingView();
+                }
+              },
+              itemCount: _usersDisplay.length + 1,
+            ),
+          )
+        ));
+
 
   }
 
   _searchBar() {
     return Padding(
-      padding: EdgeInsets.all(12.0),
-      child: TextField(
-        autofocus: false,
-        onChanged: (searchText) {
-          searchText = searchText.toLowerCase();
-          setState(() {
-            _usersDisplay = _users.where((u) {
-              var fName = u.brandname.toLowerCase();
+      padding: EdgeInsets.all(2.0),
+      child:Card(
+        child:  TextField(
+          autofocus: false,
+          onChanged: (searchText) {
+            searchText = searchText.toLowerCase();
+            setState(() {
+              _usersDisplay = _users.where((u) {
+                var fName = u.brandname.toLowerCase();
 
-              return fName.contains(searchText) ;
-            }).toList();
-          });
-        },
-        // controller: _textController,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.search),
-          hintText: 'Search Users',
+                return fName.contains(searchText) ;
+              }).toList();
+            });
+          },
+          // controller: _textController,
+          decoration: InputDecoration(
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+
+            ),
+            prefixIcon: Icon(Icons.search),
+            hintText: 'Search Products',
+          ),
         ),
       ),
     );
@@ -448,19 +511,11 @@ class _HomePageState extends State<HomePage> {
 class LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height*0.2,
-        ),
-
-        Text('Loading ...',
-          style: TextStyle(
-            fontSize: 16.0,
-          ),),
-      ],
+    return Center(
+      child: CircularProgressIndicator(
+        color: Colors.green,
+      ),
     );
   }
 }
+

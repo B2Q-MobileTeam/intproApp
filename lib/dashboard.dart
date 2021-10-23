@@ -4,11 +4,13 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intpro_final/Dashboardfragment.dart';
+import 'package:intpro_app/model/myorderlist.dart';
+import 'Dashboardfragment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'addtocart.dart';
 import 'cell.dart';
+import 'drawer.dart';
 import 'listofbrands.dart';
 
 
@@ -22,9 +24,87 @@ class Homee extends StatelessWidget {
 
 @override
 Widget build(BuildContext context) {
-  return MaterialApp(
+  var cartcount;
+  return
+    MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Scaffold(
+      appBar:  AppBar(
+        elevation: 0.0,
+        title: Text('Products',
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 22.0,
+                color: Colors.white)),
+        actions: [
+          Stack(
+            children: <Widget>[
+              new IconButton(icon: new Icon(Icons.shopping_cart,
+                color: Colors.white,),
+                onPressed: (){
+
+                },
+              ),
+              cartcount==0 ? new Container() :
+              new Positioned(
+
+                  child: new Stack(
+                    children: <Widget>[
+                      new Icon(
+                          Icons.brightness_1,
+                          size: 20.0, color: Colors.red[800]),
+                      new Positioned(
+                          top: 3.0,
+                          right: 4.0,
+                          child: new Center(
+                            child:
+                            Text(cartcount.toString(), style: new TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.0,
+                                fontWeight: FontWeight.w500
+                            ),),
+
+                          )),
+                    ],
+                  )),
+
+            ],
+          )
+        ],
+        centerTitle: true,
+
+        // drawer: new Drawer(
+        //     child: Material(
+        //       child: ListView(
+        //         children: [
+        //           Container(
+        //             child:  Column(
+        //               children: <Widget>[
+        //                 DrawerHeader(
+        //                     child: Container(
+        //                       height: 600,
+        //                       decoration: BoxDecoration(
+        //                           image: DecorationImage(
+        //                             image: AssetImage(
+        //                               "assets/logo1.png",
+        //                             ),
+        //                           )),
+        //                     )),
+        //                 new Column(children: drawerOptions)
+        //               ],
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     )
+        //
+        // ),
+
+
+
+        //body: _getDrawerItemWidget(_selectedDrawerIndex),
+      ),
+      drawer: Drawer_main(),
 
       body: Container(
         decoration: BoxDecoration(
@@ -109,6 +189,7 @@ class JsonImageListWidget extends State {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       token = preferences.getString('token');
+      print("token $token");
     });
   }
 
@@ -163,6 +244,7 @@ class JsonImageListWidget extends State {
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder<List<Flowerdata>>(
         future: fetchFlowers(),
         builder: (context, snapshot) {
@@ -183,19 +265,23 @@ class JsonImageListWidget extends State {
                     return new GestureDetector(
                         child: Cell(snapshot.data[index]),
                         onTap: () =>
-                            // Navigator.push(
-                            // context,
-                            // MaterialPageRoute(
-                            //     builder: (context) => Listbrands(
-                            //         indexvalue: snapshot.data[index].cid,
-                            //         catname: snapshot.data[index].title,
-                            //         brandnamee:
-                            //         snapshot.data[index].catergoryname)))
+                        // Navigator.push(
+                        // context,
+                        // MaterialPageRoute(
+                        //     builder: (context) => Listbrands(
+                        //         indexvalue: snapshot.data[index].cid,
+                        //         catname: snapshot.data[index].title,
+                        //         brandnamee:
+                        //         snapshot.data[index].catergoryname)))
 
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage()))
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePageSub(
+                                    indexvalue:snapshot.data[index].cid,
+                                    catname:snapshot.data[index].title,
+                                    brandnamee:snapshot.data[index].catergoryname
+                                )))
                     );
                   }));
         });

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intpro_final/Dashboardfragment.dart';
+import 'Dashboardfragment.dart';
 
 import 'brands.dart';
 

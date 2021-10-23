@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intpro_final/model/Cartcount.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Cartcount.dart';
 class AddToCartWidget extends StatefulWidget{
   final String cartcountvalue;
   AddToCartWidget({Key key, this.cartcountvalue})

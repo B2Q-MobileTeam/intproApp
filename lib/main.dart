@@ -1,14 +1,20 @@
 
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:intpro_final/Dashboardfragment.dart';
-import 'package:intpro_final/order_detail.dart';
+import 'package:intpro_app/listofbrands.dart';
+import 'package:intpro_app/routes.dart';
+
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Dashboardfragment.dart';
+import 'dashboard.dart';
 import 'frgt.dart';
+import 'model/myorderlist.dart';
+import 'order_detail.dart';
 import 'register.dart';
 
 void main() async {
@@ -19,7 +25,16 @@ void main() async {
       debugShowCheckedModeBanner: false,
      //  home:DashboardFragment()
   // home: token == null ? Login() : Homee()
-   home: token == null ? Login() : DashboardFragment()
+   home: token == null ? Login() : Homee(),
+
+    // initialRoute:Homee.routeName,
+    // routes: {
+    //   Homee.routeName:(context)=>Homee(),
+    //   MyOrder.routeName: (context) => MyOrder(),
+    //   MyOrder.routeName: (context) => MyOrder(),
+    //
+    // },
+
   ));
 }
 
@@ -31,6 +46,37 @@ class Login extends StatefulWidget {
 }
 
 class loginext extends State<Login> {
+
+  int _internetAvail = 0;
+
+  Future checkInternet() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      setState((){
+        _internetAvail = 1;
+      });
+
+      print("Internet is available");
+      return 1;
+
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      setState((){
+        _internetAvail =1;
+      });
+
+      print("Internet is available");
+      return 1;
+    }else{
+      setState((){
+        _internetAvail = 0;
+
+
+      });
+
+      print("Sorry, Internet is not available");
+      return 0;
+    }
+  }
   bool _obscureText = true;
   bool _autovalidate = false;
 
@@ -43,6 +89,12 @@ class loginext extends State<Login> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    checkInternet();
+
+  }
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   TextEditingController mob = new TextEditingController();
@@ -94,7 +146,7 @@ class loginext extends State<Login> {
           gravity: ToastGravity.TOP,
           timeInSecForIos: 1,
           fontSize: 16.0);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardFragment()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Homee()));
     }
   }
 
@@ -112,7 +164,7 @@ class loginext extends State<Login> {
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/login3.jpg"), fit: BoxFit.cover)),
-          child: Form(
+          child:Form(
             key: _formKey,
             child: ListView(
               children: [
@@ -173,7 +225,9 @@ class loginext extends State<Login> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => Forgot()));
+                              builder: (BuildContext context) => Forgot()
+                          )
+                      );
                     },
                     child: Text(
                       'Forgot Password ?',
@@ -216,7 +270,7 @@ class loginext extends State<Login> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                           setState(() => _isLoading = true);
+                          setState(() => _isLoading = true);
                           login();
                         }
                       },
@@ -235,5 +289,28 @@ class loginext extends State<Login> {
             ),
           ),
         ));
+  }
+  Widget displayInternetStatus(){
+    if(_internetAvail==0){
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          color: Colors.red,
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                child: Text("Opps, Internet is not available..",style: TextStyle(
+                  fontSize:17.0,
+                  color:Colors.white,
+                )),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

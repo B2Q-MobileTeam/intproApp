@@ -1,55 +1,99 @@
 import 'package:flutter/material.dart';
 
+import 'addtocart.dart';
 import 'brands.dart';
+
+//
+// class Secbrand extends StatelessWidget {
+//   const Secbrand(this.brandss);
+//   @required
+//   final Brandss brandss;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//         child: Card(
+//           clipBehavior: Clip.hardEdge,
+//           elevation: 10.0,
+//           child: Column(
+//             children: [
+//               ListTile(
+//                 title: Text(
+//                   brandss.brandsname,
+//                   textAlign: TextAlign.start,
+//                 ),
+//                 trailing:
+//                 IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
+//               )
+//             ],
+//           ),
+//         ));
+//   }
+//
+// // const Secbrand(this.brandss);
+// // @required
+// // final Brandss brandss;
+// // @override
+// // Widget build(BuildContext context) {
+// //   return Center(
+// //       child: Card(
+// //     clipBehavior: Clip.hardEdge,
+// //     elevation: 10.0,
+// //     child: Column(
+// //       children: [
+// //         ListTile(
+// //           title: Text(
+// //             brandss.brandsname,
+// //             textAlign: TextAlign.start,
+// //           ),
+// //           trailing:
+// //               IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
+// //         )
+// //       ],
+// //     ),
+// //   ));
+// // }
+// }
+
 
 
 class Secbrand extends StatelessWidget {
-  const Secbrand(this.brandss);
-  @required
-  final Brandss brandss;
+  final Brandss brandd;
+
+  Secbrand({this.brandd});
+
+
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Card(
-          clipBehavior: Clip.hardEdge,
-          elevation: 10.0,
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  brandss.brandsname,
-                  textAlign: TextAlign.start,
-                ),
-                trailing:
-                IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
-              )
-            ],
-          ),
-        ));
-  }
+    return
+      Center(
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            elevation: 10.0,
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    brandd.brandsname,
+                    textAlign: TextAlign.start,
+                  ),
+                  trailing:
+                  IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
+                  onTap: (){
+                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Cart(
+                                              cartid: brandd.cartsid,
+                                            )));
 
-// const Secbrand(this.brandss);
-// @required
-// final Brandss brandss;
-// @override
-// Widget build(BuildContext context) {
-//   return Center(
-//       child: Card(
-//     clipBehavior: Clip.hardEdge,
-//     elevation: 10.0,
-//     child: Column(
-//       children: [
-//         ListTile(
-//           title: Text(
-//             brandss.brandsname,
-//             textAlign: TextAlign.start,
-//           ),
-//           trailing:
-//               IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
-//         )
-//       ],
-//     ),
-//   ));
-// }
+
+                  },
+                )
+              ],
+            ),
+          )
+      );
+  }
 }

@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:intpro_final/Dashboardfragment.dart';
-import 'package:intpro_final/instamojo/payprocess.dart';
-import 'package:intpro_final/model/AddTocartWidget.dart';
-import 'package:intpro_final/model/Cartcount.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'Dashboardfragment.dart';
+import 'drawer.dart';
 import 'instamojo/nextstep.dart';
 import 'order_detail.dart';
 
@@ -321,19 +320,54 @@ class _CartState extends State<Cart> {
   }
 
   Widget build(BuildContext context) {
+    var cartcount;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text('Add to Cart',
+          title: Text('Add to cart',
               style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 22.0,
-                  color: Colors.black)),
+                  color: Colors.white)),
+          actions: [
+            Stack(
+              children: <Widget>[
+                new IconButton(icon: new Icon(Icons.shopping_cart,
+                  color: Colors.white,),
+                  onPressed: () {
+
+                  },
+                ),
+                cartcount == 0 ? new Container() :
+                new Positioned(
+
+                    child: new Stack(
+                      children: <Widget>[
+                        new Icon(
+                            Icons.brightness_1,
+                            size: 20.0, color: Colors.red[800]),
+                        new Positioned(
+                            top: 3.0,
+                            right: 4.0,
+                            child: new Center(
+                              child:
+                              Text(cartcount.toString(), style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.0,
+                                  fontWeight: FontWeight.w500
+                              ),),
+
+                            )),
+                      ],
+                    )),
+
+              ],
+            )
+          ],
           centerTitle: true,
         ),
+        drawer:Drawer_main(),
         bottomSheet: Row(
           children: <Widget>[
             Expanded(

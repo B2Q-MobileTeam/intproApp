@@ -4,13 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intpro_final/addtocart.dart';
-import 'package:intpro_final/dashboard.dart';
-import 'package:intpro_final/model/Cartcount.dart';
-import 'package:intpro_final/order_detail.dart';
+
+import 'dashboard.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:intpro_final/productall.dart';
-import 'package:intpro_final/rate.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:toast/toast.dart';
@@ -19,6 +17,8 @@ import 'listofbrands.dart';
 import 'main.dart';
 import 'model/AddTocartWidget.dart';
 import 'model/listbands1.dart';
+import 'order_detail.dart';
+import 'rate.dart';
 class DashboardProducts {
   int id;
   String catergoryname;
@@ -145,15 +145,15 @@ cartcountvalue() async{
   _getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
-        return Homee();
+        return  JsonImageList();
       case 7:
-        return new Text("My Orders");
+        return  Text("My Orders");
       case 8:
-        return new MyOrder(user_id: token);
+        return  MyOrder();
       case 9:
         return shares(context);
       case 10:
-        return new Rate();
+        return  Rate();
       case 11:
         return logOut(context);
 
@@ -203,7 +203,7 @@ cartcountvalue() async{
       ListTile(
         selectedTileColor: Colors.grey[200],
         leading: new Icon(Icons.add_shopping_cart,),
-        title: new Text("My cart",),
+        title: new Text("My cart"),
         onTap: () => _onSelectItem(8),
       ),
       ListTile(
@@ -229,9 +229,7 @@ cartcountvalue() async{
     ];
 
     return
-      Scaffold(
-      backgroundColor: Color(0xFF7A9BEE),
-      appBar: AppBar(
+    AppBar(
         elevation: 0.0,
         title: Text('Products',
             style: TextStyle(
@@ -274,37 +272,37 @@ cartcountvalue() async{
           )
         ],
         centerTitle: true,
-      ),
-      drawer: new Drawer(
-          child: Material(
-            child: ListView(
-              children: [
-                Container(
-                  child:  Column(
-                    children: <Widget>[
-                      DrawerHeader(
-                          child: Container(
-                            height: 600,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    "assets/logo1.png",
-                                  ),
-                                )),
-                          )),
-                      new Column(children: drawerOptions)
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
 
-      ),
+      // drawer: new Drawer(
+      //     child: Material(
+      //       child: ListView(
+      //         children: [
+      //           Container(
+      //             child:  Column(
+      //               children: <Widget>[
+      //                 DrawerHeader(
+      //                     child: Container(
+      //                       height: 600,
+      //                       decoration: BoxDecoration(
+      //                           image: DecorationImage(
+      //                             image: AssetImage(
+      //                               "assets/logo1.png",
+      //                             ),
+      //                           )),
+      //                     )),
+      //                 new Column(children: drawerOptions)
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     )
+      //
+      // ),
 
 
 
-      body: _getDrawerItemWidget(_selectedDrawerIndex),
+      //body: _getDrawerItemWidget(_selectedDrawerIndex),
     );
   }
 
@@ -339,7 +337,7 @@ Future logOut(BuildContext context) async {
   }
 
 
-  
+
 
 
 }

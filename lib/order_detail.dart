@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intpro_final/instamojo/payprocess.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Dashboardfragment.dart';
+import 'Shippingform.dart';
+import 'drawer.dart';
 import 'instamojo/heloo.dart';
 import 'instamojo/nextstep.dart';
 
@@ -38,14 +40,15 @@ class Listbands {
 }
 
 class MyOrder extends StatefulWidget {
-  final String user_id;
-  MyOrder({Key key, this.user_id}) : super(key: key);
+
+
 
   @override
   _MyOrderState createState() => _MyOrderState();
 }
 
 class _MyOrderState extends State<MyOrder> {
+  String token = "";
   final StringCallback callback;
   _MyOrderState({this.callback});
   var arrayof = [];
@@ -57,7 +60,7 @@ class _MyOrderState extends State<MyOrder> {
   String hana, amt;
   Future<List<Listbands>> _carddet;
   void initState() {
-    _carddet = fetchcarddet();
+   getEmail();
     super.initState();
   }
 
@@ -73,7 +76,7 @@ class _MyOrderState extends State<MyOrder> {
     final http.Response response = await http.post(
       Uri.parse(url),
       body: {
-        'user_id': widget.user_id,
+        'user_id':"1" ,
       },
     );
 
@@ -99,7 +102,14 @@ class _MyOrderState extends State<MyOrder> {
 
     return items.map<Listbands>((j) => Listbands.fromJson(j)).toList();
   }
-
+  Future getEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString('token');
+      print("token $token");
+    });
+    _carddet = fetchcarddet();
+  }
   //payment process
   void buynow() async {
     print(totalprice);
@@ -148,7 +158,7 @@ class _MyOrderState extends State<MyOrder> {
                     redirect: redirecturlinsta,
                   )));
 
-       // Navigator.push(context, MaterialPageRoute(builder: (context)=>Payprocess()));
+
     });
   }
   //end paymentprocess
@@ -183,8 +193,54 @@ class _MyOrderState extends State<MyOrder> {
 
   @override
   Widget build(BuildContext context) {
+    var cartcount;
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text('Products',
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 22.0,
+                color: Colors.white)),
+        actions: [
+          Stack(
+            children: <Widget>[
+              new IconButton(icon: new Icon(Icons.shopping_cart,
+                color: Colors.white,),
+                onPressed: () {
+
+                },
+              ),
+              cartcount == 0 ? new Container() :
+              new Positioned(
+
+                  child: new Stack(
+                    children: <Widget>[
+                      new Icon(
+                          Icons.brightness_1,
+                          size: 20.0, color: Colors.red[800]),
+                      new Positioned(
+                          top: 3.0,
+                          right: 4.0,
+                          child: new Center(
+                            child:
+                            Text(cartcount.toString(), style: new TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.0,
+                                fontWeight: FontWeight.w500
+                            ),),
+
+                          )),
+                    ],
+                  )),
+
+            ],
+          )
+        ],
+        centerTitle: true,
+      ),
+      drawer: Drawer_main(),
       bottomSheet:
       // Padding(
       //   padding: EdgeInsets.only(left: 10, right: 10),
@@ -213,7 +269,11 @@ class _MyOrderState extends State<MyOrder> {
               {
                 print("checkout $totalprice");
                 if (totalprice <= 10000) {
-                  buynow();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShippingForm()));
+                  // buynow();
                 } else {
                   print('select the more amount');
                   Fluttertoast.showToast(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intpro_final/Dashboardfragment.dart';
-
+import 'Dashboardfragment.dart';
 import 'dashboard.dart';
 
 
@@ -33,8 +32,8 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: Image.network(
-                  'https://bridge2business.in/wp-content/uploads/2019/10/604a0cadf94914c7ee6c6e552e9b4487-curved-check-mark-circle-icon-by-vexels-300x300.png',
+                child: Image.asset(
+                  'assets/succimg.jpg',
                   height: 120.0,
                   width: 120.0,
                 ),
@@ -88,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DashboardFragment()));
+                            builder: (context) => JsonImageList()));
                   },
                   color: Colors.blue,
                   child: Text("Ok"),
