@@ -335,6 +335,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Dashboardfragment.dart';
 import 'brands.dart';
 import 'drawer.dart';
 import 'subbrands.dart';
@@ -366,13 +368,14 @@ class _HomePageSubState extends State<HomePageSub> {
   String brandename;
   List<User> _users = <User>[];
   List<User> _usersDisplay = <User>[];
-
+  var token;
+var cartcount;
   bool _isLoading = true;
 
   Future<List<User>> fetchStudent() async {
     var url = 'https://www.binary2quantumsolutions.com/intpro/brands.php';
     print('brand $url');
-    //print('iddd ${widget.indexvalue}');
+    print('iddd ${widget.catname}');
     final http.Response response = await http.post(
       Uri.parse(url),
       body: {
@@ -386,64 +389,101 @@ class _HomePageSubState extends State<HomePageSub> {
     return items.map<User>((j) => User.fromJson(j)).toList();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchStudent().then((value) {
-      setState(() {
-        _isLoading = false;
-        _users.addAll(value);
-        _usersDisplay = _users;
-        print(_usersDisplay.length);
+  Future getEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+     token = preferences.getString('token');
+      print("token $token");
+      getcartdetail();
+    });
+  }
+
+  Future getcartdetail() async {
+    print("cart 2");
+    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'user_id': "80",
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+    setState(() {
+      cartcount = cartcart;
+      fetchStudent().then((value) {
+        setState(() {
+          _isLoading = false;
+          _users.addAll(value);
+          _usersDisplay = _users;
+          print(_usersDisplay.length);
+        });
       });
     });
+
+    print('item cart 3');
+
+    print('items count $cartcount');
+  }
+  @override
+  void initState() {
+    getEmail();
+    super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var cartcount;
+    String catproname=widget.catname;
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           title: Text('Products',
               style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 22.0,
-                  color: Colors.white)),
+                  fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
           actions: [
             Stack(
               children: <Widget>[
-                new IconButton(icon: new Icon(Icons.shopping_cart,
-                  color: Colors.white,),
+                new IconButton(
+                  icon: new Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
-
+                    print('cartcount $cartcount');
                   },
                 ),
-                cartcount == 0 ? new Container() :
-                new Positioned(
-
+                cartcount == 0
+                    ? new Container()
+                    : new Positioned(
                     child: new Stack(
                       children: <Widget>[
-                        new Icon(
-                            Icons.brightness_1,
-                            size: 20.0, color: Colors.red[800]),
+                        new Icon(Icons.brightness_1,
+                            size: 25.0, color: Colors.red[800]),
                         new Positioned(
                             top: 3.0,
-                            right: 4.0,
+                            right: 5.0,
                             child: new Center(
-                              child:
-                              Text(cartcount.toString(), style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11.0,
-                                  fontWeight: FontWeight.w500
-                              ),),
-
+                              child: Text(
+                                cartcount.toString(),
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             )),
                       ],
                     )),
-
               ],
-            )
+            ),
           ],
           centerTitle: true,
         ),

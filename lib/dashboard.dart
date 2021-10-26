@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,120 +12,32 @@ import 'cell.dart';
 import 'drawer.dart';
 import 'listofbrands.dart';
 
-
 import 'main.dart';
 import 'rate.dart';
 
-
-
-
 class Homee extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
 
-@override
-Widget build(BuildContext context) {
-  var cartcount;
-  return
-    MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      appBar:  AppBar(
-        elevation: 0.0,
-        title: Text('Products',
-            style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 22.0,
-                color: Colors.white)),
-        actions: [
-          Stack(
-            children: <Widget>[
-              new IconButton(icon: new Icon(Icons.shopping_cart,
-                color: Colors.white,),
-                onPressed: (){
-
-                },
-              ),
-              cartcount==0 ? new Container() :
-              new Positioned(
-
-                  child: new Stack(
-                    children: <Widget>[
-                      new Icon(
-                          Icons.brightness_1,
-                          size: 20.0, color: Colors.red[800]),
-                      new Positioned(
-                          top: 3.0,
-                          right: 4.0,
-                          child: new Center(
-                            child:
-                            Text(cartcount.toString(), style: new TextStyle(
-                                color: Colors.white,
-                                fontSize: 11.0,
-                                fontWeight: FontWeight.w500
-                            ),),
-
-                          )),
-                    ],
-                  )),
-
-            ],
-          )
-        ],
-        centerTitle: true,
-
-        // drawer: new Drawer(
-        //     child: Material(
-        //       child: ListView(
-        //         children: [
-        //           Container(
-        //             child:  Column(
-        //               children: <Widget>[
-        //                 DrawerHeader(
-        //                     child: Container(
-        //                       height: 600,
-        //                       decoration: BoxDecoration(
-        //                           image: DecorationImage(
-        //                             image: AssetImage(
-        //                               "assets/logo1.png",
-        //                             ),
-        //                           )),
-        //                     )),
-        //                 new Column(children: drawerOptions)
-        //               ],
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     )
-        //
-        // ),
-
-
-
-        //body: _getDrawerItemWidget(_selectedDrawerIndex),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage("assets/login3.jpg"),
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.8), BlendMode.dstATop),
+            fit: BoxFit.cover,
+          )),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: JsonImageList(),
+        ),
       ),
-      drawer: Drawer_main(),
-
-      body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/login3.jpg"),
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.dstATop),
-              fit: BoxFit.cover,
-            )),
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        child: JsonImageList(),
-      ),
-    ),
-  );
-}}
+    );
+  }
+}
 
 Future logOut(BuildContext context) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -147,17 +58,13 @@ Future logOut(BuildContext context) async {
   );
 }
 
-
-
- share(BuildContext context)  {
-     FlutterShare.share(
-        title: 'Share our app',
-        text: 'Share the App',
-        linkUrl: 'https://flutter.dev/',
-        chooserTitle: 'Example Chooser Title');
-  }
-
-
+share(BuildContext context) {
+  FlutterShare.share(
+      title: 'Share our app',
+      text: 'Share the App',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Example Chooser Title');
+}
 
 class Flowerdata {
   int id;
@@ -168,6 +75,7 @@ class Flowerdata {
 
   Flowerdata(
       {this.id, this.cid, this.catergoryname, this.title, this.flowerImageURL});
+
   factory Flowerdata.fromJson(Map<String, dynamic> json) {
     return Flowerdata(
         id: json['id'],
@@ -183,22 +91,52 @@ class JsonImageList extends StatefulWidget {
 }
 
 class JsonImageListWidget extends State {
+  String cartcount;
 
   String token = "";
+
   Future getEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       token = preferences.getString('token');
       print("token $token");
+      getcartdetail();
     });
   }
 
+  Future getcartdetail() async {
+    print("cart 2");
+    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'user_id': "80",
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+   setState(() {
+     cartcount = cartcart;
+   });
+    print('item cart 3');
+
+    print('items count $cartcount');
+  }
+
   Future logOut(BuildContext context) async {}
+
   @override
   void initState() {
     super.initState();
     getEmail();
-
+    getcartdetail();
   }
 
   final String apiURL =
@@ -244,47 +182,103 @@ class JsonImageListWidget extends State {
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text('Products',
+              style: TextStyle(
+                  fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
+          actions: [
+            Stack(
+              children: <Widget>[
+                new IconButton(
+                  icon: new Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    print('cartcount $cartcount');
+                  },
+                ),
+                cartcount == 0
+                    ? new Container()
+                    : new Positioned(
+                    child: new Stack(
+                      children: <Widget>[
+                        new Icon(Icons.brightness_1,
+                            size: 25.0, color: Colors.red[800]),
+                        new Positioned(
+                            top: 3.0,
+                            right: 5.0,
+                            child: new Center(
+                              child: Text(
+                                cartcount.toString(),
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            )),
+                      ],
+                    )),
+              ],
+            ),
+          ],
+          centerTitle: true,
+        ),
+        drawer: Drawer_main(),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/login3.jpg"),
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                fit: BoxFit.cover,
+              )),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: FutureBuilder<List<Flowerdata>>(
+              future: fetchFlowers(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return Center(
 
-    return FutureBuilder<List<Flowerdata>>(
-        future: fetchFlowers(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-              // child: SpinKitCircle(
-              //   color: Colors.blueAccent,
-              //   size: 50.0,
-              // ),
-            );
-          return new Padding(
-              padding: new EdgeInsets.all(10.0),
-              child: GridView.builder(
-                  itemCount: snapshot.data.length,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (BuildContext context, int index) {
-                    return new GestureDetector(
-                        child: Cell(snapshot.data[index]),
-                        onTap: () =>
-                        // Navigator.push(
-                        // context,
-                        // MaterialPageRoute(
-                        //     builder: (context) => Listbrands(
-                        //         indexvalue: snapshot.data[index].cid,
-                        //         catname: snapshot.data[index].title,
-                        //         brandnamee:
-                        //         snapshot.data[index].catergoryname)))
+                  );
+                return new Padding(
+                    padding: new EdgeInsets.all(10.0),
+                    child: GridView.builder(
+                        itemCount: snapshot.data.length,
+                        gridDelegate:
+                        new SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                        itemBuilder: (BuildContext context, int index) {
+                          return new GestureDetector(
+                              child: Cell(snapshot.data[index]),
+                              onTap: () =>
+                              // Navigator.push(
+                              // context,
+                              // MaterialPageRoute(
+                              //     builder: (context) => Listbrands(
+                              //         indexvalue: snapshot.data[index].cid,
+                              //         catname: snapshot.data[index].title,
+                              //         brandnamee:
+                              //         snapshot.data[index].catergoryname)))
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePageSub(
-                                    indexvalue:snapshot.data[index].cid,
-                                    catname:snapshot.data[index].title,
-                                    brandnamee:snapshot.data[index].catergoryname
-                                )))
-                    );
-                  }));
-        });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomePageSub(
+                                          indexvalue:
+                                          snapshot.data[index].cid,
+                                          catname: snapshot.data[index].title,
+                                          brandnamee: snapshot
+                                              .data[index].catergoryname))));
+                        }));
+              }),
+        ),
+      ),
+    );
   }
 }
-

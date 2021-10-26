@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intpro_app/model/myorderlist.dart';
 import 'package:intpro_app/order_detail.dart';
 import 'package:intpro_app/routes.dart';
-import 'package:intpro_app/tokenidget.dart';
+
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dashboard.dart';
 import 'main.dart';
+import 'rate.dart';
+import 'shareapp.dart';
 
 // class Drawer_main extends StatefulWidget{
 //   @override
@@ -97,6 +101,7 @@ import 'main.dart';
 // }
 
 class Drawer_main extends StatelessWidget {
+
       @override
   Widget build(BuildContext context) {
 
@@ -171,12 +176,12 @@ class Drawer_main extends StatelessWidget {
               title: new Text("Share App",),
               onTap: () {
                 Navigator.pop(context);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (BuildContext context) => ShareApp()
-                //     )
-                // );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => ShareApp()
+                    )
+                );
               },
             ),
             ListTile(
@@ -185,12 +190,12 @@ class Drawer_main extends StatelessWidget {
               title: new Text("Rate Us",),
               onTap: () {
                 Navigator.pop(context);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (BuildContext context) => RateUs()
-                //     )
-                // );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Rate()
+                    )
+                );
               },
             ),
             ListTile(
@@ -222,10 +227,14 @@ class Drawer_main extends StatelessWidget {
         ),
       )
 
+
   );
   }
 
 }
+
+
+
 
 // createDrawer(BuildContext context)  {
 //

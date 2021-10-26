@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Dashboardfragment.dart';
 import 'dashboard.dart';
 import 'frgt.dart';
+import 'instamojo/egeg.dart';
 import 'model/myorderlist.dart';
 import 'order_detail.dart';
 import 'register.dart';
@@ -22,10 +23,11 @@ void main() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var token = preferences.getString('token');
   runApp(MaterialApp(
+    color: Colors.white,
       debugShowCheckedModeBanner: false,
-     //  home:DashboardFragment()
+    //   home:MyStatefulWidget(),
   // home: token == null ? Login() : Homee()
-   home: token == null ? Login() : Homee(),
+   home: token == null ? Login() : JsonImageList(),
 
     // initialRoute:Homee.routeName,
     // routes: {
@@ -49,34 +51,7 @@ class loginext extends State<Login> {
 
   int _internetAvail = 0;
 
-  Future checkInternet() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      setState((){
-        _internetAvail = 1;
-      });
 
-      print("Internet is available");
-      return 1;
-
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      setState((){
-        _internetAvail =1;
-      });
-
-      print("Internet is available");
-      return 1;
-    }else{
-      setState((){
-        _internetAvail = 0;
-
-
-      });
-
-      print("Sorry, Internet is not available");
-      return 0;
-    }
-  }
   bool _obscureText = true;
   bool _autovalidate = false;
 
@@ -92,7 +67,7 @@ class loginext extends State<Login> {
   @override
   void initState() {
     super.initState();
-    checkInternet();
+
 
   }
   final _formKey = GlobalKey<FormState>();

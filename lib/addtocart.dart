@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'Dashboardfragment.dart';
+import 'Shippingform.dart';
 import 'drawer.dart';
 import 'instamojo/nextstep.dart';
 import 'order_detail.dart';
@@ -45,12 +46,13 @@ class _CartState extends State<Cart> {
   List datapro = List();
   List typepro = List();
   String selectedvalue, typevalue;
-  var pro_id, a;
+  var pro_id, a,priceid;
   String count_changed;
 
   var price = '';
   var amount, b;
   String img;
+  var cartcount,token;
 
   //thickness api
 
@@ -127,12 +129,13 @@ class _CartState extends State<Cart> {
       },
     );
     var resJson = json.decode(response.body);
-    print('price $resJson');
+    print('product_price  $resJson');
     var types = resJson['product_price'];
     print('price $types');
 
     price = types[0]['price'];
-    pro_id = types[0]['price_id'];
+    pro_id = types[0]['price_id'];//proid ku price id
+    priceid=types[0]['pro_id'];//priceid ku proid
 
     print('prices $price');
     print('pro_id $pro_id');
@@ -149,71 +152,8 @@ class _CartState extends State<Cart> {
 
   //payment instamojo process
 
-  void buynow() async {
-    print(totalprice);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    name_pay = (prefs.getString('name1'));
-    print('name1 $name_pay');
-    mobileno_pay = (prefs.getString('mobileno'));
-    print('mobileno $mobileno_pay');
-    email_pay = (prefs.getString('email'));
-    print('email $email_pay');
-    print('price $totalprice');
-    var url = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
-    print('url $name_pay');
-
-    http.post(
-        Uri.parse(url),
-        body: {
-      'userName': name_pay,
-      'payAmount': totalprice,
-      'userMobile': mobileno_pay,
-      'userEmail': email_pay,
-      'userId': userid,
-      'purpose': 'plywood'
-    }).then((res) {
-      var resJson = json.decode(res.body);
-      print('resj $resJson');
-      var paymentprocess = resJson['payment_request']['longurl'];
-      print('resjosn $paymentprocess');
-      var redirecturlinsta = resJson['payment_request']['redirect_url'];
-      print('redirecturlinsta $redirecturlinsta');
-
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Nextstep(
-                    paymenturl: paymentprocess,
-                    redirect: redirecturlinsta,
-                  )));
-
-      //  Navigator.push(context, MaterialPageRoute(builder: (context)=>Hello()));
-    });
-  }
   //end payment instamojo
-  void numbercount()async {
 
-    print('count_changed $count_changed');
-    SharedPreferences Preferences = await SharedPreferences.getInstance();
-     String  cartcounts = (Preferences.getString('cartcount'));
-      print('count get $cartcounts');
-      Preferences.remove("cartcount");
-    String  cartcountss = (Preferences.getString('cartcount'));
-      print('count remove $cartcountss');
-      Preferences.setString("cartcount", count_changed);
-    cartcountsss= (Preferences.getString('cartcount'));
-      print('cart count final $cartcountsss');
-
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => MyOrder()));
-    //  AddToCartWidget(cartcounts: cartcountsss);
-
-
-
-
-  }
 
 
 
@@ -234,25 +174,30 @@ class _CartState extends State<Cart> {
       userid = (prefs.getString('token'));
       print('userid $userid');
     });
-
+print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
     final http.Response response = await http.post(
       Uri.parse(url),
       body: {
         'price_id': pro_id,
         'amount': totalprice,
         'quantity': _count.toString(),
-        'user_id': userid
+        'user_id': "80"
       },
     );
     var resJson = json.decode(response.body);
     print('add to cart $resJson');
     String count_changedd= resJson["data"];
     count_changed=count_changedd;
-    DashboardFragment.of(context).checkprocess(count_changed);
+    print('countchanged $count_changed');
+    setState(() {
+      cartcount="";
+      cartcount=count_changed;
+    });
+    // DashboardFragment.of(context).checkprocess(count_changed);
+   // DashboardFragment.of(context).checkprocess(count_changed);
 
     print('count changed $count_changed');
     //int count_changed = count_changedd;
-
 
     Fluttertoast.showToast(
         msg: "Added to Cart",
@@ -286,11 +231,46 @@ class _CartState extends State<Cart> {
     }
   }
 
+  Future getEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString('token');
+      print("token $token");
+      getcartdetail();
+    });
+  }
+
+  Future getcartdetail() async {
+    print("cart 2");
+    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'user_id': "80",
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+    setState(() {
+      cartcount = cartcart;
+    });
+    fetchcart();
+    print('item cart 3');
+
+    print('items count $cartcount');
+  }
   //endn cart api
 
   @override
   void initState() {
-    fetchcart();
+   getEmail();
     super.initState();
   }
 
@@ -320,50 +300,57 @@ class _CartState extends State<Cart> {
   }
 
   Widget build(BuildContext context) {
-    var cartcount;
+    String brandidcart=widget.carttid;
+    String ship_proid=pro_id;
+    String ship_priceid=priceid;
+    String ship_qty=_count.toString();
+    String payAmnt = totalprice;
+    String ship_purpose=widget.title;
+
+
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          title: Text('Add to cart',
+          title: Text('Products',
               style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 22.0,
-                  color: Colors.white)),
+                  fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
           actions: [
             Stack(
               children: <Widget>[
-                new IconButton(icon: new Icon(Icons.shopping_cart,
-                  color: Colors.white,),
+                new IconButton(
+                  icon: new Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
-
+                    print('cartcount $cartcount');
                   },
                 ),
-                cartcount == 0 ? new Container() :
-                new Positioned(
-
+                cartcount == 0
+                    ? new Container()
+                    : new Positioned(
                     child: new Stack(
                       children: <Widget>[
-                        new Icon(
-                            Icons.brightness_1,
-                            size: 20.0, color: Colors.red[800]),
+                        new Icon(Icons.brightness_1,
+                            size: 25.0, color: Colors.red[800]),
                         new Positioned(
                             top: 3.0,
-                            right: 4.0,
+                            right: 5.0,
                             child: new Center(
-                              child:
-                              Text(cartcount.toString(), style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11.0,
-                                  fontWeight: FontWeight.w500
-                              ),),
-
+                              child: Text(
+                                cartcount.toString(),
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             )),
                       ],
                     )),
-
               ],
-            )
+            ),
           ],
           centerTitle: true,
         ),
@@ -376,12 +363,12 @@ class _CartState extends State<Cart> {
                     child: Text('Add to Cart'),
                     onPressed: (){
                       // myModel.doaddproduct();
-                    //  DashboardFragment.of(context).cartcount="34";
+                     // DashboardFragment.of(context).cartcount="34";
 
 validateprocess();
                       // fetchpro();
                       // cleardataprocess();
-                     // checkprocess("23");
+
                     },
                   ),
 
@@ -427,7 +414,18 @@ validateprocess();
             Expanded(
                 child: RaisedButton(
               onPressed: () {
-               buynow();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ShippingForm(
+                          ship_brandid:brandidcart,
+                          ship_productid:ship_proid,
+                          ship_price_id:ship_priceid,
+                          ship_quantity:ship_qty,
+                          ship_amt:payAmnt,
+                          shippurpose:ship_purpose,
+                          ship_mode:"buynow"
+                        )));
               },
               child: Text("Buy Now"),
               color: Theme.of(context).colorScheme.primary,

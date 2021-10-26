@@ -55,6 +55,7 @@ class _MyOrderState extends State<MyOrder> {
   var totalprice = 0;
   var totalprice1;
   var itemsWithout;
+  var cartcount;
   String userid, name_pay, mobileno_pay, email_pay, pricefinal_pay,del_user_id;
 
   String hana, amt;
@@ -76,7 +77,7 @@ class _MyOrderState extends State<MyOrder> {
     final http.Response response = await http.post(
       Uri.parse(url),
       body: {
-        'user_id':"1" ,
+        'user_id':"80" ,
       },
     );
 
@@ -107,8 +108,42 @@ class _MyOrderState extends State<MyOrder> {
     setState(() {
       token = preferences.getString('token');
       print("token $token");
+      getcartdetail();
+    });
+
+  }
+
+
+  Future getcartdetail()async {
+    print("cart 2");
+    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'user_id':"80",
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+    setState(() {
+
+      cartcount=cartcart;
     });
     _carddet = fetchcarddet();
+
+    print('item cart 3');
+
+    print('items count $cartcount');
+
+
+
   }
   //payment process
   void buynow() async {
@@ -181,62 +216,66 @@ class _MyOrderState extends State<MyOrder> {
     print('delete process $resJson');
     String count_changedd= resJson["data"];
     print('delete count changed $count_changedd');
-    DashboardFragment.of(context).checkprocess(count_changedd);
+
+   // DashboardFragment.of(context).checkprocess(count_changedd);
     Fluttertoast.showToast(
         msg: "Deleted Successfully",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
         fontSize: 16.0);
+setState(() {
+  cartcount="";
+  cartcount=count_changedd;
+});
     fetchcarddet();
   }
 
   @override
   Widget build(BuildContext context) {
-    var cartcount;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
         title: Text('Products',
             style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 22.0,
-                color: Colors.white)),
+                fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
         actions: [
           Stack(
             children: <Widget>[
-              new IconButton(icon: new Icon(Icons.shopping_cart,
-                color: Colors.white,),
+              new IconButton(
+                icon: new Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
                 onPressed: () {
-
+                  print('cartcount $cartcount');
                 },
               ),
-              cartcount == 0 ? new Container() :
-              new Positioned(
-
+              cartcount == 0
+                  ? new Container()
+                  : new Positioned(
                   child: new Stack(
                     children: <Widget>[
-                      new Icon(
-                          Icons.brightness_1,
-                          size: 20.0, color: Colors.red[800]),
+                      new Icon(Icons.brightness_1,
+                          size: 25.0, color: Colors.red[800]),
                       new Positioned(
                           top: 3.0,
-                          right: 4.0,
+                          right: 5.0,
                           child: new Center(
-                            child:
-                            Text(cartcount.toString(), style: new TextStyle(
-                                color: Colors.white,
-                                fontSize: 11.0,
-                                fontWeight: FontWeight.w500
-                            ),),
-
+                            child: Text(
+                              cartcount.toString(),
+                              style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           )),
                     ],
                   )),
-
             ],
-          )
+          ),
         ],
         centerTitle: true,
       ),
@@ -272,7 +311,10 @@ class _MyOrderState extends State<MyOrder> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ShippingForm()));
+                          builder: (context) => ShippingForm(
+
+                              ship_mode:"cart"
+                          )));
                   // buynow();
                 } else {
                   print('select the more amount');
