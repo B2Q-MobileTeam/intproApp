@@ -51,7 +51,7 @@ class UserTile extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  user.brandname,
+                  user.brandnames,
                   textAlign: TextAlign.start,
                 ),
                 trailing:
@@ -63,7 +63,8 @@ context,
 MaterialPageRoute(
 builder: (context) => Cart(
 carttid:user.id,
-title:user.title
+title:user.title,
+  b_name:user.brandnames
 )));}else{
       Navigator.push(
                                             context,
@@ -71,7 +72,7 @@ title:user.title
                                                 builder: (context) => Brands(
                                                     brandid:
                                                     user.id,
-                                                    brandname:user.brandname)));
+                                                    brandname:user.brandnames)));
     }
                 },
               )

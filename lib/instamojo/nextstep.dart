@@ -108,6 +108,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../successpage.dart';
 import 'heloo.dart';
@@ -123,6 +124,8 @@ class Nextstep extends StatefulWidget {
 
 class NextState extends State<Nextstep> {
 
+  String name_pay,email_pay;
+
   String paymentpay;
   String payredirect;
   WebViewController controller;
@@ -134,58 +137,45 @@ class NextState extends State<Nextstep> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   StreamSubscription<String> _onUrlChanged;
+
+  void getpro() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name_pay = (prefs.getString('name1'));
+    print('name1 $name_pay');
+    email_pay = (prefs.getString('email'));
+    print('email $email_pay');
+  }
   @override
   void initState() {
+    getpro();
     super.initState();
 
 
     _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
+
         print("Current URL: $url");
         if (url.contains("paymentResponse")) {
+
           flutterWebviewPlugin.close();
-          print(Uri.base.toString());
-          print(Uri.base.query);
           print("cur $url");
-          var varurl = url;
-          print('url1 $varurl');
-          var one = varurl.split("?");
-          print('one ${one[1]}');
-          var paytwo = one[1];
-          print('two ${paytwo[1]}');
-          var paythree = paytwo.split("&");
-          print('three ${paythree[1]}');
-          print(paythree);
-          var payfour = paythree[0].split("=");
-          print(payfour);
-          var payfive = paythree[1].split("=");
-          print(payfive);
-          var paysix = paythree[2].split("=");
-          print(paysix);
-          var payseven =paythree[3].split("=");
-          print(payseven);
-          var payeight =paythree[4].split("=");
-          print(payeight);
-          var paynine =paythree[5].split("=");
-          print(paynine);
-          var payten =paythree[6].split("=");
-          print(payten);
-          var payinvoice =paythree[7].split("=");
-          print(payinvoice);
-          print("values pay,meny $payfour $payfive $paysix $payseven $payeight $paynine $payten $payinvoice");
-          payment_status = payfour[1];
-          payment_message = payfive[1];
-          payment_order_id = paysix[1];
-          payment_transaction_id=payseven[1];
-          payment_transaction_date=payeight[1];
-          payment_amount=paynine[1];
-          payment_buyername=payten[1];
-          payment_invoice=payinvoice[1];
+
+          Uri uri = Uri.dataFromString(url);
+          payment_status = uri.queryParameters['status'];
+          payment_order_id = uri.queryParameters['orderid'];
+          payment_message="Message sent to $email_pay";
+          payment_transaction_id = uri.queryParameters['transactionid'];
+          payment_amount = uri.queryParameters['amount'];
+          payment_transaction_date = uri.queryParameters['transaction_date'];
+          payment_buyername= name_pay;
+          payment_invoice = "https://www.binary2quantumsolutions.com/intpro/uploaded/${payment_order_id}.pdf";
+         // print("aa $aa $bb $cc $dd $ee $ff $gg");
+
+
+
           print("values pay,meny $payment_status $payment_message $payment_order_id $payment_transaction_id "
               "$payment_transaction_date $payment_amount $payment_buyername $payment_invoice");
-          print('payment id $payment_id');
-          print('payment status $payment_status');
-          print('payment request id $payment_request_id');
+
           if (payment_status == "1") {
             print("Success");
             Hellosam();
@@ -207,12 +197,14 @@ class NextState extends State<Nextstep> {
         payment_message:payment_message,
         payment_order_id:payment_order_id,
         payment_transaction_id:payment_transaction_id,
-        payment_transaction_date:payment_transaction_date,
+        // payment_transaction_date:payment_transaction_date,
         payment_amount:payment_amount,
         payment_buyername:payment_buyername,
         payment_invoice:payment_invoice
     )));
   }
+
+
   @override
   Widget build(BuildContext context) {
     paymentpay = widget.paymenturl;
@@ -223,6 +215,7 @@ class NextState extends State<Nextstep> {
 
     );
   }
+
 }
 
 

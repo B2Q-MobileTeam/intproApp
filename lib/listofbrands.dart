@@ -344,13 +344,13 @@ import 'subbrands.dart';
 
 class User {
   String id;
-  String brandname;
+  String brandnames;
   String title;
 
-  User({this.id, this.brandname,this.title});
+  User({this.id, this.brandnames,this.title});
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        id: json['id'], brandname: json['brandname'], title: json['title']);
+        id: json['id'], brandnames: json['brandname'], title: json['title']);
   }
 }
 
@@ -526,7 +526,7 @@ var cartcount;
             searchText = searchText.toLowerCase();
             setState(() {
               _usersDisplay = _users.where((u) {
-                var fName = u.brandname.toLowerCase();
+                var fName = u.brandnames.toLowerCase();
 
                 return fName.contains(searchText) ;
               }).toList();

@@ -24,14 +24,13 @@ class Add {
 
 class Cart extends StatefulWidget {
 
-  final String carttid, cartid, title;
-  Cart({Key key, this.carttid, this.cartid, this.title,}) : super(key: key);
+  final String carttid, cartid, title,pro_name,brand_name,cat_name,pro_id,b_name;
+  Cart({Key key, this.carttid, this.cartid, this.title,this.pro_name,this.brand_name,this.cat_name,this.pro_id,this.b_name}) : super(key: key);
   @override
   _CartState createState() => _CartState();
 }
 
 class _CartState extends State<Cart> {
-
   final StringCallback callback;
   _CartState({this.callback});
   List<Add> _cartList = List<Add>();
@@ -42,10 +41,17 @@ class _CartState extends State<Cart> {
   int count_decrease;
   String totalprice = '0';
   String cartcountsss;
+  String brand_brandname;
+  String catcat_value;
+  String re_brand_id;
+  String Show_drop_down_type,Show_drop_down_shades;
+  String eg_shade_id;
+  var eg_pro_id;
 
   List datapro = List();
   List typepro = List();
-  String selectedvalue, typevalue;
+  List shadespro = List();
+  String selectedvalue, typevalue,shadevalue;
   var pro_id, a,priceid;
   String count_changed;
 
@@ -53,34 +59,74 @@ class _CartState extends State<Cart> {
   var amount, b;
   String img;
   var cartcount,token;
+  String remaining_woods,Category_name_display;
 
   //thickness api
 
   Future<String> fetchcart() async {
     var cart = widget.carttid;
-    print(' cart $cart');
+    remaining_woods = widget.title;
+
+    print(' cart $cart $remaining_woods');
     var url =
         'https://www.binary2quantumsolutions.com/intpro/product_measures.php';
 
     print('url $url');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final http.Response response = await http.post(
-      Uri.parse(url),
-      body: {'brand_id': widget.carttid},
-    );
-    var resJson = json.decode(response.body);
-    // print('object $resJson');
-    var product = resJson['product_measure'];
-    img = product[0]['cat_img'];
-    print('img $img');
+    if(remaining_woods=="plywoods"){
+      brand_brandname=widget.b_name;
 
-    // print('product $product');
-    setState(() {
-      userid = (prefs.getString('token'));
-      print('share $userid');
-      datapro = product;
-    });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final http.Response response = await http.post(
+        Uri.parse(url),
+        body: {
+          'brand_id': widget.carttid
+        },
+      );
+      var resJson = json.decode(response.body);
+      print('object $resJson');
+      var product = resJson['product_measure'];
+      img = product[0]['cat_img'];
+      print('img $img');
+      print('val $resJson');
+
+      // print('product $product');
+      setState(() {
+        userid = (prefs.getString('token'));
+        print('share $userid');
+        datapro = product;
+      });
+    }
+    else{
+
+      remaining_woods=widget.cat_name;
+      brand_brandname=widget.pro_name;
+      Category_name_display=widget.brand_name;
+      catcat_value=Category_name_display;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final http.Response response = await http.post(
+        Uri.parse(url),
+        body:{
+          'pro_id': widget.pro_id
+        },
+      );
+      var resJson = json.decode(response.body);
+      print('object product mesasure response  $resJson');
+      var product = resJson['product_measure'];
+      img = product[0]['cat_img'];
+      print('img $img');
+
+      // print('product $product');
+      setState(() {
+        userid = (prefs.getString('token'));
+        print('share $userid');
+        datapro = product;
+      });
+    }
+
     // print('object $datapro');
   }
   //end thicknes api
@@ -89,7 +135,7 @@ class _CartState extends State<Cart> {
 
   Future<String> fetchtype() async {
     var cart = widget.carttid;
-    print(' cart $cart');
+    print(' cart $selectedvalue');
 
     var url =
         'https://www.binary2quantumsolutions.com/intpro/product_types.php';
@@ -97,11 +143,14 @@ class _CartState extends State<Cart> {
 
     final http.Response response = await http.post(
       Uri.parse(url),
-      body: {'m_id': selectedvalue},
+      body: {'m_id':selectedvalue},
     );
     var resJson = json.decode(response.body);
-    // print('type $resJson');
+    print('type product  $resJson');
+    Show_drop_down_type=resJson['apicall'];
+    print('show_dropdown $Show_drop_down_type');
     var types = resJson['product_types'];
+
 
     // print('type $types');
     setState(() {
@@ -110,7 +159,34 @@ class _CartState extends State<Cart> {
     // print('producttype $typepro');
   }
   //end type api
+//shades api
 
+  Future<String> fetchshades() async {
+    var cart = widget.carttid;
+    print(' shadeid $eg_shade_id');
+
+    var url ='https://www.binary2quantumsolutions.com/intpro/product_shades.php';
+    print('type $url');
+
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'shade_id':eg_shade_id,
+
+      },
+    );
+    var resJson = json.decode(response.body);
+    print('type product $resJson');
+
+    var shades = resJson['product_shade'];
+
+    // print('type $types');
+    setState(() {
+      shadespro = shades;
+    });
+    // print('producttype $typepro');
+  }
+  //shades api end
   //price api
   Future<String> fetchprice() async {
     var cart = widget.carttid;
@@ -120,32 +196,68 @@ class _CartState extends State<Cart> {
         'https://www.binary2quantumsolutions.com/intpro/product_price.php';
     print('price $url');
 
-    final http.Response response = await http.post(
-      Uri.parse(url),
-      body: {
-        'm_id': selectedvalue,
-        'brand_id': widget.carttid,
-        'type_id': typevalue
-      },
-    );
-    var resJson = json.decode(response.body);
-    print('product_price  $resJson');
-    var types = resJson['product_price'];
-    print('price $types');
+ if(remaining_woods=="plywoods"){
+   final http.Response response = await http.post(
+     Uri.parse(url),
+     body: {
+       'm_id': selectedvalue,
+       'brand_id': widget.carttid,
+       'type_id': typevalue,
+       'pro_id':eg_pro_id
+     },
+   );
+   var resJson = json.decode(response.body);
+   print('product_price  $resJson');
+   var types = resJson['product_price'];
+   print('price $types');
 
-    price = types[0]['price'];
-    pro_id = types[0]['price_id'];//proid ku price id
-    priceid=types[0]['pro_id'];//priceid ku proid
+   price = types[0]['price'];
+   pro_id = types[0]['price_id'];//proid ku price id
+   priceid=types[0]['pro_id'];//priceid ku proid
 
-    print('prices $price');
-    print('pro_id $pro_id');
+   print('prices $price');
+   print('pro_id $pro_id');
 
-    setState(() {
-      amount = price;
-      print('amout is $amount');
-      calculationpart();
-      //fetchprice();
-    });
+   setState(() {
+     amount = price;
+     print('amout is $amount');
+     calculationpart();
+     //fetchprice();
+   });
+ }else{
+   re_brand_id=widget.cartid;
+   print('brandid $re_brand_id');
+   print('m_id $selectedvalue');
+   print('type value $typevalue');
+   print('proid $eg_pro_id');
+   final http.Response response = await http.post(
+     Uri.parse(url),
+     body: {
+       'm_id': selectedvalue,
+       'brand_id': re_brand_id,
+       'type_id': typevalue,
+       'pro_id':eg_pro_id
+     },
+   );
+   var resJson = json.decode(response.body);
+   print('product_price  $resJson');
+   var types = resJson['product_price'];
+   print('price $types');
+
+   price = types[0]['price'];
+   pro_id = types[0]['price_id'];//proid ku price id
+   priceid=types[0]['pro_id'];//priceid ku proid
+
+   print('prices $price');
+   print('pro_id $pro_id');
+
+   setState(() {
+     amount = price;
+     print('amout is $amount');
+     calculationpart();
+     //fetchprice();
+   });
+ }
   }
 
   //end price api
@@ -313,7 +425,7 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          title: Text('Products',
+          title: Text('Add to cart',
               style: TextStyle(
                   fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
           actions: [
@@ -448,19 +560,44 @@ validateprocess();
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 30.0, top: 30.0, bottom: 20.0),
-                      child: Text(widget.title,
+                      child: Center(
+
+                        child: Text("${remaining_woods}",
+                            style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.w800)),
+                      )
+                    ),
+
+
+               catcat_value==null?
+                    Container():
+                    Padding(
+    padding: const EdgeInsets.only(
+    left: 30.0, top: 5.0, bottom: 5.0),
+    child: Text("${catcat_value}",
+    style: TextStyle(
+    fontSize: 20.0,
+    fontWeight: FontWeight.normal)),
+    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 30.0, top: 5.0, bottom: 10.0),
+                      child: Text("${brand_brandname}",
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold)),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 30.0, right: 20.0),
-                      child: Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
+                            padding:EdgeInsets.only(bottom: 5),
                             child: DropdownButton(
+                              isExpanded: true,
                                 value: selectedvalue,
                                 items: datapro.map((data) {
                                   return DropdownMenuItem(
@@ -481,20 +618,53 @@ validateprocess();
                           ),
                           Container(
                             child: DropdownButton(
+                              isExpanded: true,
                                 value: typevalue,
                                 items: typepro.map((item) {
-                                  return DropdownMenuItem(
-                                      value: item['type_id'],
-                                      child: Text(item['type']));
+                                    return DropdownMenuItem(
+                                      onTap: (){
+                                        eg_pro_id= item['pro_id'];
+                                        eg_shade_id =item['shade_id'];
+                                      },
+                                        value: item['type_id'],
+                                        child: Text(item['type']));
                                 }).toList(),
                                 hint: Text('Select  type'),
                                 onChanged: (value) {
                                   setState(() {
-                                    typevalue = value;
+                                    if(Show_drop_down_type=="true"){
+                                      typevalue = value;
+                                      fetchshades();
+                                    }else{
+                                      typevalue = value;
+                                      fetchprice();
+                                    }
 
-                                    fetchprice();
                                   });
-
+                                  print('typeid $typevalue');
+                                }),
+                          ),
+                          Container(
+                            child: DropdownButton(
+                                isExpanded: true,
+                                value: shadevalue,
+                                items: shadespro.map((item) {
+                                  return DropdownMenuItem(
+                                      onTap: (){
+                                        eg_pro_id= item['pro_id'];
+                                        selectedvalue=item['m_id'];
+                                        re_brand_id=item['brand_id'];
+                                        typevalue=item['type_id'];
+                                      },
+                                      value: item['shade_id'],
+                                      child: Text(item['shade']));
+                                }).toList(),
+                                hint: Text('Select Shades'),
+                                onChanged: (value) {
+                                  setState(() {
+                                    shadevalue=value;
+                                      fetchprice();
+                                  });
                                   print('typeid $typevalue');
                                 }),
                           ),
@@ -553,6 +723,19 @@ validateprocess();
           ),
         )
       );
+  }
+  Widget Category_name(){
+    String category_name_dis=widget.cat_name;
+    return
+      Padding(
+      padding: const EdgeInsets.only(
+          left: 30.0, top: 30.0, bottom: 20.0),
+      child: Text("${category_name_dis}",
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold)),
+    );
   }
 }
 

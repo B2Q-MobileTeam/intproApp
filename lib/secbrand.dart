@@ -75,17 +75,22 @@ class Secbrand extends StatelessWidget {
               children: [
                 ListTile(
                   title: Text(
-                    brandd.brandsname,
+                    brandd.product_name,
                     textAlign: TextAlign.start,
                   ),
                   trailing:
                   IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
                   onTap: (){
+                    print('cartid ${brandd.cartsid}');
                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Cart(
                                               cartid: brandd.cartsid,
+                                              pro_id:brandd.pro_id,
+                                              pro_name:brandd.product_name,
+                                              brand_name:brandd.brandsname,
+                                              cat_name:brandd.category_name
                                             )));
 
 

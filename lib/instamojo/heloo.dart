@@ -230,7 +230,7 @@ class NextStates extends State<Nextsteps> {
         payment_message:payment_message,
         payment_order_id:payment_order_id,
         payment_transaction_id:payment_transaction_id,
-        payment_transaction_date:payment_transaction_date,
+        //payment_transaction_date:payment_transaction_date,
         payment_amount:payment_amount,
         payment_buyername:payment_buyername,
         payment_invoice:payment_invoice

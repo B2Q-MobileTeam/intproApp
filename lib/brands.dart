@@ -118,6 +118,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'drawer.dart';
@@ -127,12 +128,18 @@ import 'secbrand.dart';
 class Brandss {
   String cartsid;
   String brandsname;
+  String pro_id;
+  String category_name;
+  String product_name;
 
-  Brandss({this.cartsid, this.brandsname});
+  Brandss({this.cartsid, this.brandsname,this.pro_id,this.category_name,this.product_name});
   factory Brandss.fromJson(Map<String, dynamic> json) {
     return Brandss(
       cartsid: json['brand_id'],
-      brandsname: json['product_name'],
+      brandsname: json['brandname'],
+      pro_id: json['pro_id'],
+      category_name: json['category_name'],
+      product_name: json['product_name'],
     );
   }
 }
@@ -153,8 +160,9 @@ class BrandsSubState extends State<Brands> {
   String brandename;
   List<Brandss> _brandss = <Brandss>[];
   List<Brandss> _brandssdisplay = <Brandss>[];
-
+   String cartcount;
   bool _isLoading = true;
+  String token;
 
     Future<List<Brandss>> fetchbrand() async {
     var url = 'https://www.binary2quantumsolutions.com/intpro/products.php';
@@ -175,9 +183,37 @@ class BrandsSubState extends State<Brands> {
     return items.map<Brandss>((j) => Brandss.fromJson(j)).toList();
   }
 
-  @override
-  void initState() {
-    super.initState();
+
+  Future getEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString('token');
+      print("token $token");
+      getcartdetail();
+    });
+  }
+
+  Future getcartdetail() async {
+    print("cart 2");
+    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+    final http.Response response = await http.post(
+      Uri.parse(url),
+      body: {
+        'user_id': "80",
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+    setState(() {
+      cartcount = cartcart;
+    });
     fetchbrand().then((value) {
       setState(() {
         _isLoading = false;
@@ -186,11 +222,19 @@ class BrandsSubState extends State<Brands> {
         print(_brandssdisplay.length);
       });
     });
+    print('item cart 3');
+
+    print('items count $cartcount');
+  }
+  @override
+  void initState() {
+    super.initState();
+    getEmail();
   }
 
   @override
   Widget build(BuildContext context) {
-    var cartcount;
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
@@ -210,7 +254,6 @@ class BrandsSubState extends State<Brands> {
                 ),
                 cartcount == 0 ? new Container() :
                 new Positioned(
-
                     child: new Stack(
                       children: <Widget>[
                         new Icon(
