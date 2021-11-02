@@ -1,21 +1,13 @@
-
-
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:intpro_app/listofbrands.dart';
-import 'package:intpro_app/routes.dart';
-
+import 'package:intpro_app/Url.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Dashboardfragment.dart';
 import 'dashboard.dart';
 import 'frgt.dart';
-import 'instamojo/egeg.dart';
-import 'model/myorderlist.dart';
-import 'order_detail.dart';
+
 import 'register.dart';
 
 void main() async {
@@ -25,18 +17,7 @@ void main() async {
   runApp(MaterialApp(
     color: Colors.white,
       debugShowCheckedModeBanner: false,
-    //   home:MyStatefulWidget(),
-  // home: token == null ? Login() : Homee()
-   home: token == null ? Login() : JsonImageList(),
-
-    // initialRoute:Homee.routeName,
-    // routes: {
-    //   Homee.routeName:(context)=>Homee(),
-    //   MyOrder.routeName: (context) => MyOrder(),
-    //   MyOrder.routeName: (context) => MyOrder(),
-    //
-    // },
-
+   home: token == null ? Login() : Homee(),
   ));
 }
 
@@ -48,9 +29,6 @@ class Login extends StatefulWidget {
 }
 
 class loginext extends State<Login> {
-
-  int _internetAvail = 0;
-
 
   bool _obscureText = true;
   bool _autovalidate = false;
@@ -79,12 +57,10 @@ class loginext extends State<Login> {
     String mobile = mob.text;
     String password = pass.text;
 
-//    var url = 'http://192.168.0.107/Intpro/login.php';
-    var url = 'https://www.binary2quantumsolutions.com/intpro/Login.php';
-    print('get $url');
+    print('get ${ApiCall.LoginUrl}');
 
     var response = await http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.LoginUrl),
         body: {
       "mobileno": mobile,
       "password": password,
@@ -128,12 +104,6 @@ class loginext extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.lightBlue[50],
-
-      // appBar: AppBar(
-      //   title: Text("IntPro"),
-      //   centerTitle: true,
-      // ),
         body: Container(
           padding: EdgeInsets.only(left: 15.0, right: 15.0),
           decoration: BoxDecoration(
@@ -265,27 +235,5 @@ class loginext extends State<Login> {
           ),
         ));
   }
-  Widget displayInternetStatus(){
-    if(_internetAvail==0){
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          color: Colors.red,
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: Text("Opps, Internet is not available..",style: TextStyle(
-                  fontSize:17.0,
-                  color:Colors.white,
-                )),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
 }

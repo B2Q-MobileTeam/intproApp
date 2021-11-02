@@ -4,9 +4,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intpro_app/model/myorderlist.dart';
 import 'package:intpro_app/order_detail.dart';
-import 'package:intpro_app/routes.dart';
 
-import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dashboard.dart';
@@ -14,91 +12,7 @@ import 'main.dart';
 import 'rate.dart';
 import 'shareapp.dart';
 
-// class Drawer_main extends StatefulWidget{
-//   @override
-//   State<StatefulWidget> createState() {
-//    Drawer_main_state();
-//   }
-//
-// }
-//
-// class Drawer_main_state extends State<Drawer_main>{
-//   @override
-//   Widget build(BuildContext context) {
-//     return Drawer(
-//       child: Material(
-//         child: ListView(
-//           children: [
-//             Container(
-//               child: Column(
-//                 children: <Widget>[
-//                   DrawerHeader(
-//                       child: Container(
-//                         height: 600,
-//                         decoration: BoxDecoration(
-//                             image: DecorationImage(
-//                               image: AssetImage(
-//                                 "assets/logo1.png",
-//                               ),
-//                             )),
-//                       )),
-//
-//                 ],
-//               ),
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("Home",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//
-//                 Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (BuildContext context) => Homee()
-//                     )
-//                 );
-//                 // Navigator.pushNamed(context, Homee.routeName);
-//               },
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("My Order",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//                 Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (BuildContext context) => MyOrder()
-//                     )
-//                 );
-//               },
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("My Cart",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//                 Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (BuildContext context) => MyOrder()
-//                     )
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       )
-//
-//   );
-//   }
-//
-//
-// }
+
 
 class Drawer_main extends StatelessWidget {
 
@@ -232,96 +146,3 @@ class Drawer_main extends StatelessWidget {
   }
 
 }
-
-
-
-
-// createDrawer(BuildContext context)  {
-//
-//   return Drawer(
-//       child: Material(
-//         child: ListView(
-//           children: [
-//             Container(
-//               child: Column(
-//                 children: <Widget>[
-//                   DrawerHeader(
-//                       child: Container(
-//                         height: 600,
-//                         decoration: BoxDecoration(
-//                             image: DecorationImage(
-//                               image: AssetImage(
-//                                 "assets/logo1.png",
-//                               ),
-//                             )),
-//                       )),
-//
-//                 ],
-//               ),
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("Home",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//                 Navigator.pushNamed(context, Homee.routeName);
-//               },
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("My Order",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//                 Navigator.pushNamed(context,MyOrder.routeName);
-//               },
-//             ),
-//             ListTile(
-//               selectedTileColor: Colors.grey[200],
-//               leading: new Icon(Icons.person,),
-//               title: new Text("My Cart",),
-//               onTap: () {
-//                 Navigator.pop(context);
-//                 Navigator.pushNamed(context,MyOrder.routeName);
-//               },
-//             ),
-//           ],
-//         ),
-//       )
-//
-//   );
-//
-// }
-
-//
-//   Drawer(
-//       child: ListView(
-//         padding: EdgeInsets.zero,
-//         children: <Widget>[
-//           Container(
-//             color: Theme.of(context).canvasColor,
-//             child: DrawerHeader(
-//               child: Text(
-//                 'Navigation Drawer',
-//                 style: TextStyle(
-//                   fontSize: 20,
-//                 ),
-//               ),
-//             ),
-//           ),
-//           ListTile(
-//               leading: Icon(Icons.monetization_on),
-//               title: Text('New Transaction'),
-//               onTap: () {
-//                 Navigator.pushReplacementNamed(context,routes.transaction);
-//               }),
-//           ListTile(
-//               leading: Icon(Icons.category),
-//               title: Text('Categories Manager'),
-//               onTap: () {
-//                 Navigator.pushReplacementNamed(context, routes.categories);
-//               }),
-//         ],
-//       ));
-// }

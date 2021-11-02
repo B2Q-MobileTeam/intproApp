@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
+import 'package:intpro_app/Url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -31,8 +30,7 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  final StringCallback callback;
-  _CartState({this.callback});
+
   List<Add> _cartList = List<Add>();
   int counter = 0;
   int _count = 1;
@@ -68,10 +66,9 @@ class _CartState extends State<Cart> {
     remaining_woods = widget.title;
 
     print(' cart $cart $remaining_woods');
-    var url =
-        'https://www.binary2quantumsolutions.com/intpro/product_measures.php';
 
-    print('url $url');
+
+    print('url ${ApiCall.ProductMeasure}');
 
     if(remaining_woods=="plywoods"){
       brand_brandname=widget.b_name;
@@ -79,7 +76,7 @@ class _CartState extends State<Cart> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       final http.Response response = await http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.ProductMeasure),
         body: {
           'brand_id': widget.carttid
         },
@@ -108,7 +105,7 @@ class _CartState extends State<Cart> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       final http.Response response = await http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.ProductMeasure),
         body:{
           'pro_id': widget.pro_id
         },
@@ -137,12 +134,10 @@ class _CartState extends State<Cart> {
     var cart = widget.carttid;
     print(' cart $selectedvalue');
 
-    var url =
-        'https://www.binary2quantumsolutions.com/intpro/product_types.php';
-    print('type $url');
+    print('type ${ApiCall.ProductType}');
 
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.ProductType),
       body: {'m_id':selectedvalue},
     );
     var resJson = json.decode(response.body);
@@ -164,12 +159,10 @@ class _CartState extends State<Cart> {
   Future<String> fetchshades() async {
     var cart = widget.carttid;
     print(' shadeid $eg_shade_id');
-
-    var url ='https://www.binary2quantumsolutions.com/intpro/product_shades.php';
-    print('type $url');
+    print('type ${ApiCall.ProductShades}');
 
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.ProductShades),
       body: {
         'shade_id':eg_shade_id,
 
@@ -191,17 +184,15 @@ class _CartState extends State<Cart> {
   Future<String> fetchprice() async {
     var cart = widget.carttid;
     print(' cart $cart');
-
-    var url =
-        'https://www.binary2quantumsolutions.com/intpro/product_price.php';
-    print('price $url');
+    print('price ${ApiCall.ProductPrice}');
 
  if(remaining_woods=="plywoods"){
+   re_brand_id=widget.carttid;
    final http.Response response = await http.post(
-     Uri.parse(url),
+     Uri.parse(ApiCall.ProductPrice),
      body: {
        'm_id': selectedvalue,
-       'brand_id': widget.carttid,
+       'brand_id':re_brand_id,
        'type_id': typevalue,
        'pro_id':eg_pro_id
      },
@@ -231,7 +222,7 @@ class _CartState extends State<Cart> {
    print('type value $typevalue');
    print('proid $eg_pro_id');
    final http.Response response = await http.post(
-     Uri.parse(url),
+     Uri.parse(ApiCall.ProductPrice),
      body: {
        'm_id': selectedvalue,
        'brand_id': re_brand_id,
@@ -279,8 +270,8 @@ class _CartState extends State<Cart> {
 
   //cart api
   Future<String> fetchpro() async {
-    var url = 'https://www.binary2quantumsolutions.com/intpro/add_cart.php';
-    print('cart price $url');
+
+    print('cart price ${ApiCall.AddToCart}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userid = (prefs.getString('token'));
@@ -288,12 +279,12 @@ class _CartState extends State<Cart> {
     });
 print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.AddToCart),
       body: {
         'price_id': pro_id,
         'amount': totalprice,
         'quantity': _count.toString(),
-        'user_id': "80"
+        'user_id': userid
       },
     );
     var resJson = json.decode(response.body);
@@ -305,11 +296,8 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
       cartcount="";
       cartcount=count_changed;
     });
-    // DashboardFragment.of(context).checkprocess(count_changed);
-   // DashboardFragment.of(context).checkprocess(count_changed);
 
     print('count changed $count_changed');
-    //int count_changed = count_changedd;
 
     Fluttertoast.showToast(
         msg: "Added to Cart",
@@ -354,9 +342,9 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
 
   Future getcartdetail() async {
     print("cart 2");
-    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.CartDetails),
       body: {
         'user_id': "80",
       },
@@ -412,12 +400,12 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
   }
 
   Widget build(BuildContext context) {
-    String brandidcart=widget.carttid;
+    String brandidcart=re_brand_id;
     String ship_proid=pro_id;
     String ship_priceid=priceid;
     String ship_qty=_count.toString();
     String payAmnt = totalprice;
-    String ship_purpose=widget.title;
+    String ship_purpose=remaining_woods;
 
 
 
@@ -474,58 +462,15 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
                   RaisedButton(
                     child: Text('Add to Cart'),
                     onPressed: (){
-                      // myModel.doaddproduct();
-                     // DashboardFragment.of(context).cartcount="34";
-
 validateprocess();
-                      // fetchpro();
-                      // cleardataprocess();
-
                     },
                   ),
-
-//                 child: RaisedButton
-//                   (
-//                   onPressed: (){
-// CartModel.
-//                   },
-//             //   onPressed: () {
-//             //     cartcount.addToCartUrl(),
-//             //     // fetchpro();
-//             //
-//             // //     var b = int.parse(totalprice);
-//             // //
-//             // //     if (b <= 10000) {
-//             // //       fetchpro();
-//             // //
-//             // //       setState(() {
-//             // //         counter++;
-//             // //       });
-//             // //     }
-//             // //     else {
-//             // //       print('data increased lot');
-//             // //       Fluttertoast.showToast(
-//             // // msg: "Your Maximum Limit is 10000",
-//             // // toastLength: Toast.LENGTH_SHORT,
-//             // // gravity: ToastGravity.TOP,
-//             // // timeInSecForIos: 1,
-//             // // fontSize: 16.0);
-//             // //     }
-//             //
-//             //     //print('enter the button');
-//             //     // Navigator.push(
-//             //     //     context,
-//             //     //     MaterialPageRoute(
-//             //     //         builder: (context) => MyOrder()));
-//             //   },
-//               child: Text("Add to Cart"),
-//               color: Theme.of(context).colorScheme.primary,
-//               textColor: Colors.white,
-//             )
             ),
             Expanded(
                 child: RaisedButton(
               onPressed: () {
+
+                print('add to cart to $brandidcart $ship_proid $ship_priceid $ship_qty $payAmnt $ship_purpose  ');
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -559,7 +504,7 @@ validateprocess();
                         : Center(child: Image.network(img)),
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 30.0, top: 30.0, bottom: 20.0),
+                          left: 30.0, top: 10.0, bottom: 20.0,right: 10),
                       child: Center(
 
                         child: Text("${remaining_woods}",
@@ -723,19 +668,6 @@ validateprocess();
           ),
         )
       );
-  }
-  Widget Category_name(){
-    String category_name_dis=widget.cat_name;
-    return
-      Padding(
-      padding: const EdgeInsets.only(
-          left: 30.0, top: 30.0, bottom: 20.0),
-      child: Text("${category_name_dis}",
-          style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold)),
-    );
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intpro_app/Url.dart';
 import 'package:intpro_app/model/myorderlist.dart';
 import 'Dashboardfragment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ import 'drawer.dart';
 import 'listofbrands.dart';
 
 import 'main.dart';
+import 'order_detail.dart';
 import 'rate.dart';
 
 class Homee extends StatelessWidget {
@@ -39,32 +41,7 @@ class Homee extends StatelessWidget {
   }
 }
 
-Future logOut(BuildContext context) async {
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  preferences.remove('token');
-  Fluttertoast.showToast(
-      msg: "Logout Successful",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIos: 1,
-      backgroundColor: Colors.amber,
-      textColor: Colors.white,
-      fontSize: 16.0);
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Login(),
-    ),
-  );
-}
 
-share(BuildContext context) {
-  FlutterShare.share(
-      title: 'Share our app',
-      text: 'Share the App',
-      linkUrl: 'https://flutter.dev/',
-      chooserTitle: 'Example Chooser Title');
-}
 
 class Flowerdata {
   int id;
@@ -106,11 +83,11 @@ class JsonImageListWidget extends State {
 
   Future getcartdetail() async {
     print("cart 2");
-    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+   // var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id': "80",
+        'user_id': token,
       },
     );
 
@@ -139,11 +116,10 @@ class JsonImageListWidget extends State {
     getcartdetail();
   }
 
-  final String apiURL =
-      'https://www.binary2quantumsolutions.com/intpro/category.php';
+
 
   Future<List<Flowerdata>> fetchFlowers() async {
-    var response = await http.get(Uri.parse(apiURL));
+    var response = await http.get(Uri.parse(ApiCall.CategoryOfProducts));
     print('object $response');
 
     if (response.statusCode == 200) {
@@ -182,9 +158,7 @@ class JsonImageListWidget extends State {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           title: Text('Products',
@@ -199,6 +173,12 @@ class JsonImageListWidget extends State {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => MyOrder()
+                        )
+                    );
                     print('cartcount $cartcount');
                   },
                 ),
@@ -257,14 +237,6 @@ class JsonImageListWidget extends State {
                           return new GestureDetector(
                               child: Cell(snapshot.data[index]),
                               onTap: () =>
-                              // Navigator.push(
-                              // context,
-                              // MaterialPageRoute(
-                              //     builder: (context) => Listbrands(
-                              //         indexvalue: snapshot.data[index].cid,
-                              //         catname: snapshot.data[index].title,
-                              //         brandnamee:
-                              //         snapshot.data[index].catergoryname)))
 
                               Navigator.push(
                                   context,
@@ -277,7 +249,7 @@ class JsonImageListWidget extends State {
                                               .data[index].catergoryname))));
                         }));
               }),
-        ),
+
       ),
     );
   }

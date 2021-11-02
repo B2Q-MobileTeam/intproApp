@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intpro_app/Url.dart';
 
 import 'dashboard.dart';
 import 'main.dart';
@@ -31,13 +32,9 @@ class signupnext extends State<Signup> {
     });
   }
 
-  // String _username;
-  // String _email;
-  // String _password;
-  // String _mob;
 
   final _formKey = GlobalKey<FormState>();
-  //  bool true = false;
+
   TextEditingController userrname = new TextEditingController();
   TextEditingController mobileno = new TextEditingController();
   TextEditingController email = new TextEditingController();
@@ -46,75 +43,6 @@ class signupnext extends State<Signup> {
 
   get verifiedSuccess => null;
 
-
-  // Future<void> verifyphone() async {
-  //   final PhoneCodeAutoRetrievalTimeout autoRetrive = (String verId) {
-  //     this.verificationId = verId;
-  //   };
-  //   final PhoneCodeSent smsCodesent =
-  //       (String verId, [int forceCodeResent]) async {
-  //     this.verificationId = verId;
-  //     smsCodeDialoge(context).then((value) {
-  //       print('code sent');
-  //     });
-  //     PhoneVerificationCompleted verifiedsucess(AuthCredential auth) {}
-  //     PhoneVerificationFailed verifyfailed(AuthException e) {
-  //       print('${e.message}');
-  //     }
-  //
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //         phoneNumber: mobileno.text,
-  //         timeout: const Duration(seconds: 5),
-  //         verificationCompleted: verifiedsucess,
-  //         verificationFailed: verifyfailed,
-  //         codeSent: smsCodesent,
-  //         codeAutoRetrievalTimeout: autoRetrive);
-  //   };
-  //   Future<bool> smsCodeDialoge(BuildContext context) {
-  //     return showDialog(
-  //         context: context,
-  //         barrierDismissible: false,
-  //         builder: (BuildContext context) {
-  //           return new AlertDialog(
-  //             title: Text('Enter OTP'),
-  //             content: TextField(
-  //               onChanged: (value) {
-  //                 this.smssent = value;
-  //               },
-  //             ),
-  //             contentPadding: EdgeInsets.all(10.0),
-  //             actions: [
-  //               FlatButton(
-  //                   onPressed: () {
-  //                     FirebaseAuth.instance.currentUser().then((user) {
-  //                       if (user != null) {
-  //                         Navigator.of(context).pop();
-  //                         Navigator.push(context,
-  //                             MaterialPageRoute(builder: (context) => Homee()));
-  //                       } else {
-  //                         Navigator.of(context).pop();
-  //                         signIn(smssent);
-  //                       }
-  //                     });
-  //                   },
-  //                   child: Text('Done', style: TextStyle(color: Colors.white)))
-  //             ],
-  //           );
-  //         });
-  //   }
-  //
-  //   Future<void> signIn(String smsCode) async {
-  //     final AuthCredential credential = PhoneAuthProvider.getCredential(
-  //         verificationId: verificationId, smsCode: smsCode);
-  //   }
-  //
-  //   await FirebaseAuth.instance.signInWithCredential(credential).then((user) {
-  //     Navigator.push(context, MaterialPageRoute(builder: (context) => Homee()));
-  //   }).catchError((e) {
-  //     print(e);
-  //   });
-  // }
-
   void register() {
     String username = userrname.text;
     String mob = mobileno.text;
@@ -122,11 +50,10 @@ class signupnext extends State<Signup> {
     String pass = password.text;
     print('$username,$mob,$eemail,$pass');
 
-    var url = 'https://www.binary2quantumsolutions.com/intpro/register.php';
-    print('url $url');
+    print('url ${ApiCall.RegisterUrl}');
 
     http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.RegisterUrl),
         body: {
       "name": username,
       "mobileno": mob,

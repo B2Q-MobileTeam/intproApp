@@ -5,11 +5,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Dashboardfragment.dart';
+
 import 'Shippingform.dart';
+import 'Url.dart';
 import 'drawer.dart';
 import 'instamojo/heloo.dart';
-import 'instamojo/nextstep.dart';
+
 
 class Listbands {
   String id;
@@ -49,8 +50,7 @@ class MyOrder extends StatefulWidget {
 
 class _MyOrderState extends State<MyOrder> {
   String token = "";
-  final StringCallback callback;
-  _MyOrderState({this.callback});
+
   var arrayof = [];
   var totalprice = 0;
   var totalprice1;
@@ -65,19 +65,14 @@ class _MyOrderState extends State<MyOrder> {
     super.initState();
   }
 
-  // total(){
-  //   int[] arr = amt;
-  //   int sum =0;
-  //   sum+=;
-  //
-  // }
+
 
   Future<List<Listbands>> fetchcarddet() async {
-    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id':"80" ,
+        'user_id':token ,
       },
     );
 
@@ -116,11 +111,11 @@ class _MyOrderState extends State<MyOrder> {
 
   Future getcartdetail()async {
     print("cart 2");
-    var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
+   // var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
     final http.Response response = await http.post(
-      Uri.parse(url),
+      Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id':"80",
+        'user_id':token,
       },
     );
 
@@ -138,7 +133,7 @@ class _MyOrderState extends State<MyOrder> {
     });
     _carddet = fetchcarddet();
 
-    print('item cart 3');
+    print('item car');
 
     print('items count $cartcount');
 
@@ -161,7 +156,7 @@ class _MyOrderState extends State<MyOrder> {
     print('email $email_pay');
 
     print('price $totalprice1');
-    var url = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
+    //var url = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
     print('url $name_pay');
     print('url $totalprice1');
     print('url $mobileno_pay');
@@ -169,7 +164,7 @@ class _MyOrderState extends State<MyOrder> {
     print('url $userid');
 
     http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.PaymentProcessPay),
         body: {
       'userName': name_pay,
       'payAmount': totalprice1,
@@ -202,12 +197,12 @@ class _MyOrderState extends State<MyOrder> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     del_user_id=(prefs.getString('token'));
     print('delete user id $del_user_id');
-    var del = 'https://www.binary2quantumsolutions.com/intpro/delete_cart.php';
-    print('del $del');
+
+    print('del ${ApiCall.DeleteCart}');
     print('cartid $hana');
     final http.Response response =
         await http.post(
-            Uri.parse(del),
+            Uri.parse(ApiCall.DeleteCart),
             body: {
               'cart_id': hana,
               'user_id':del_user_id
@@ -217,7 +212,6 @@ class _MyOrderState extends State<MyOrder> {
     String count_changedd= resJson["data"];
     print('delete count changed $count_changedd');
 
-   // DashboardFragment.of(context).checkprocess(count_changedd);
     Fluttertoast.showToast(
         msg: "Deleted Successfully",
         toastLength: Toast.LENGTH_SHORT,
@@ -250,6 +244,12 @@ setState(() {
                   color: Colors.white,
                 ),
                 onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => MyOrder()
+                      )
+                  );
                   print('cartcount $cartcount');
                 },
               ),
@@ -333,7 +333,6 @@ setState(() {
             )),
           ],
         ),
-
 
       body:SafeArea(
         child:  Container(

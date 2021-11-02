@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
+import 'Url.dart';
 import 'drawer.dart';
+import 'order_detail.dart';
 class ShareApp extends StatefulWidget {
 
   @override
@@ -10,6 +16,8 @@ class ShareApp extends StatefulWidget {
 }
 
 class _ShareAppState extends State<ShareApp> {
+
+  String token;
   shares(BuildContext context)  {
     FlutterShare.share(
         title: 'Share our app',
@@ -18,9 +26,45 @@ class _ShareAppState extends State<ShareApp> {
         chooserTitle: 'Example Chooser Title');
   }
 
+
+  Future getEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString('token');
+      print("token $token");
+      getcartdetail();
+    });
+  }
+
+  Future getcartdetail() async {
+    print("cart 2");
+    final http.Response response = await http.post(
+      Uri.parse(ApiCall.CartDetails),
+      body: {
+        'user_id':token,
+      },
+    );
+
+    var resJson = json.decode(response.body);
+    print("cart data");
+    print('object $resJson');
+    final items = resJson['cart_details'];
+    print('cartdetails $items');
+    final itemsWithout = resJson['cart_details'];
+    var cartcart = resJson['data'];
+    print('items product $cartcart');
+    setState(() {
+      cartcount = cartcart;
+      shares(context);
+    });
+
+    print('item cart 3');
+
+    print('items count $cartcount');
+  }
   @override
   void initState() {
-shares(context);
+    getEmail();
   }
 
   var cartcount;
@@ -30,7 +74,7 @@ shares(context);
 
       appBar:  AppBar(
         elevation: 0.0,
-        title: Text('Prohfjhfhjducts',
+        title: Text('ShareApp',
             style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 22.0,
@@ -41,7 +85,12 @@ shares(context);
               new IconButton(icon: new Icon(Icons.shopping_cart,
                 color: Colors.white,),
                 onPressed: (){
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => MyOrder()
+                      )
+                  );
                 },
               ),
               cartcount==0 ? new Container() :
@@ -71,37 +120,6 @@ shares(context);
           )
         ],
         centerTitle: true,
-
-        // drawer: new Drawer(
-        //     child: Material(
-        //       child: ListView(
-        //         children: [
-        //           Container(
-        //             child:  Column(
-        //               children: <Widget>[
-        //                 DrawerHeader(
-        //                     child: Container(
-        //                       height: 600,
-        //                       decoration: BoxDecoration(
-        //                           image: DecorationImage(
-        //                             image: AssetImage(
-        //                               "assets/logo1.png",
-        //                             ),
-        //                           )),
-        //                     )),
-        //                 new Column(children: drawerOptions)
-        //               ],
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     )
-        //
-        // ),
-
-
-
-        //body: _getDrawerItemWidget(_selectedDrawerIndex),
       ),
       drawer: Drawer_main(),
       body:  Container(

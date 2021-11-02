@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intpro_app/Dashboardfragment.dart';
+import 'package:intpro_app/Url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,14 +23,16 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
   List<Order> listModel = [];
 
   Future<Null> getData() async{
+    print('url ${ApiCall.OrderDetails}');
+    print('token $token');
     setState(() {
       loading = true;
     });
 
     final responseData = await http.post(Uri.parse
-      ("https://www.binary2quantumsolutions.com/intpro/orderdetails.php"),
+      (ApiCall.OrderDetails),
         body: {
-          'user_id':"80"
+          'user_id':token
         }
     );
 
@@ -69,7 +72,6 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
 
   @override
   Widget build(BuildContext context) {
-    var cartcount;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

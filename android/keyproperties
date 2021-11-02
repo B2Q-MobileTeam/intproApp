@@ -1,0 +1,4 @@
+storePassword=intpro
+keyPassword=intpro
+keyAlias=key0
+storeFile=E:\Flutter_Projects\intpro_app\keystore.jks

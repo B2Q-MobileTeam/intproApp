@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.intpro_app",
+  "applicationId": "com.intpro.intpro_app",
   "variantName": "processDebugResources",
   "elements": [
     {

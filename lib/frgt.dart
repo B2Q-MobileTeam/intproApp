@@ -4,7 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
-
+import 'Url.dart';
 import 'main.dart';
 
 
@@ -22,11 +22,10 @@ class Forgotte extends State<Forgot> {
   void chck() async {
     String eemail = email.text;
 
-    var url =
-        'https://www.binary2quantumsolutions.com/intpro/forgetPassword.php';
-    print('get $url');
+
+    print('get ${ApiCall.ForgetPassword}');
     var response = await http.post(
-        Uri.parse(url),
+        Uri.parse(ApiCall.ForgetPassword),
         body: {
       "email_id": eemail,
     });
@@ -156,15 +155,7 @@ class Forgotte extends State<Forgot> {
                               padding: EdgeInsets.all(2.5),
                               child: Ink(
                                 decoration: BoxDecoration(
-                                    // gradient: LinearGradient(
-                                    //   // colors: [
-                                    //   //   Color(0xff374ABE),
-                                    //   //   Color(0xff64B6FF)
-                                    //   // ],
-                                    //   begin: Alignment.centerLeft,
-                                    //   end: Alignment.centerRight,
-                                    // ),
-                                    borderRadius: BorderRadius.circular(30.0)),
+                                borderRadius: BorderRadius.circular(30.0)),
                                 child: Container(
                                   constraints: BoxConstraints(
                                       maxWidth: 300.0,

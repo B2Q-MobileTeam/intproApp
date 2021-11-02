@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Url.dart';
 import 'instamojo/nextstep.dart';
 class ShippingForm extends StatefulWidget {
   String ship_brandid,ship_productid,ship_price_id,ship_quantity,
@@ -83,11 +84,11 @@ class _ShippingFormState extends State<ShippingForm> {
     print('$sh_username,$sh_email,$sh_address,$sh_pincode,$sh_mob,$pay_shippingstatus');
 
 
-    var urls = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
-    print('url $urls');
+  //  var urls = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
+    print('url ${ApiCall.PaymentProcessPay}');
     if(pay_checkmode=="cart"){
       http.post(
-          Uri.parse(urls),
+          Uri.parse(ApiCall.PaymentProcessPay),
           body: {
             "checkoutmode": pay_checkmode,
             "name": sh_username,
@@ -122,7 +123,7 @@ class _ShippingFormState extends State<ShippingForm> {
       });
     }else{
     http.post(
-        Uri.parse(urls),
+        Uri.parse(ApiCall.PaymentProcessPay),
         body: {
           "brand_id": pay_brandid,
           "pro_id": pay_proid,
@@ -164,14 +165,12 @@ class _ShippingFormState extends State<ShippingForm> {
   }
 
 
-  void getshippingstatus() {
-
-
-    var shippingstatus = "https://www.binary2quantumsolutions.com/intpro/shipping.php";
-    print('url $shippingstatus');
+ void getshippingstatus() {
+  //var shippingstatus = "https://www.binary2quantumsolutions.com/intpro/shipping.php";
+    print('url ${ApiCall.ShippingProcess}');
 
     http.post(
-        Uri.parse(shippingstatus),
+        Uri.parse(ApiCall.ShippingProcess),
         body: {
         "userid":"80"
         }).then((res) {
@@ -210,10 +209,8 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      bottomSheet: Container(
+      bottomSheet:Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(10),
         child: ElevatedButton(
@@ -234,15 +231,20 @@ setState(() {
         title: Text("Shipping Details"),
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: Column(
+
+            children: [
+        Container(
             child:_isvisible?Center(
               child: CircularProgressIndicator(),
             ):Container(
                 child:shipping_status?OldShippingAddress():NewShippingAddress()
             )
         ),
-      ),
-    );
+
+
+      ]),
+    ));
   }
   Widget OldShippingAddress(){
     return Container(
@@ -292,7 +294,6 @@ setState(() {
                      setState(() {
                        shipmodestatus= "new";
                        shipping_status=false;
-
                        NewShippingAddress();
                      });
                       },
