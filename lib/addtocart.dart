@@ -346,7 +346,7 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
     final http.Response response = await http.post(
       Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id': "80",
+        'user_id':token,
       },
     );
 
@@ -425,6 +425,13 @@ print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => MyOrder()
+                        )
+                    );
                     print('cartcount $cartcount');
                   },
                 ),

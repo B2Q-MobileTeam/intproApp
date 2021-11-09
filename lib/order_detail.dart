@@ -304,29 +304,20 @@ setState(() {
             ),
             Expanded(
                 child: RaisedButton(
-              onPressed: ()
-              {
-                print("checkout $totalprice");
-                if (totalprice <= 10000) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ShippingForm(
+              onPressed: (){
+                print(totalprice);
+               if(totalprice==0){
+                 Fluttertoast.showToast(
+                     msg: 'Your Cart is empty ',
+                     toastLength: Toast.LENGTH_SHORT,
+                     gravity: ToastGravity.TOP,
+                     timeInSecForIos: 1,
+                     fontSize: 16.0);
 
-                              ship_mode:"cart"
-                          )));
-                  // buynow();
-                } else {
-                  print('select the more amount');
-                  Fluttertoast.showToast(
-      msg: 'Your Maximum Limit 10000',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
-      timeInSecForIos: 1,
-      fontSize: 16.0);
-                }
-              },
-
+               }else{
+                 checkoutprocessvalidate();
+               }
+    },
               child: Text("Checkout"),
               color: Theme.of(context).colorScheme.primary,
               textColor: Colors.white,
@@ -335,59 +326,114 @@ setState(() {
         ),
 
       body:SafeArea(
-        child:  Container(
-          child: FutureBuilder<List<Listbands>>(
-              future: _carddet,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData)
-                  return Center(child: CircularProgressIndicator());
-                return Container(
-                    child: ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          var item = snapshot.data[index];
-                          amt = item.amount;
-                          print('amt $amt');
-                          return Card(
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    ListTile(
-                                      //isThreeLine: true,
-                                      title: Text(item.catname),
-                                      leading: Container(
-                                        height: 75,
-                                        width: 75,
-                                        child: Image.network(
-                                            '${snapshot.data[index].proimg}'),
-                                      ),
-                                      trailing: GestureDetector(
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                          onTap: () {
-                                            print('amt $amt');
-                                            amt = item.amount;
+        child:totalprice==0?
+        Container(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top:20),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/addtocart.png"),
+                      colorFilter: ColorFilter.mode(
+                          Colors.white.withOpacity(0.8), BlendMode.dstATop),
 
-                                            hana = item.cartid;
-                                            print(snapshot.data[index].cartid);
-                                            setState(() {
-                                              snapshot.data.remove(item);
+                    )),
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height/2,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Text("Your Cart is Empty",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 22),),
+              ),
+            ],
+          ),
+        )
 
-                                              delete();
-                                            });
-
-                                            _carddet;
-                                          }),
-                                      subtitle: Text(
-                                          'Particulars :  ${snapshot.data[index].title} \n Order Id :  ${snapshot.data[index].id}\n price : ${item.amount}'),
+            :Container(
+        child: FutureBuilder<List<Listbands>>(
+            future: _carddet,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              return Container(
+                  child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var item = snapshot.data[index];
+                        amt = item.amount;
+                        print('amt $amt');
+                        return Card(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    //isThreeLine: true,
+                                    title: Text(item.catname),
+                                    leading: Container(
+                                      height: 75,
+                                      width: 75,
+                                      child: Image.network(
+                                          '${snapshot.data[index].proimg}'),
                                     ),
-                                  ]));
-                        }));
-              }),
-        ),
+                                    trailing: GestureDetector(
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        onTap: () {
+                                          print('amt $amt');
+                                          amt = item.amount;
+
+                                          hana = item.cartid;
+                                          print(snapshot.data[index].cartid);
+                                          setState(() {
+                                            snapshot.data.remove(item);
+
+                                            delete();
+                                          });
+
+                                          _carddet;
+                                        }),
+                                    subtitle: Text(
+                                        'Particulars :  ${snapshot.data[index].title} \n Order Id :  ${snapshot.data[index].id}\n price : ${item.amount}'),
+                                  ),
+                                ]));
+                      }));
+            }),
+      ),
       ),
     );
   }
+
+   checkoutprocessvalidate() {
+
+       print("checkout $totalprice");
+       if (totalprice <= 10000) {
+         Navigator.push(
+             context,
+             MaterialPageRoute(
+                 builder: (context) => ShippingForm(
+                     ship_mode:"cart",
+                     total_price:totalprice
+                 )));
+         // buynow();
+       } else
+         {
+         print('select the more amount');
+         Fluttertoast.showToast(
+             msg: 'Your Maximum Limit 10000',
+             toastLength: Toast.LENGTH_SHORT,
+             gravity: ToastGravity.TOP,
+             timeInSecForIos: 1,
+             fontSize: 16.0);
+       }
+
+   }
 }

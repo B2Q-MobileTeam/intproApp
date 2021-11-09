@@ -68,9 +68,9 @@ class JsonImageList extends StatefulWidget {
 }
 
 class JsonImageListWidget extends State {
-  String cartcount;
+  String cartcount="0";
 
-  String token = "";
+  String token ="";
 
   Future getEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -87,10 +87,9 @@ class JsonImageListWidget extends State {
     final http.Response response = await http.post(
       Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id': token,
+        'user_id':token
       },
     );
-
     var resJson = json.decode(response.body);
     print("cart data");
     print('object $resJson');
@@ -111,9 +110,12 @@ class JsonImageListWidget extends State {
 
   @override
   void initState() {
+
+    setState(() {
+      getEmail();
+      getcartdetail();
+    });
     super.initState();
-    getEmail();
-    getcartdetail();
   }
 
 

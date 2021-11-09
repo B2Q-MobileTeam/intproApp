@@ -12,9 +12,10 @@ import 'instamojo/nextstep.dart';
 class ShippingForm extends StatefulWidget {
   String ship_brandid,ship_productid,ship_price_id,ship_quantity,
       ship_amt,shippurpose,ship_mode;
+  int total_price;
 
   ShippingForm({this.ship_brandid, this.ship_productid, this. ship_price_id,this.ship_quantity,
-    this.ship_amt, this.shippurpose,this.ship_mode});
+    this.ship_amt, this.shippurpose,this.ship_mode,this.total_price});
 
   @override
   _ShippingFormState createState() => _ShippingFormState();
@@ -51,10 +52,9 @@ class _ShippingFormState extends State<ShippingForm> {
   }
 
 
-  void shippingformsubmit()async {
+  shippingformsubmit() async{
     String pay_checkmode=widget.ship_mode;
     print('paycheckmode $pay_checkmode');
-
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     name_pay = (prefs.getString('name1'));
@@ -63,7 +63,6 @@ class _ShippingFormState extends State<ShippingForm> {
     print('mobileno $mobileno_pay');
     email_pay = (prefs.getString('email'));
     print('email $email_pay');
-    //print('price $totalprice');
 
     print('url $name_pay');
     String pay_brandid = widget.ship_brandid;
@@ -81,12 +80,14 @@ class _ShippingFormState extends State<ShippingForm> {
     sh_pincode = shippincode.text;
     sh_mob = shipmobno.text;
     pay_shippingstatus = shipmodestatus;
+
     print('$sh_username,$sh_email,$sh_address,$sh_pincode,$sh_mob,$pay_shippingstatus');
 
-
-  //  var urls = 'https://www.binary2quantumsolutions.com/intpro/pay.php';
     print('url ${ApiCall.PaymentProcessPay}');
     if(pay_checkmode=="cart"){
+      int pay_amnt=widget.total_price;
+      print("yes $pay_amnt");
+      print('check $pay_checkmode $sh_username $sh_email $sh_mob $sh_address $sh_pincode $pay_shippingstatus $user_id_shipping $mobileno_pay $name_pay $email_pay');
       http.post(
           Uri.parse(ApiCall.PaymentProcessPay),
           body: {
@@ -98,11 +99,15 @@ class _ShippingFormState extends State<ShippingForm> {
             "pincode": sh_pincode,
             "shippingstatus": pay_shippingstatus,
             "mode": "Mobile",
-            "userid":user_id_shipping,
+            "user_id":user_id_shipping,
             "userMobile":mobileno_pay,
             "userName":name_pay,
-            "userEmail":email_pay
+            "userEmail":email_pay,
+            "payAmount":pay_amnt.toString(),
+            "purpose": "Product Buy From Intpro",
           }).then((res) {
+            var resdec = res.body;
+            print("response before decode $resdec");
         var resJsonship = json.decode(res.body);
         var statusprocess = resJsonship['success'];
         print('resjosn status $statusprocess');
@@ -121,7 +126,7 @@ class _ShippingFormState extends State<ShippingForm> {
                 )));
 
       });
-    }else{
+    }else if(pay_checkmode=="buynow"){
     http.post(
         Uri.parse(ApiCall.PaymentProcessPay),
         body: {
@@ -168,11 +173,10 @@ class _ShippingFormState extends State<ShippingForm> {
  void getshippingstatus() {
   //var shippingstatus = "https://www.binary2quantumsolutions.com/intpro/shipping.php";
     print('url ${ApiCall.ShippingProcess}');
-
     http.post(
         Uri.parse(ApiCall.ShippingProcess),
         body: {
-        "userid":"80"
+        "userid":user_id_shipping
         }).then((res) {
       var resJson =jsonDecode(res.body);
       print('resjosn shipping  $resJson["brand_list]');
@@ -188,9 +192,7 @@ class _ShippingFormState extends State<ShippingForm> {
       ship_pincode=brand_list_details[0]["pincode"];
       ship_userid=brand_list_details[0]["userid"];
       print("values  $brand_no $ship_name $ship_mobileno $ship_email $ship_address $ship_pincode $ship_userid");
-
 setState(() {
-
   _isvisible=false;
   if(ship_status=="true"){
     shipping_status=true;
@@ -198,9 +200,7 @@ setState(() {
     shipping_status=false;
   }
 });
-
-
-    });
+        });
   }
 
   @override
