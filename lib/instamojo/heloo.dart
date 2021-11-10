@@ -20,6 +20,7 @@ class NextStates extends State<Nextsteps> {
   String paymentpay;
   String payredirect;
   WebViewController controller;
+  String name_pay,email_pay;
   String _initial = 'sample test';
   var payment_id,payment_status,payment_request_id,payment_message,payment_order_id,payment_transaction_id,
       payment_transaction_date,payment_amount,payment_buyername,payment_invoice;
@@ -37,48 +38,33 @@ class NextStates extends State<Nextsteps> {
       if (mounted) {
         print("Current URL: $url");
 
-        if (url.contains("Payment_call")) {
+        if (url.contains("paymentResponse")) {
+
           flutterWebviewPlugin.close();
           print("cur $url");
-          var varurl = url;
-          print('url1 $varurl');
-          var one = varurl.split("?");
-          print('one ${one[1]}');
-          var paytwo = one[1];
-          print('two ${paytwo[1]}');
-          var paythree = paytwo.split("&");
-          print('three ${paythree[1]}');
-          print(paythree);
-          var payfour = paythree[0].split("=");
-          var payfive = paythree[1].split("=");
-          var paysix = paythree[2].split("=");
-          var payseven =paythree[3].split("=");
-          var payeight =paythree[4].split("=");
-          var paynine =paythree[5].split("=");
-          var payten =paythree[6].split("=");
-          var payinvoice =paythree[7].split("=");
-          print("values pay,meny $payfour $payfive $paysix $payseven $payeight $paynine $payten $payinvoice");
-          payment_status = payfour[1];
-          payment_message = payfive[1];
-          payment_order_id = paysix[1];
-          payment_transaction_id=payseven[1];
-          payment_transaction_date=payeight[1];
-          payment_amount=paynine[1];
-          payment_buyername=payten[1];
-          payment_invoice=payinvoice[1];
+
+          Uri uri = Uri.dataFromString(url);
+          payment_status = uri.queryParameters['status'];
+          print("payment_status $payment_status");
+          payment_order_id = uri.queryParameters['orderid'];
+          payment_message="Message sent to $email_pay";
+          payment_transaction_id = uri.queryParameters['transactionid'];
+          payment_amount = uri.queryParameters['amount'];
+          payment_transaction_date = uri.queryParameters['transaction_date'];
+          payment_buyername= name_pay;
+          payment_invoice = "https://www.binary2quantumsolutions.com/intpro/uploaded/${payment_order_id}.pdf";
+          // print("aa $aa $bb $cc $dd $ee $ff $gg");
+
           print("values pay,meny $payment_status $payment_message $payment_order_id $payment_transaction_id "
               "$payment_transaction_date $payment_amount $payment_buyername $payment_invoice");
-          print('payment id $payment_id');
-          print('payment status $payment_status');
-          print('payment request id $payment_request_id');
-          print('payment $payment_status');
-          if (payment_status == 1) {
+
+          if (payment_status == "1") {
             print("Success");
             Hellosam();
 
-            // Navigator.push(context, MaterialPageRoute(builder: (context)=>Hello()));
-          } else {
-            print("Failure");
+          } else if(payment_status=="0") {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Failurescreeen()));
+            print("Failure status");
           }
         }
       }

@@ -111,10 +111,9 @@ class JsonImageListWidget extends State {
   @override
   void initState() {
 
-    setState(() {
       getEmail();
       getcartdetail();
-    });
+
     super.initState();
   }
 
@@ -179,7 +178,7 @@ class JsonImageListWidget extends State {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => MyOrder()
-                        )
+                        ),
                     );
                     print('cartcount $cartcount');
                   },

@@ -50,12 +50,11 @@ class MyOrder extends StatefulWidget {
 
 class _MyOrderState extends State<MyOrder> {
   String token = "";
-
   var arrayof = [];
-  var totalprice = 0;
+  var totalprice;
   var totalprice1;
   var itemsWithout;
-  var cartcount;
+  var cartcount="0";
   String userid, name_pay, mobileno_pay, email_pay, pricefinal_pay,del_user_id;
 
   String hana, amt;
@@ -130,6 +129,7 @@ class _MyOrderState extends State<MyOrder> {
     setState(() {
 
       cartcount=cartcart;
+
     });
     _carddet = fetchcarddet();
 
@@ -325,7 +325,7 @@ setState(() {
           ],
         ),
 
-      body:SafeArea(
+      body: SafeArea(
         child:totalprice==0?
         Container(
           child: Column(
@@ -355,7 +355,6 @@ setState(() {
             ],
           ),
         )
-
             :Container(
         child: FutureBuilder<List<Listbands>>(
             future: _carddet,

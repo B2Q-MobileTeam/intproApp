@@ -46,7 +46,7 @@ class BrandsSubState extends State<Brands> {
   String brandename;
   List<Brandss> _brandss = <Brandss>[];
   List<Brandss> _brandssdisplay = <Brandss>[];
-   String cartcount;
+   String cartcount="0";
   bool _isLoading = true;
   String token;
 
@@ -231,7 +231,7 @@ class LoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: CircularProgressIndicator(
-        color: Colors.green,
+        color: Colors.blue,
       ),
     );
   }

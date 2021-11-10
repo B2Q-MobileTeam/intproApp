@@ -39,7 +39,7 @@ class _HomePageSubState extends State<HomePageSub> {
   List<User> _users = <User>[];
   List<User> _usersDisplay = <User>[];
   var token;
-var cartcount;
+var cartcount="0";
   bool _isLoading = true;
 
   Future<List<User>> fetchStudent() async {

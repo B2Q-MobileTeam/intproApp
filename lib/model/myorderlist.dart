@@ -46,9 +46,7 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
       for(Map i in ordersdata){
         listModel.add(Order.fromJson(i));
       }
-
       loading = false;
-
     });
 
   }
@@ -181,7 +179,7 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                                     )));
                                   },
-                                  child:Text("View Invoice")
+                                  child:Text("More Details")
 
                               )
                             )

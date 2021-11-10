@@ -50,13 +50,14 @@ class NextState extends State<Nextstep> {
       if (mounted) {
 
         print("Current URL: $url");
-        if (url.contains("Payment_call")) {
+        if (url.contains("paymentResponse")) {
 
           flutterWebviewPlugin.close();
           print("cur $url");
 
           Uri uri = Uri.dataFromString(url);
           payment_status = uri.queryParameters['status'];
+          print("payment_status $payment_status");
           payment_order_id = uri.queryParameters['orderid'];
           payment_message="Message sent to $email_pay";
           payment_transaction_id = uri.queryParameters['transactionid'];
@@ -68,7 +69,7 @@ class NextState extends State<Nextstep> {
 
 
 
-          print("values pay,meny $payment_status $payment_message $payment_order_id $payment_transaction_id "
+          print("values payment $payment_status $payment_message $payment_order_id $payment_transaction_id "
               "$payment_transaction_date $payment_amount $payment_buyername $payment_invoice");
 
           if (payment_status == "1") {
@@ -76,8 +77,10 @@ class NextState extends State<Nextstep> {
             Hellosam();
 
             // Navigator.push(context, MaterialPageRoute(builder: (context)=>Hello()));
-          } else {
-            print("Failure");
+          }else if(payment_status=="0") {
+
+            print("Failure status");
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Failurescreeen()));
           }
         }
       }
