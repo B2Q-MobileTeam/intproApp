@@ -20,6 +20,7 @@ class MyOrderListprocess extends StatefulWidget {
 class MyOrderListprocessState extends State<MyOrderListprocess> {
   String token;
   var loading = false;
+  var _iswaiting=true;
   List<Order> listModel = [];
 
   Future<Null> getData() async{
@@ -39,15 +40,25 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
 
     final data = jsonDecode(responseData.body);
     print("data 1 $data");
+    final order_status= data['status'];
+    print("order status $order_status");
     final ordersdata  =data['orders'];
     print("data $ordersdata");
 
+  if(order_status=="true"){
     setState(() {
       for(Map i in ordersdata){
         listModel.add(Order.fromJson(i));
       }
       loading = false;
+      _iswaiting=false;
     });
+  }else{
+    setState(() {
+      _iswaiting=false;
+    });
+
+  }
 
   }
 
@@ -85,11 +96,12 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
         centerTitle: true,
       ),
       drawer: Drawer_main(),
-
       body:SafeArea(
-        child:  Container(
+        child:_iswaiting?Center(
+          child: CircularProgressIndicator(),
+        ):Container(
           color: Colors.grey[300],
-          child: loading ? Center (child: CircularProgressIndicator()) : ListView.builder(
+          child: loading ? Center (child: Text("There is no order list")) : ListView.builder(
               itemCount: listModel.length,
               itemBuilder: (context, i){
                 final nDataList = listModel[i];
@@ -97,23 +109,23 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                   child: InkWell(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
-                        dorderid:nDataList.orderid,
-                        dtransactionid:nDataList.transactionid,
-                        dtransactiondate:nDataList.transaction_date,
-                        dproduct:nDataList.product,
-                        dbrand:nDataList.brand,
-                        ditem:nDataList.item,
-                        dprice:nDataList.price,
-                        dquantity:nDataList.quantity,
-                        damount:nDataList.amount,
-                        dshipping: nDataList.shipping,
-                        dspecification:nDataList.specification,
-                        dinvoice:nDataList.invoice,
-                        dinvoicename:nDataList.invoicename
+                          dorderid:nDataList.orderid,
+                          dtransactionid:nDataList.transactionid,
+                          dtransactiondate:nDataList.transaction_date,
+                          dproduct:nDataList.product,
+                          dbrand:nDataList.brand,
+                          ditem:nDataList.item,
+                          dprice:nDataList.price,
+                          dquantity:nDataList.quantity,
+                          damount:nDataList.amount,
+                          dshipping: nDataList.shipping,
+                          dspecification:nDataList.specification,
+                          dinvoice:nDataList.invoice,
+                          dinvoicename:nDataList.invoicename
                       )));
                     },
                     child: Card(
-elevation: 10,
+                      elevation: 10,
                       color: Colors.white,
                       margin: EdgeInsets.all(15),
                       child: Container(
@@ -125,14 +137,14 @@ elevation: 10,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Order ID -${nDataList.orderid}", style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54),
                                 ),
 
-                               Icon(Icons.arrow_right,color: Colors.grey,size: 25,),
+                                Icon(Icons.arrow_right,color: Colors.grey,size: 25,),
                               ],
                             ),
                             Divider(color: Colors.grey[300],thickness: 1,),
@@ -159,29 +171,29 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             ),
                             SizedBox(height: 10,),
                             Container(
-                              alignment: Alignment.bottomRight,
-                              child:ElevatedButton(
-                                  onPressed: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
-                                      dorderid:nDataList.orderid,
-                                      dtransactionid:nDataList.transactionid,
-                                      dtransactiondate:nDataList.transaction_date,
-                                      dproduct:nDataList.product,
-                                      dbrand:nDataList.brand,
-                                      ditem:nDataList.item,
-                                      dprice:nDataList.price,
-                                      dquantity:nDataList.quantity,
-                                      damount:nDataList.amount,
-                                      dshipping: nDataList.shipping,
-                                      dspecification:nDataList.specification,
-                                      dinvoice:nDataList.invoice,
-                                        dinvoicename:nDataList.invoicename
+                                alignment: Alignment.bottomRight,
+                                child:ElevatedButton(
+                                    onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
+                                          dorderid:nDataList.orderid,
+                                          dtransactionid:nDataList.transactionid,
+                                          dtransactiondate:nDataList.transaction_date,
+                                          dproduct:nDataList.product,
+                                          dbrand:nDataList.brand,
+                                          ditem:nDataList.item,
+                                          dprice:nDataList.price,
+                                          dquantity:nDataList.quantity,
+                                          damount:nDataList.amount,
+                                          dshipping: nDataList.shipping,
+                                          dspecification:nDataList.specification,
+                                          dinvoice:nDataList.invoice,
+                                          dinvoicename:nDataList.invoicename
 
-                                    )));
-                                  },
-                                  child:Text("More Details")
+                                      )));
+                                    },
+                                    child:Text("More Details")
 
-                              )
+                                )
                             )
                           ],
                         ),
@@ -191,7 +203,7 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 );
               }
           ),
-        ),
+        )
       ),
     );
   }

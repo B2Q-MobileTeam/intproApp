@@ -182,24 +182,35 @@ class _ShippingFormState extends State<ShippingForm> {
       print('resjosn shipping  $resJson["brand_list]');
       ship_status=resJson["status"];
       print("status $ship_status");
-      var brand_list_details=resJson["brand_list"];
-      print(brand_list_details[0]["no"]);
-      brand_no=brand_list_details[0]["no"];
-      ship_name=brand_list_details[0]["name"];
-      ship_mobileno=brand_list_details[0]["mobileno"];
-      ship_email=brand_list_details[0]["email"];
-      ship_address=brand_list_details[0]["address"];
-      ship_pincode=brand_list_details[0]["pincode"];
-      ship_userid=brand_list_details[0]["userid"];
-      print("values  $brand_no $ship_name $ship_mobileno $ship_email $ship_address $ship_pincode $ship_userid");
-setState(() {
-  _isvisible=false;
-  if(ship_status=="true"){
-    shipping_status=true;
-  }else{
-    shipping_status=false;
-  }
-});
+      if(ship_status=="true") {
+        print("hello true");
+        var brand_list_details = resJson["brand_list"];
+        print(brand_list_details[0]["no"]);
+        brand_no = brand_list_details[0]["no"];
+        ship_name = brand_list_details[0]["name"];
+        ship_mobileno = brand_list_details[0]["mobileno"];
+        ship_email = brand_list_details[0]["email"];
+        ship_address = brand_list_details[0]["address"];
+        ship_pincode = brand_list_details[0]["pincode"];
+        ship_userid = brand_list_details[0]["userid"];
+        print(
+            "values  $brand_no $ship_name $ship_mobileno $ship_email $ship_address $ship_pincode $ship_userid");
+        setState(() {
+          _isvisible = false;
+          if (ship_status == "true") {
+            shipping_status = true;
+          } else {
+            shipping_status = false;
+          }
+        });
+      }else if(ship_status=="false"){
+
+        print("hello false");
+        setState(() {
+          _isvisible=false;
+          shipping_status=false;
+        });
+      }
         });
   }
 
