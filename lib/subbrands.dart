@@ -29,7 +29,7 @@ class UserTile extends StatelessWidget {
                 IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
                 onTap: (){
     if (user.title == "plywoods") {
-                  Navigator.push(
+                  Navigator.pushReplacement(
 context,
 MaterialPageRoute(
 builder: (context) => Cart(
@@ -37,8 +37,7 @@ carttid:user.id,
 title:user.title,
   b_name:user.brandnames
 )));}else{
-      Navigator.push(
-                                            context,
+      Navigator.pushReplacement(context,
                                             MaterialPageRoute(
                                                 builder: (context) => Brands(
                                                     brandid:

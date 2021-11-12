@@ -1,241 +1,188 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
-import 'package:intpro_app/Url.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginPage.dart';
 import 'dashboard.dart';
-import 'frgt.dart';
 
-import 'register.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/animation/animation_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  var token = preferences.getString('token');
   runApp(MaterialApp(
     color: Colors.white,
       debugShowCheckedModeBanner: false,
-   home: token == null ? Login() : Homee(),
+   home:MyCustomSplashScreen()
   ));
 }
 
-class Login extends StatefulWidget {
+
+
+class MyCustomSplashScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return loginext();
-  }
+  _MyCustomSplashScreenState createState() => _MyCustomSplashScreenState();
 }
 
-class loginext extends State<Login> {
+class _MyCustomSplashScreenState extends State<MyCustomSplashScreen>
+    with TickerProviderStateMixin {
+  double _fontSize = 2;
+  double _containerSize = 5.0;
+  double _textOpacity = 0.0;
+  double _containerOpacity = 0.0;
+  var token;
 
-  bool _obscureText = true;
-  bool _autovalidate = false;
-
-  String _password;
-
-  // Toggles the password show status
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+   AnimationController _controller;
+   Animation<double> animation1;
+  void getUserId()async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    token = preferences.getString('token');
+    print("token $token");
   }
-
   @override
   void initState() {
     super.initState();
+  getUserId();
 
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
+
+    animation1 = Tween<double>(begin: 40, end: 20).animate(CurvedAnimation(
+        parent: _controller, curve: Curves.fastLinearToSlowEaseIn))
+      ..addListener(() {
+        setState(() {
+          _textOpacity = 1.0;
+        });
+      });
+
+    _controller.forward();
+    Timer(Duration(seconds: 2), () {
+      setState(() {
+        _fontSize = 1.06;
+      });
+    });
+
+    Timer(Duration(seconds: 2), () {
+      setState(() {
+        _containerSize = 2;
+        _containerOpacity = 1;
+      });
+    });
+
+    Timer(Duration(seconds: 4), () {
+setState(() {
+  print('token print $token');
+  token == null ? Navigator.pushAndRemoveUntil(context,
+      MaterialPageRoute(builder:
+          (context) => Login(),
+      ),(route) => false,
+  ): Navigator.pushAndRemoveUntil(context,
+      MaterialPageRoute(builder:
+          (context) => Homee()
+      ),(route) => false,
+  );
+
+});
+    });
 
   }
-  final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
-  TextEditingController mob = new TextEditingController();
-  TextEditingController pass = new TextEditingController();
 
-  void login() async {
-    String mobile = mob.text;
-    String password = pass.text;
-
-    print('get ${ApiCall.LoginUrl}');
-
-    var response = await http.post(
-        Uri.parse(ApiCall.LoginUrl),
-        body: {
-      "mobileno": mobile,
-      "password": password,
-    });
-    var data = json.decode(response.body);
-    print('login data $data');
-    print(response);
-    var id = data['id'];  
-    var name = data['name1'];
-    var mobileno = data['mobileno'];
-    var email = data['email'];
-
-    print('id $id');
-
-    var succ = data['success'];
-    print('succ $succ');
-    if (succ == 0) {
-      Fluttertoast.showToast(
-          msg: "Invalid Username and Password",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          timeInSecForIos: 1,
-          fontSize: 16.0);
-    } else {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString('token', id);
-      preferences.setString('name1', name);
-      preferences.setString('mobileno', mobileno);
-      preferences.setString('email', email);
-      print('preference $preferences');
-      Fluttertoast.showToast(
-          msg: "Login Successfully",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          timeInSecForIos: 1,
-          fontSize: 16.0);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Homee()));
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: Container(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/login3.jpg"), fit: BoxFit.cover)),
-            child:Form(
-              key: _formKey,
-              child: ListView(
-                children: [
-                  Center(
-                      child: Image.asset(
-                        'assets/logo1.png',
-                        height: 180.0,
-                        alignment: Alignment.center,
-                      )),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  TextFormField(
-                    autovalidate: _autovalidate,
-                    validator: (val) =>
-                    val.length < 10 ? 'Enter Valid  Number' : null,
-                    controller: mob,
-                    autofocus: true,
-                    maxLength: 10,
-                    keyboardType: TextInputType.number,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.yellow)),
-                      labelText: "Mobile No",
-                      labelStyle: TextStyle(color: Colors.black),
-                      counterText: "",
-                      prefixIcon: Icon(Icons.phone),
-                    ),
-                    // onSaved: (mobile) => _mob = mobile,
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    autovalidate: _autovalidate,
-                    validator: (val) => val.length < 6 ? 'Enter a password' : null,
-                    controller: pass,
-                    keyboardType: TextInputType.text,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.yellow)),
-                      prefixIcon: Icon(Icons.lock),
-                      labelText: "Password",
-                      suffixIcon: GestureDetector(
-                          onTap: _toggle,
-                          child: Icon(_obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility)),
-                    ),
-                    // onSaved: (password) => _password = password,
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => Forgot()
-                            )
-                        );
-                      },
-                      child: Text(
-                        'Forgot Password ?',
-                        style: TextStyle(color: Colors.blue),
-                      ),
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      // backgroundColor: Color(0xffe8490d),
+      body:Container(
+        decoration: BoxDecoration(
+         color: Colors.white
+        ),
+        child:  Stack(
+          children: [
+            Column(
+              children: [
+                AnimatedContainer(
+                    duration: Duration(milliseconds: 2000),
+                    curve: Curves.fastLinearToSlowEaseIn,
+                    height: _height / _fontSize
+                ),
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 1000),
+                  opacity: _textOpacity,
+                  child: Text(
+                    'Intpro',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                      fontSize: animation1.value,
                     ),
                   ),
-                  Container(
-                      padding: EdgeInsets.only(
-                        left: 50.0,
-                        right: 50.0,
-                      ),
-                      child: TextField(
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                              hintText: 'Reference ID',
-                              hintStyle: TextStyle(
-                                color: Colors.blueAccent,
-                              )))),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    'eg : 9159028571',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.blueAccent),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                      child: RaisedButton(
-                        elevation: 5.0,
-                        shape: StadiumBorder(),
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        child: Text(
-                          'Login',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            setState(() => _isLoading = true);
-                            login();
-                          }
-                        },
-                      )),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                    Text('Already Have an Account ?'),
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Signup()));
-                        },
-                        child: Text('SignUp',
-                            style: TextStyle(color: Colors.blue, fontSize: 18.0))),
-                  ]),
-                ],
+                ),
+              ],
+            ),
+            Center(
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 3000),
+                curve: Curves.fastLinearToSlowEaseIn,
+                opacity: _containerOpacity,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 3000),
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  height: _width / _containerSize,
+                  width: _width / _containerSize,
+                  alignment: Alignment.center,
+                  // child: Image.asset('assets/images/file_name.png')
+                  child:Image.asset("assets/logo1.png"),
+                ),
               ),
             ),
-          )),
+          ],
+        ),
+      ),
     );
   }
 
+  void validatepage()async {
+    print("yes me wsdsgf rgsfgdf");
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  var token = preferences.getString('token');
+  print("token $token");
+
+
 }
+
+
+}
+
+class PageTransition extends PageRouteBuilder {
+  final Widget page;
+
+  PageTransition(this.page)
+      : super(
+    pageBuilder: (context, animation, anotherAnimation) => page,
+    transitionDuration: Duration(milliseconds: 2000),
+    transitionsBuilder: (context, animation, anotherAnimation, child) {
+      animation = CurvedAnimation(
+        curve: Curves.fastLinearToSlowEaseIn,
+        parent: animation,
+      );
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: SizeTransition(
+          sizeFactor: animation,
+          child: page,
+          axisAlignment: 0,
+        ),
+      );
+    },
+  );
+}
+
+

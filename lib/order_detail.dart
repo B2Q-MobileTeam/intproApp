@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Shippingform.dart';
 import 'Url.dart';
+import 'dashboard.dart';
 import 'drawer.dart';
 import 'instamojo/heloo.dart';
 
@@ -71,7 +72,7 @@ class _MyOrderState extends State<MyOrder> {
     final http.Response response = await http.post(
       Uri.parse(ApiCall.CartDetails),
       body: {
-        'user_id':token ,
+        'user_id':token,
       },
     );
 
@@ -228,7 +229,17 @@ setState(() {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Homee(),
+        ),
+      );
+    },
+
+    child:  Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
@@ -408,7 +419,7 @@ setState(() {
             }),
       ),
       ),
-    );
+    ));
   }
 
    checkoutprocessvalidate() {

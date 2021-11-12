@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intpro_app/LoginPage.dart';
 import 'package:intpro_app/model/myorderlist.dart';
 import 'package:intpro_app/order_detail.dart';
 
@@ -128,11 +129,11 @@ class Drawer_main extends StatelessWidget {
                       backgroundColor: Colors.amber,
                       textColor: Colors.white,
                       fontSize: 16.0);
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Login(),
-                    ),
+                    ),(route) => false,
                   );
 
               },

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intpro_app/Url.dart';
 
+import 'LoginPage.dart';
 import 'dashboard.dart';
 import 'main.dart';
 
@@ -76,8 +77,8 @@ class signupnext extends State<Signup> {
             gravity: ToastGravity.TOP,
             timeInSecForIos: 1,
             fontSize: 16.0);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Login()));
+        Navigator.pushAndRemoveUntil(
+            context, MaterialPageRoute(builder: (context) => Login()),(route) => false,);
       }
     });
   }

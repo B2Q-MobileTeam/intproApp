@@ -5,7 +5,9 @@ import 'package:intpro_app/Url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Shippingform.dart';
+import 'dashboard.dart';
 import 'drawer.dart';
+import 'listofbrands.dart';
 import 'order_detail.dart';
 
 class Add {
@@ -415,7 +417,18 @@ class _CartState extends State<Cart> {
     String ship_qty = _count.toString();
     String payAmnt = totalprice;
     String ship_purpose = remaining_woods;
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Homee(),
+        ),
+      );
+    },
+
+
+     child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
@@ -708,6 +721,6 @@ class _CartState extends State<Cart> {
               ),
             ]),
           ),
-        ));
+        )));
   }
 }

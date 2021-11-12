@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'Url.dart';
+import 'dashboard.dart';
 import 'drawer.dart';
 import 'secbrand.dart';
 
@@ -122,7 +123,17 @@ class BrandsSubState extends State<Brands> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return  WillPopScope(
+        onWillPop: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Homee(),
+            ),
+          );
+        },
+
+  child:    Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           title: Text('Products',
@@ -190,7 +201,7 @@ class BrandsSubState extends State<Brands> {
               itemCount: _brandssdisplay.length + 1,
             ),
           )
-      ));
+      )));
 
 
   }

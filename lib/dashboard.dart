@@ -69,7 +69,6 @@ class JsonImageList extends StatefulWidget {
 
 class JsonImageListWidget extends State {
   String cartcount="0";
-
   String token ="";
 
   Future getEmail() async {
@@ -82,7 +81,7 @@ class JsonImageListWidget extends State {
   }
 
   Future getcartdetail() async {
-    print("cart 2");
+    print("cart");
    // var url = 'https://www.binary2quantumsolutions.com/intpro/cart_details.php';
     final http.Response response = await http.post(
       Uri.parse(ApiCall.CartDetails),
@@ -98,8 +97,9 @@ class JsonImageListWidget extends State {
     final itemsWithout = resJson['cart_details'];
     var cartcart = resJson['data'];
     print('items product $cartcart');
-   setState(() {
+   setState((){
      cartcount = cartcart;
+
    });
     print('item cart 3');
 
@@ -239,7 +239,7 @@ class JsonImageListWidget extends State {
                               child: Cell(snapshot.data[index]),
                               onTap: () =>
 
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => HomePageSub(
