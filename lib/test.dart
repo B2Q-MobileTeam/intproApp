@@ -239,3 +239,50 @@
 //       timeInSecForIos: 1,
 //       fontSize: 16.0);
 // }
+
+
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'NoInternet.dart';
+import 'connectivity_provider.dart';
+
+class TestNet extends StatefulWidget {
+
+
+  @override
+  _TestNetState createState() => _TestNetState();
+}
+
+class _TestNetState extends State<TestNet> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child:  PageUI(),
+      ),
+    );
+  }
+
+
+  Widget PageUI(){
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline? Center(child:Text("Hellooo ")):NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+}

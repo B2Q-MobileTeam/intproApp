@@ -44,6 +44,7 @@ dependencies:
   path_provider: any
   ext_storage:
   permission_handler: 4.4.0
+  provider:
 
 
 dev_dependencies:

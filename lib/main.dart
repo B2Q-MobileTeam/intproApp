@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginPage.dart';
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/animation/animation_controller.dart';
 
+import 'test.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    color: Colors.white,
-      debugShowCheckedModeBanner: false,
-   home:MyCustomSplashScreen()
-  ));
+  runApp(MyIntproApp());
+
+}
+
+
+class MyIntproApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(providers:[
+      ChangeNotifierProvider(create:
+          (context)=>ConnectivityProvider(),
+      )
+    ],
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Intpro',
+          home:  MyCustomSplashScreen(),
+        ));
+  }
 }
 
 

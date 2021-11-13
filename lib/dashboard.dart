@@ -5,11 +5,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intpro_app/Url.dart';
 import 'package:intpro_app/model/myorderlist.dart';
+import 'package:provider/provider.dart';
 import 'Dashboardfragment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'NoInternet.dart';
 import 'addtocart.dart';
 import 'cell.dart';
+import 'connectivity_provider.dart';
 import 'drawer.dart';
 import 'listofbrands.dart';
 
@@ -89,6 +92,8 @@ class JsonImageListWidget extends State {
         'user_id':token
       },
     );
+    var tesres = response.body;
+    print('dashboard $tesres');
     var resJson = json.decode(response.body);
     print("cart data");
     print('object $resJson');
@@ -110,7 +115,7 @@ class JsonImageListWidget extends State {
 
   @override
   void initState() {
-
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
       getEmail();
       getcartdetail();
 
@@ -159,99 +164,116 @@ class JsonImageListWidget extends State {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          title: Text('Products',
-              style: TextStyle(
-                  fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
-          actions: [
-            Stack(
-              children: <Widget>[
-                new IconButton(
-                  icon: new Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => MyOrder()
-                        ),
-                    );
-                    print('cartcount $cartcount');
-                  },
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              title: Text('Products',
+                  style: TextStyle(
+                      fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
+              actions: [
+                Stack(
+                  children: <Widget>[
+                    new IconButton(
+                      icon: new Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => MyOrder()
+                          ),
+                        );
+                        print('cartcount $cartcount');
+                      },
+                    ),
+                    cartcount == 0
+                        ? new Container()
+                        : new Positioned(
+                        child: new Stack(
+                          children: <Widget>[
+                            new Icon(Icons.brightness_1,
+                                size: 25.0, color: Colors.red[800]),
+                            new Positioned(
+                                top: 3.0,
+                                right: 5.0,
+                                child: new Center(
+                                  child: Text(
+                                    cartcount.toString(),
+                                    style: new TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                )),
+                          ],
+                        )),
+                  ],
                 ),
-                cartcount == 0
-                    ? new Container()
-                    : new Positioned(
-                    child: new Stack(
-                      children: <Widget>[
-                        new Icon(Icons.brightness_1,
-                            size: 25.0, color: Colors.red[800]),
-                        new Positioned(
-                            top: 3.0,
-                            right: 5.0,
-                            child: new Center(
-                              child: Text(
-                                cartcount.toString(),
-                                style: new TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            )),
-                      ],
-                    )),
               ],
+              centerTitle: true,
             ),
-          ],
-          centerTitle: true,
-        ),
-        drawer: Drawer_main(),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/login3.jpg"),
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.8), BlendMode.dstATop),
-                fit: BoxFit.cover,
-              )),
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: FutureBuilder<List<Flowerdata>>(
-              future: fetchFlowers(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData)
-                  return Center(
+            drawer: Drawer_main(),
+            body:
+            Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/login3.jpg"),
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                  )),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: FutureBuilder<List<Flowerdata>>(
+                  future: fetchFlowers(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return Center(
 
-                  );
-                return new Padding(
-                    padding: new EdgeInsets.all(10.0),
-                    child: GridView.builder(
-                        itemCount: snapshot.data.length,
-                        gridDelegate:
-                        new SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                        itemBuilder: (BuildContext context, int index) {
-                          return new GestureDetector(
-                              child: Cell(snapshot.data[index]),
-                              onTap: () =>
+                      );
+                    return new Padding(
+                        padding: new EdgeInsets.all(10.0),
+                        child: GridView.builder(
+                            itemCount: snapshot.data.length,
+                            gridDelegate:
+                            new SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
+                            itemBuilder: (BuildContext context, int index) {
+                              return new GestureDetector(
+                                  child: Cell(snapshot.data[index]),
+                                  onTap: () =>
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePageSub(
-                                          indexvalue:
-                                          snapshot.data[index].cid,
-                                          catname: snapshot.data[index].title,
-                                          brandnamee: snapshot
-                                              .data[index].catergoryname))));
-                        }));
-              }),
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePageSub(
+                                                  indexvalue:
+                                                  snapshot.data[index].cid,
+                                                  catname: snapshot.data[index].title,
+                                                  brandnamee: snapshot
+                                                      .data[index].catergoryname))));
+                            }));
+                  }),
 
-      ),
+            ),
+          )
+              :
+          NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
+
+
   }
 }

@@ -230,7 +230,7 @@ setState(() {
   Widget build(BuildContext context) {
 
     return WillPopScope(
-        onWillPop: () {
+        onWillPop: (){
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

@@ -28,7 +28,7 @@ class _ShippingFormState extends State<ShippingForm> {
   String ship_status;
   bool _isvisible=true;
   bool shipping_status;
-  String shipmodestatus= "old";
+  String shipmodestatus;
   String sh_username="";
   String sh_email="";
   String sh_address="";
@@ -85,6 +85,8 @@ class _ShippingFormState extends State<ShippingForm> {
 
     print('url ${ApiCall.PaymentProcessPay}');
     if(pay_checkmode=="cart"){
+      print('url ${ApiCall.PaymentProcessPay}');
+      print('user_id_shipping $user_id_shipping');
       int pay_amnt=widget.total_price;
       print("yes $pay_amnt");
       print('check $pay_checkmode $sh_username $sh_email $sh_mob $sh_address $sh_pincode $pay_shippingstatus $user_id_shipping $mobileno_pay $name_pay $email_pay');
@@ -127,6 +129,9 @@ class _ShippingFormState extends State<ShippingForm> {
 
       });
     }else if(pay_checkmode=="buynow"){
+      print('url ${ApiCall.PaymentProcessPay}');
+      print('user_id_shipping $user_id_shipping');
+
     http.post(
         Uri.parse(ApiCall.PaymentProcessPay),
         body: {
@@ -144,11 +149,13 @@ class _ShippingFormState extends State<ShippingForm> {
           "pincode": sh_pincode,
           "shippingstatus": pay_shippingstatus,
           "mode": "Mobile",
-          "userid":user_id_shipping,
+          "user_id":user_id_shipping,
           "userMobile":mobileno_pay,
           "userName":name_pay,
           "userEmail":email_pay
         }).then((res) {
+      var resdec = res.body;
+      print("response before decode $resdec");
       var resJsonship = json.decode(res.body);
       var statusprocess = resJsonship['success'];
       print('resjosn status $statusprocess');
@@ -183,6 +190,7 @@ class _ShippingFormState extends State<ShippingForm> {
       ship_status=resJson["status"];
       print("status $ship_status");
       if(ship_status=="true") {
+        shipmodestatus="old";
         print("hello true");
         var brand_list_details = resJson["brand_list"];
         print(brand_list_details[0]["no"]);
@@ -204,7 +212,7 @@ class _ShippingFormState extends State<ShippingForm> {
           }
         });
       }else if(ship_status=="false"){
-
+        shipmodestatus="new";
         print("hello false");
         setState(() {
           _isvisible=false;
@@ -402,8 +410,10 @@ class _ShippingFormState extends State<ShippingForm> {
                       ),
                       SizedBox(height: 10,),
                       TextField(
+                        maxLength: 10,
                      controller: shipmobno,
                         decoration: new InputDecoration(
+                          counterText: "",
 
                           icon:Icon(Icons.phone_android_sharp,color: Colors.blueGrey,),
                           labelText: "Mobile No.",

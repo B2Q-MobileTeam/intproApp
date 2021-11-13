@@ -64,6 +64,7 @@ class _CartState extends State<Cart> {
   String eg_shade_id;
   var eg_pro_id;
   bool showthirddropdown = false;
+  String add_cart_brandid,add_cart_proid;
 
   List datapro = List();
   List typepro = List();
@@ -222,9 +223,10 @@ class _CartState extends State<Cart> {
       price = types[0]['price'];
       pro_id = types[0]['price_id']; //proid ku price id
       priceid = types[0]['pro_id']; //priceid ku proid
-
+      add_cart_brandid=types[0]['brand_id'];
       print('prices $price');
-      print('pro_id $pro_id');
+      print('pro_id $pro_id');//price_id
+      print('price_id $priceid');//pro_id
 
       setState(() {
         amount = price;
@@ -255,7 +257,7 @@ class _CartState extends State<Cart> {
       price = types[0]['price'];
       pro_id = types[0]['price_id']; //proid ku price id
       priceid = types[0]['pro_id']; //priceid ku proid
-
+     add_cart_brandid=types[0]['brand_id'];
       print('prices $price');
       print('pro_id $pro_id');
 
@@ -289,10 +291,13 @@ class _CartState extends State<Cart> {
       userid = (prefs.getString('token'));
       print('userid $userid');
     });
-    print('values in add to cart $pro_id $totalprice ${_count.toString()} ');
+    print('values in add to cart $add_cart_brandid $priceid $userid $pro_id $totalprice ${_count.toString()} ');
     final http.Response response = await http.post(
       Uri.parse(ApiCall.AddToCart),
       body: {
+
+        'brand_id':add_cart_brandid,
+        'pro_id':priceid,
         'price_id': pro_id,
         'amount': totalprice,
         'quantity': _count.toString(),

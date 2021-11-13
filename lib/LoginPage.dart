@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intpro_app/Url.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'NoInternet.dart';
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 import 'frgt.dart';
 
@@ -33,7 +35,7 @@ class loginext extends State<Login> {
   @override
   void initState() {
     super.initState();
-
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
 
   }
   final _formKey = GlobalKey<FormState>();
@@ -92,139 +94,156 @@ class loginext extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: Container(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/login3.jpg"), fit: BoxFit.cover)),
-            child:Form(
-              key: _formKey,
-              child: ListView(
-                children: [
-                  Center(
-                      child: Image.asset(
-                        'assets/logo1.png',
-                        height: 180.0,
-                        alignment: Alignment.center,
-                      )),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  TextFormField(
-                    autovalidate: _autovalidate,
-                    validator: (val) =>
-                    val.length < 10 ? 'Enter Valid  Number' : null,
-                    controller: mob,
-                    autofocus: true,
-                    maxLength: 10,
-                    keyboardType: TextInputType.number,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.yellow)),
-                      labelText: "Mobile No",
-                      labelStyle: TextStyle(color: Colors.black),
-                      counterText: "",
-                      prefixIcon: Icon(Icons.phone),
-                    ),
-                    // onSaved: (mobile) => _mob = mobile,
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    autovalidate: _autovalidate,
-                    validator: (val) => val.length < 6 ? 'Enter a password' : null,
-                    controller: pass,
-                    keyboardType: TextInputType.text,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.yellow)),
-                      prefixIcon: Icon(Icons.lock),
-                      labelText: "Password",
-                      suffixIcon: GestureDetector(
-                          onTap: _toggle,
-                          child: Icon(_obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility)),
-                    ),
-                    // onSaved: (password) => _password = password,
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => Forgot()
-                            )
-                        );
-                      },
-                      child: Text(
-                        'Forgot Password ?',
-                        style: TextStyle(color: Colors.blue),
+    return
+      Consumer<ConnectivityProvider>(
+        builder: (context,model,child){
+          if(model.isOnline!=null){
+            return model.isOnline?
+            SafeArea(
+              child: Scaffold(
+                  body: Container(
+                    padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/login3.jpg"), fit: BoxFit.cover)),
+                    child:Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          Center(
+                              child: Image.asset(
+                                'assets/logo1.png',
+                                height: 180.0,
+                                alignment: Alignment.center,
+                              )),
+                          SizedBox(
+                            height: 40.0,
+                          ),
+                          TextFormField(
+                            autovalidate: _autovalidate,
+                            validator: (val) =>
+                            val.length < 10 ? 'Enter Valid  Number' : null,
+                            controller: mob,
+                            autofocus: true,
+                            maxLength: 10,
+                            keyboardType: TextInputType.number,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: new BorderSide(color: Colors.yellow)),
+                              labelText: "Mobile No",
+                              labelStyle: TextStyle(color: Colors.black),
+                              counterText: "",
+                              prefixIcon: Icon(Icons.phone),
+                            ),
+                            // onSaved: (mobile) => _mob = mobile,
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          TextFormField(
+                            autovalidate: _autovalidate,
+                            validator: (val) => val.length < 6 ? 'Enter a password' : null,
+                            controller: pass,
+                            keyboardType: TextInputType.text,
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: new BorderSide(color: Colors.yellow)),
+                              prefixIcon: Icon(Icons.lock),
+                              labelText: "Password",
+                              suffixIcon: GestureDetector(
+                                  onTap: _toggle,
+                                  child: Icon(_obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility)),
+                            ),
+                            // onSaved: (password) => _password = password,
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) => Forgot()
+                                    )
+                                );
+                              },
+                              child: Text(
+                                'Forgot Password ?',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ),
+                          Container(
+                              padding: EdgeInsets.only(
+                                left: 50.0,
+                                right: 50.0,
+                              ),
+                              child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      hintText: 'Reference ID',
+                                      hintStyle: TextStyle(
+                                        color: Colors.blueAccent,
+                                      )))),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Text(
+                            'eg : 9159028571',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Container(
+                              child: RaisedButton(
+                                elevation: 5.0,
+                                shape: StadiumBorder(),
+                                textColor: Colors.white,
+                                color: Colors.blue,
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(fontSize: 20.0),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() => _isLoading = true);
+                                    login();
+                                  }
+                                },
+                              )),
+                          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                            Text('Already Have an Account ?'),
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => Signup()));
+                                },
+                                child: Text('SignUp',
+                                    style: TextStyle(color: Colors.blue, fontSize: 18.0))),
+                          ]),
+                        ],
                       ),
                     ),
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(
-                        left: 50.0,
-                        right: 50.0,
-                      ),
-                      child: TextField(
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                              hintText: 'Reference ID',
-                              hintStyle: TextStyle(
-                                color: Colors.blueAccent,
-                              )))),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    'eg : 9159028571',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.blueAccent),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                      child: RaisedButton(
-                        elevation: 5.0,
-                        shape: StadiumBorder(),
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        child: Text(
-                          'Login',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            setState(() => _isLoading = true);
-                            login();
-                          }
-                        },
-                      )),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                    Text('Already Have an Account ?'),
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Signup()));
-                        },
-                        child: Text('SignUp',
-                            style: TextStyle(color: Colors.blue, fontSize: 18.0))),
-                  ]),
-                ],
-              ),
+                  )),
+            )
+                :
+            NoInternet();
+          }
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-          )),
-    );
+          );
+        },
+      );
+
+
   }
 
 }
