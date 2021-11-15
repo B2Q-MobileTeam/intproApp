@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'NoInternet.dart';
 import 'Shippingform.dart';
 import 'Url.dart';
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 import 'drawer.dart';
 import 'instamojo/heloo.dart';
@@ -61,6 +64,7 @@ class _MyOrderState extends State<MyOrder> {
   String hana, amt;
   Future<List<Listbands>> _carddet;
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
    getEmail();
     super.initState();
   }
@@ -181,13 +185,13 @@ class _MyOrderState extends State<MyOrder> {
       var redirecturlinsta = resJson['payment_request']['redirect_url'];
       print('redirecturlinsta $redirecturlinsta');
 
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
               builder: (context) => Nextsteps(
                     paymenturl: paymentprocess,
                     redirect: redirecturlinsta,
-                  )));
+                  )),(route)=>false);
 
 
     });
@@ -229,210 +233,223 @@ setState(() {
   @override
   Widget build(BuildContext context) {
 
-    return WillPopScope(
-        onWillPop: (){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Homee(),
-        ),
-      );
-    },
-
-    child:  Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Text('Products',
-            style: TextStyle(
-                fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
-        actions: [
-          Stack(
-            children: <Widget>[
-              new IconButton(
-                icon: new Icon(
-                  Icons.shopping_cart,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => MyOrder()
-                      )
-                  );
-                  print('cartcount $cartcount');
-                },
-              ),
-              cartcount == 0
-                  ? new Container()
-                  : new Positioned(
-                  child: new Stack(
-                    children: <Widget>[
-                      new Icon(Icons.brightness_1,
-                          size: 25.0, color: Colors.red[800]),
-                      new Positioned(
-                          top: 3.0,
-                          right: 5.0,
-                          child: new Center(
-                            child: Text(
-                              cartcount.toString(),
-                              style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          )),
-                    ],
-                  )),
-            ],
-          ),
-        ],
-        centerTitle: true,
-      ),
-      drawer: Drawer_main(),
-      bottomSheet:
-      // Padding(
-      //   padding: EdgeInsets.only(left: 10, right: 10),
-      //   child:
-        Row(
-          children: <Widget>[
-            Expanded(
-                child: RaisedButton(
-              onPressed: () {
-                print('enter the button');
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => MyOrder()));
+    return   Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WillPopScope(
+              onWillPop: (){
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Homee(),
+                  ),(route) => false
+                );
               },
-              child: Text("Total : $totalprice"),
-              color: Theme.of(context).colorScheme.primary,
-              textColor: Colors.white,
-            )),
-            SizedBox(
-              width: 15,
-            ),
-            Expanded(
-                child: RaisedButton(
-              onPressed: (){
-                print(totalprice);
-               if(totalprice==0){
-                 Fluttertoast.showToast(
-                     msg: 'Your Cart is empty ',
-                     toastLength: Toast.LENGTH_SHORT,
-                     gravity: ToastGravity.TOP,
-                     timeInSecForIos: 1,
-                     fontSize: 16.0);
 
-               }else{
-                 checkoutprocessvalidate();
-               }
-    },
-              child: Text("Checkout"),
-              color: Theme.of(context).colorScheme.primary,
-              textColor: Colors.white,
-            )),
-          ],
-        ),
+              child:  Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  elevation: 0.0,
+                  title: Text('Products',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
+                  actions: [
+                    Stack(
+                      children: <Widget>[
+                        new IconButton(
+                          icon: new Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => MyOrder()
+                                ),(route)=> false
+                            );
+                            print('cartcount $cartcount');
+                          },
+                        ),
+                        cartcount == 0
+                            ? new Container()
+                            : new Positioned(
+                            child: new Stack(
+                              children: <Widget>[
+                                new Icon(Icons.brightness_1,
+                                    size: 25.0, color: Colors.red[800]),
+                                new Positioned(
+                                    top: 3.0,
+                                    right: 5.0,
+                                    child: new Center(
+                                      child: Text(
+                                        cartcount.toString(),
+                                        style: new TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13.0,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    )),
+                              ],
+                            )),
+                      ],
+                    ),
+                  ],
+                  centerTitle: true,
+                ),
+                drawer: Drawer_main(),
+                bottomSheet:
+                // Padding(
+                //   padding: EdgeInsets.only(left: 10, right: 10),
+                //   child:
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: RaisedButton(
+                          onPressed: () {
+                            print('enter the button');
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => MyOrder()));
+                          },
+                          child: Text("Total : $totalprice"),
+                          color: Theme.of(context).colorScheme.primary,
+                          textColor: Colors.white,
+                        )),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                        child: RaisedButton(
+                          onPressed: (){
+                            print(totalprice);
+                            if(totalprice==0){
+                              Fluttertoast.showToast(
+                                  msg: 'Your Cart is empty ',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIos: 1,
+                                  fontSize: 16.0);
 
-      body: SafeArea(
-        child:totalprice==0?
-        Container(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.only(top:20),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/addtocart.png"),
-                      colorFilter: ColorFilter.mode(
-                          Colors.white.withOpacity(0.8), BlendMode.dstATop),
+                            }else{
+                              checkoutprocessvalidate();
+                            }
+                          },
+                          child: Text("Checkout"),
+                          color: Theme.of(context).colorScheme.primary,
+                          textColor: Colors.white,
+                        )),
+                  ],
+                ),
 
-                    )),
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height/2,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: Text("Your Cart is Empty",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 22),),
-              ),
-            ],
+                body: SafeArea(
+                  child:totalprice==0?
+                  Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(top:20),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/addtocart.png"),
+                                colorFilter: ColorFilter.mode(
+                                    Colors.white.withOpacity(0.8), BlendMode.dstATop),
+
+                              )),
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height/2,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Text("Your Cart is Empty",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 22),),
+                        ),
+                      ],
+                    ),
+                  )
+                      :Container(
+                    child: FutureBuilder<List<Listbands>>(
+                        future: _carddet,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(child: CircularProgressIndicator());
+                          return Container(
+                              child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    var item = snapshot.data[index];
+                                    amt = item.amount;
+                                    print('amt $amt');
+                                    return Card(
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              ListTile(
+                                                //isThreeLine: true,
+                                                title: Text(item.catname),
+                                                leading: Container(
+                                                  height: 75,
+                                                  width: 75,
+                                                  child: Image.network(
+                                                      '${snapshot.data[index].proimg}'),
+                                                ),
+                                                trailing: GestureDetector(
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onTap: () {
+                                                      print('amt $amt');
+                                                      amt = item.amount;
+
+                                                      hana = item.cartid;
+                                                      print(snapshot.data[index].cartid);
+                                                      setState(() {
+                                                        snapshot.data.remove(item);
+
+                                                        delete();
+                                                      });
+
+                                                      _carddet;
+                                                    }),
+                                                subtitle: Text(
+                                                    'Particulars :  ${snapshot.data[index].title} \n Order Id :  ${snapshot.data[index].id}\n price : ${item.amount}'),
+                                              ),
+                                            ]));
+                                  }));
+                        }),
+                  ),
+                ),
+              ))
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
           ),
-        )
-            :Container(
-        child: FutureBuilder<List<Listbands>>(
-            future: _carddet,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return Center(child: CircularProgressIndicator());
-              return Container(
-                  child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        var item = snapshot.data[index];
-                        amt = item.amount;
-                        print('amt $amt');
-                        return Card(
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  ListTile(
-                                    //isThreeLine: true,
-                                    title: Text(item.catname),
-                                    leading: Container(
-                                      height: 75,
-                                      width: 75,
-                                      child: Image.network(
-                                          '${snapshot.data[index].proimg}'),
-                                    ),
-                                    trailing: GestureDetector(
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
-                                        onTap: () {
-                                          print('amt $amt');
-                                          amt = item.amount;
-
-                                          hana = item.cartid;
-                                          print(snapshot.data[index].cartid);
-                                          setState(() {
-                                            snapshot.data.remove(item);
-
-                                            delete();
-                                          });
-
-                                          _carddet;
-                                        }),
-                                    subtitle: Text(
-                                        'Particulars :  ${snapshot.data[index].title} \n Order Id :  ${snapshot.data[index].id}\n price : ${item.amount}'),
-                                  ),
-                                ]));
-                      }));
-            }),
-      ),
-      ),
-    ));
+        );
+      },
+    );
   }
 
    checkoutprocessvalidate() {
 
        print("checkout $totalprice");
        if (totalprice <= 10000) {
-         Navigator.push(
+         Navigator.pushAndRemoveUntil(
              context,
              MaterialPageRoute(
                  builder: (context) => ShippingForm(
                      ship_mode:"cart",
                      total_price:totalprice
-                 )));
+                 )),(route)=>false);
          // buynow();
        } else
          {

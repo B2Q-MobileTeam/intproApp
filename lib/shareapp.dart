@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'NoInternet.dart';
 import 'Url.dart';
+import 'connectivity_provider.dart';
 import 'drawer.dart';
 import 'order_detail.dart';
 class ShareApp extends StatefulWidget {
@@ -64,84 +67,101 @@ class _ShareAppState extends State<ShareApp> {
   }
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getEmail();
   }
 
   var cartcount;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          Scaffold(
 
-      appBar:  AppBar(
-        elevation: 0.0,
-        title: Text('ShareApp',
-            style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 22.0,
-                color: Colors.white)),
-        actions: [
-          Stack(
-            children: <Widget>[
-              new IconButton(icon: new Icon(Icons.shopping_cart,
-                color: Colors.white,),
-                onPressed: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => MyOrder()
-                      )
-                  );
-                },
-              ),
-              cartcount==0 ? new Container() :
-              new Positioned(
+            appBar:  AppBar(
+              elevation: 0.0,
+              title: Text('ShareApp',
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 22.0,
+                      color: Colors.white)),
+              actions: [
+                Stack(
+                  children: <Widget>[
+                    new IconButton(icon: new Icon(Icons.shopping_cart,
+                      color: Colors.white,),
+                      onPressed: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => MyOrder()
+                            )
+                        );
+                      },
+                    ),
+                    cartcount==0 ? new Container() :
+                    new Positioned(
 
-                  child: new Stack(
-                    children: <Widget>[
-                      new Icon(
-                          Icons.brightness_1,
-                          size: 20.0, color: Colors.red[800]),
-                      new Positioned(
-                          top: 3.0,
-                          right: 4.0,
-                          child: new Center(
-                            child:
-                            Text(cartcount.toString(), style: new TextStyle(
-                                color: Colors.white,
-                                fontSize: 11.0,
-                                fontWeight: FontWeight.w500
-                            ),),
+                        child: new Stack(
+                          children: <Widget>[
+                            new Icon(
+                                Icons.brightness_1,
+                                size: 20.0, color: Colors.red[800]),
+                            new Positioned(
+                                top: 3.0,
+                                right: 4.0,
+                                child: new Center(
+                                  child:
+                                  Text(cartcount.toString(), style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.w500
+                                  ),),
 
-                          )),
-                    ],
+                                )),
+                          ],
+                        )),
+
+                  ],
+                )
+              ],
+              centerTitle: true,
+            ),
+            drawer: Drawer_main(),
+            body:  Container(
+              padding: EdgeInsets.only(top:20),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/Sharelink-pana.png"),
+                    colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.8), BlendMode.dstATop),
+
                   )),
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height/2,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
 
-            ],
+            ),
           )
-        ],
-        centerTitle: true,
-      ),
-      drawer: Drawer_main(),
-      body:  Container(
-        padding: EdgeInsets.only(top:20),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/Sharelink-pana.png"),
-              colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.8), BlendMode.dstATop),
-
-            )),
-        height: MediaQuery
-            .of(context)
-            .size
-            .height/2,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-
-      ),
+              :
+          NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
+
+
   }
 
 

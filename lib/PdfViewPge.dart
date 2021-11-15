@@ -7,7 +7,12 @@ import 'package:dio/dio.dart';
 import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intpro_app/model/DetailOrderPage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+
+import 'NoInternet.dart';
+import 'connectivity_provider.dart';
 
 class PdfViewPage extends StatefulWidget {
   String dinvoiceview,dinvoicename;
@@ -43,7 +48,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   }
   @override
   void initState() {
-    // TODO: implement initState
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     super.initState();
     _loadFile();
 
@@ -62,27 +67,62 @@ class _PdfViewPageState extends State<PdfViewPage> {
   Widget build(BuildContext context) {
     String pdfurls=widget.dinvoiceview;
     String invoice_name=widget.dinvoicename;
-    return Scaffold(
-        appBar: AppBar(
-        title: Text('Invoice'),
-    backgroundColor: Colors.blue,
-    ),
-    body:  Container(
-    child: _isLoading
-    ? Center(child: CircularProgressIndicator())
-        : PDFViewer(document: _pdf)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ()async{
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WillPopScope(
+              onWillPop: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailOrderPage(),
+                    ),(route)=>false
+                );
+              },
+      child:    Scaffold(
+            appBar: AppBar(
+              title: Text('Invoice'),
+              backgroundColor: Colors.blue,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailOrderPage(),
+                      ),(route)=>false
+                  );
+                },
+              ),
+            ),
+            body:  Container(
+                child: _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : PDFViewer(document: _pdf)),
+            floatingActionButton: FloatingActionButton(
+              onPressed: ()async{
 
-          String path = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
-          String fullpath = "$path/$invoice_name";
-          print(fullpath);
-          download2(dio,pdfurls,fullpath);
-        },
-        child: Icon(Icons.download_rounded),
-        backgroundColor: Colors.blueGrey,
-      ),
+                String path = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
+                String fullpath = "$path/$invoice_name";
+                print(fullpath);
+                download2(dio,pdfurls,fullpath);
+              },
+              child: Icon(Icons.download_rounded),
+              backgroundColor: Colors.blueGrey,
+            ),
+          ))
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
+
+
   }
 
 

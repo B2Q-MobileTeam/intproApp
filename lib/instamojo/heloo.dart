@@ -2,7 +2,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../NoInternet.dart';
+import '../connectivity_provider.dart';
 import '../successpage.dart';
 
 
@@ -31,6 +34,7 @@ class NextStates extends State<Nextsteps> {
   StreamSubscription<String> _onUrlChanged;
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     super.initState();
 
 
@@ -63,7 +67,7 @@ class NextStates extends State<Nextsteps> {
             Hellosam();
 
           } else if(payment_status=="0") {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Failurescreeen()));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Failurescreeen()),(route)=>false);
             print("Failure status");
           }
         }
@@ -74,7 +78,7 @@ class NextStates extends State<Nextsteps> {
 
   Hellosam(){
     print("hellosam");
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyHomePage(
         payment_status:payment_status,
         payment_message:payment_message,
         payment_order_id:payment_order_id,
@@ -84,16 +88,28 @@ class NextStates extends State<Nextsteps> {
         payment_buyername:payment_buyername,
         payment_invoice:payment_invoice
 
-    )));
+    )),(route)=>false);
   }
   @override
   Widget build(BuildContext context) {
     paymentpay = widget.paymenturl;
     payredirect = widget.redirect;
     print('paymentfinal $paymentpay');
-    return WebviewScaffold(
-      url: paymentpay,
-
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WebviewScaffold(
+            url: paymentpay,
+          )
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }

@@ -155,6 +155,8 @@ class JsonImageListWidget extends State {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+
+
             ),
           ],
         );
@@ -183,11 +185,11 @@ class JsonImageListWidget extends State {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => MyOrder()
-                          ),
+                          ),(route) => false,
                         );
                         print('cartcount $cartcount');
                       },
@@ -235,7 +237,6 @@ class JsonImageListWidget extends State {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData)
                       return Center(
-
                       );
                     return new Padding(
                         padding: new EdgeInsets.all(10.0),
@@ -249,7 +250,7 @@ class JsonImageListWidget extends State {
                                   child: Cell(snapshot.data[index]),
                                   onTap: () =>
 
-                                      Navigator.pushReplacement(
+                                      Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => HomePageSub(
@@ -257,7 +258,7 @@ class JsonImageListWidget extends State {
                                                   snapshot.data[index].cid,
                                                   catname: snapshot.data[index].title,
                                                   brandnamee: snapshot
-                                                      .data[index].catergoryname))));
+                                                      .data[index].catergoryname)),(route) => false));
                             }));
                   }),
 

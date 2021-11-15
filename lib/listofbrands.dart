@@ -3,10 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'NoInternet.dart';
 import 'Url.dart';
 import 'brands.dart';
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 import 'drawer.dart';
 import 'order_detail.dart';
@@ -104,6 +107,7 @@ var cartcount="0";
   }
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getEmail();
     super.initState();
 
@@ -112,95 +116,111 @@ var cartcount="0";
   @override
   Widget build(BuildContext context) {
 
-    return  WillPopScope(
-        onWillPop: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Homee(),
+    return Consumer<ConnectivityProvider>(
+        builder: (context,model,child){
+          if(model.isOnline!=null){
+            return model.isOnline?
+            WillPopScope(
+                onWillPop: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Homee(),
+                    ),
+                  );
+                },
+                child:    Scaffold(
+                    appBar: AppBar(
+                      elevation: 0.0,
+                      title: Text('Products',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 22.0,
+                              color: Colors.white)),
+                      actions: [
+                        Stack(
+                          children: <Widget>[
+                            new IconButton(
+                              icon: new Icon(
+                                Icons.shopping_cart,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) => MyOrder()
+                                    ),
+                                );
+                                print('cartcount $cartcount');
+                              },
+                            ),
+                            cartcount == 0
+                                ? new Container()
+                                : new Positioned(
+                                child: new Stack(
+                                  children: <Widget>[
+                                    new Icon(Icons.brightness_1,
+                                        size: 25.0, color: Colors.red[800]),
+                                    new Positioned(
+                                        top: 3.0,
+                                        right: 5.0,
+                                        child: new Center(
+                                          child: Text(
+                                            cartcount.toString(),
+                                            style: new TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13.0,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        )),
+                                  ],
+                                )),
+                          ],
+                        ),
+                      ],
+                      centerTitle: true,
+                    ),
+                    drawer: Drawer_main(),
+                    body:
+                    Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/bg1.jpg"),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white.withOpacity(0.9),
+                                  BlendMode.dstATop),
+                              fit: BoxFit.cover,
+                            )),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              if (!_isLoading) {
+                                return index == 0 ? _searchBar() : UserTile(
+                                    user: this._usersDisplay[index - 1]);
+                              } else {
+                                return LoadingView();
+                              }
+                            },
+                            itemCount: _usersDisplay.length + 1,
+                          ),
+                        )
+                    ))
+
+            )
+                :
+            NoInternet();
+          }
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
           );
         },
-      child:    Scaffold(
-              appBar: AppBar(
-                elevation: 0.0,
-                title: Text('Products',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 22.0,
-                        color: Colors.white)),
-                actions: [
-                  Stack(
-                    children: <Widget>[
-                      new IconButton(
-                        icon: new Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) => MyOrder()
-                              )
-                          );
-                          print('cartcount $cartcount');
-                        },
-                      ),
-                      cartcount == 0
-                          ? new Container()
-                          : new Positioned(
-                          child: new Stack(
-                            children: <Widget>[
-                              new Icon(Icons.brightness_1,
-                                  size: 25.0, color: Colors.red[800]),
-                              new Positioned(
-                                  top: 3.0,
-                                  right: 5.0,
-                                  child: new Center(
-                                    child: Text(
-                                      cartcount.toString(),
-                                      style: new TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                            ],
-                          )),
-                    ],
-                  ),
-                ],
-                centerTitle: true,
-              ),
-              drawer: Drawer_main(),
-              body:
-              Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/bg1.jpg"),
-                        colorFilter: ColorFilter.mode(
-                            Colors.white.withOpacity(0.9),
-                            BlendMode.dstATop),
-                        fit: BoxFit.cover,
-                      )),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        if (!_isLoading) {
-                          return index == 0 ? _searchBar() : UserTile(
-                              user: this._usersDisplay[index - 1]);
-                        } else {
-                          return LoadingView();
-                        }
-                      },
-                      itemCount: _usersDisplay.length + 1,
-                    ),
-                  )
-              ))
+      );
 
-    );
+
   }
 
   _searchBar() {

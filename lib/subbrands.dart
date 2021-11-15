@@ -29,20 +29,20 @@ class UserTile extends StatelessWidget {
                 IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
                 onTap: (){
     if (user.title == "plywoods") {
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
 context,
 MaterialPageRoute(
 builder: (context) => Cart(
 carttid:user.id,
 title:user.title,
   b_name:user.brandnames
-)));}else{
-      Navigator.pushReplacement(context,
+)),(route) => false);}else{
+      Navigator.pushAndRemoveUntil(context,
                                             MaterialPageRoute(
                                                 builder: (context) => Brands(
                                                     brandid:
                                                     user.id,
-                                                    brandname:user.brandnames)));
+                                                    brandname:user.brandnames)),(route) => false);
     }
                 },
               )

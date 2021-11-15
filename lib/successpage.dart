@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intpro_app/connectivity_provider.dart';
+import 'package:provider/provider.dart';
 import 'Dashboardfragment.dart';
+import 'NoInternet.dart';
 import 'dashboard.dart';
+import 'model/myorderlist.dart';
 import 'order_detail.dart';
 
 
@@ -26,6 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   @override
+  void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
+  }
+
+  @override
   Widget build(BuildContext context)
   {
     dis_pay_status=widget.payment_status;
@@ -39,108 +48,144 @@ class _MyHomePageState extends State<MyHomePage> {
     dis_pay_invoice=widget.payment_invoice;
 
 
-    return Scaffold(
- appBar: AppBar(
-   title: Text("Intpro"),
- ),
-      body: Container(
-          padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
-          child: ListView(shrinkWrap: true, children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return
+      Consumer<ConnectivityProvider>(
+        builder: (context,model,child){
+          if(model.isOnline!=null){
+            return model.isOnline?
 
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    'assets/succimg.jpg',
-                    height: 120.0,
-                    width: 120.0,
-                  ),
+            WillPopScope(
+                onWillPop: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Homee(),
+                      ),(route)=>false
+                  );
+                },
+         child:   Scaffold(
+              appBar: AppBar(
+                title: Text("Intpro"),
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: (){
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Homee(),
+                        ),(route)=>false
+                    );
+                  },
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Payment Successful!',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green,
-                        fontSize: 30.0),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child:  Container(
-                    padding: EdgeInsets.all(10),
-                    child:  Text('$dis_pay_message',style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w500),textAlign: TextAlign.center,),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              body: Container(
+                  padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
+                  child: ListView(shrinkWrap: true, children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+
                       children: [
-                        Text('Paid By',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
-                        Text('$dis_pay_buyname',style: TextStyle(fontSize: 15.0),),
-                      ],
-                    )
-                ),
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Oredr Id ',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
-                        Text('$dis_pay_order_id',style: TextStyle(fontSize: 15.0),),
-                      ],
-                    )
-                ),
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Transaction Id',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
-                        Text('$dis_pay_trans_id',style: TextStyle(fontSize: 15.0),),
-                      ],
-                    )
-                ),
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Amount',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
-                        Text('$dis_pay_amnt',style: TextStyle(fontSize: 15.0),),
-                      ],
-                    )
-                ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            'assets/succimg.jpg',
+                            height: 120.0,
+                            width: 120.0,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Payment Successful!',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green,
+                                fontSize: 30.0),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child:  Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Text('$dis_pay_message',style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.w500),textAlign: TextAlign.center,),
+                          ),
+                        ),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Paid By',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
+                                Text('$dis_pay_buyname',style: TextStyle(fontSize: 15.0),),
+                              ],
+                            )
+                        ),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Oredr Id ',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
+                                Text('$dis_pay_order_id',style: TextStyle(fontSize: 15.0),),
+                              ],
+                            )
+                        ),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Transaction Id',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
+                                Text('$dis_pay_trans_id',style: TextStyle(fontSize: 15.0),),
+                              ],
+                            )
+                        ),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            child:  Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Amount',style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500),),
+                                Text('$dis_pay_amnt',style: TextStyle(fontSize: 15.0),),
+                              ],
+                            )
+                        ),
 
 
-                Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: EdgeInsets.only(top: 15),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyOrder()));
-                        },
-                        color: Colors.blue,
-                        child: Text("Ok"),
-                      ),
-                    )
-                )
-              ],
+                        Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              padding: EdgeInsets.only(top: 15),
+                              child: RaisedButton(
+                                onPressed: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyOrderListprocess()),(route)=>false);
+                                },
+                                color: Colors.blue,
+                                child: Text("Ok"),
+                              ),
+                            )
+                        )
+                      ],
 
-            )])),
-    );
+                    )])),
+            ))
+
+                :NoInternet();
+          }
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
   }
 
 
@@ -154,99 +199,125 @@ class Failurescreeen extends StatefulWidget {
 
 class _FailurescreeenState extends State<Failurescreeen> {
   @override
+  void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Intpro"),
-        leading:IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyOrder()));
-          },
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WillPopScope(
+              onWillPop: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Homee(),
+                    ),(route)=>false
+                );
+              },
+        child:  Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              title: Text("Intpro"),
+              leading:IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyOrder()),(route)=>false);
+                },
 
-        ),
-      ),
-      body: Container(
-          padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
-          child: ListView(shrinkWrap: true, children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              ),
+            ),
+            body: Container(
+                padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
+                child: ListView(shrinkWrap: true, children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
 
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    'assets/down.png',
-                    height: 160.0,
-                    width: 140.0,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Payment Failed!',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.red,
-                        fontSize: 28.0),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                   'Oops! Somethings went wrong.',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black87,
-                        fontSize: 18.0),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Your Transacation is failed,',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black87,
-                        fontSize: 18.0),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Try again',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black87,
-                        fontSize: 18.0),
-                  ),
-                ),
-
-
-                Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: EdgeInsets.only(top: 15),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyOrder()));
-                        },
-                        color: Colors.blue,
-                        child: Text("Ok"),
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          'assets/down.png',
+                          height: 160.0,
+                          width: 140.0,
+                        ),
                       ),
-                    )
-                )
-              ],
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Payment Failed!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                              fontSize: 28.0),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Oops! Somethings went wrong.',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Your Transacation is failed,',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black87,
+                              fontSize: 18.0),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Try again',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black87,
+                              fontSize: 18.0),
+                        ),
+                      ),
 
-            )])),
+
+                      Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyOrder()),(route)=>false);
+                              },
+                              color: Colors.blue,
+                              child: Text("Ok"),
+                            ),
+                          )
+                      )
+                    ],
+
+                  )])),
+          ))
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }

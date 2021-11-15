@@ -38,6 +38,11 @@ class loginext extends State<Login> {
     Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
 
   }
+
+  void cleardatalogin() {
+    mob.clear();
+    pass.clear();
+  }
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   TextEditingController mob = new TextEditingController();
@@ -87,7 +92,7 @@ class loginext extends State<Login> {
           gravity: ToastGravity.TOP,
           timeInSecForIos: 1,
           fontSize: 16.0);
-
+     cleardatalogin ();
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Homee()),(route) => false,);
     }
   }
@@ -245,5 +250,7 @@ class loginext extends State<Login> {
 
 
   }
+
+
 
 }

@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../NoInternet.dart';
+import '../connectivity_provider.dart';
 import '../successpage.dart';
 
 
@@ -42,6 +45,7 @@ class NextState extends State<Nextstep> {
   }
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getpro();
     super.initState();
 
@@ -80,7 +84,7 @@ class NextState extends State<Nextstep> {
           }else if(payment_status=="0") {
 
             print("Failure status");
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Failurescreeen()));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Failurescreeen()),(route)=>false);
           }
         }
       }
@@ -90,7 +94,7 @@ class NextState extends State<Nextstep> {
 
   Hellosam(){
     print("hellosam");
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyHomePage(
         payment_status:payment_status,
         payment_message:payment_message,
         payment_order_id:payment_order_id,
@@ -99,7 +103,7 @@ class NextState extends State<Nextstep> {
         payment_amount:payment_amount,
         payment_buyername:payment_buyername,
         payment_invoice:payment_invoice
-    )));
+    )),(route)=>false);
   }
 
 
@@ -108,10 +112,24 @@ class NextState extends State<Nextstep> {
     paymentpay = widget.paymenturl;
     payredirect = widget.redirect;
     print('paymentfinal $paymentpay');
-    return WebviewScaffold(
-                url: paymentpay,
-
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WebviewScaffold(
+            url: paymentpay,
+          )
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
+
+
   }
 
 }

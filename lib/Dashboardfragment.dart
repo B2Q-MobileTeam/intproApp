@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intpro_app/Url.dart';
+import 'package:provider/provider.dart';
 
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 
 import 'package:http/http.dart' as http;
@@ -127,6 +129,7 @@ class DashboardFragmentState extends State<DashboardFragment> {
   @override
   void initState() {
     super.initState();
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getEmail();
 
 

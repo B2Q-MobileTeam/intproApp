@@ -28,7 +28,7 @@ class Secbrand extends StatelessWidget {
                   IconButton(icon: Icon(Icons.arrow_right), onPressed: null),
                   onTap: (){
                     print('cartid ${brandd.cartsid}');
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Cart(
@@ -37,7 +37,7 @@ class Secbrand extends StatelessWidget {
                                               pro_name:brandd.product_name,
                                               brand_name:brandd.brandsname,
                                               cat_name:brandd.category_name
-                                            )));
+                                            )),(route)=>false);
 
 
                   },

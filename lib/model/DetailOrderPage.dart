@@ -1,7 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../NoInternet.dart';
 import '../PdfViewPge.dart';
+import '../connectivity_provider.dart';
+import '../dashboard.dart';
+import 'myorderlist.dart';
 
 class DetailOrderPage extends StatefulWidget {
   String dorderid,dtransactionid,dtransactiondate,dproduct,
@@ -18,6 +23,11 @@ class DetailOrderPageState extends State<DetailOrderPage> {
 
   var shipping_data;
 
+
+  @override
+  void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,217 +66,252 @@ class DetailOrderPageState extends State<DetailOrderPage> {
     print(specificationdetails);
 
 
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Order Details'),
-        backgroundColor: Colors.blue,
-      ),
-      body: ListView(
+    return Consumer<ConnectivityProvider>(
+      builder: (context,model,child){
+        if(model.isOnline!=null){
+          return model.isOnline?
+          WillPopScope(
+              onWillPop: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyOrderListprocess(),
+                    ),(route)=>false
+                );
+              },
+        child:  Scaffold(
+            backgroundColor: Colors.grey[100],
+            appBar: AppBar(
+              title: Text('Order Details'),
+              backgroundColor: Colors.blue,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyOrderListprocess(),
+                      ),(route)=>false
+                  );
+                },
+              ),
+            ),
+            body: ListView(
 
-        children: <Widget>[
-          Container(
+              children: <Widget>[
+                Container(
 
-            padding: EdgeInsets.all(16),
-            child: Card(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-
-                          child: Text(
-                            'Product Details',
-
-                            style: TextStyle(
-
-                                fontSize: 18,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        Container(
-                          child:OutlinedButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => PdfViewPage(
-
-                                dinvoiceview:dinvoice,
-                                dinvoicename:dinvoicename,
-
-                              )));
-
-                            },
-                            child: Text("View Invoice"),
-                          ),
-                        )
-                      ],
-                    ),
-                    Divider(
-                      color: Colors.blueGrey,
-                    ),
-                    Container(
+                  padding: EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: <Widget>[
-                          Text(
-                            "Product - $disproduct",
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
 
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Color(0xff333333),
+                                child: Text(
+                                  'Product Details',
+
+                                  style: TextStyle(
+
+                                      fontSize: 18,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500),
                                 ),
+                              ),
+                              Container(
+                                child:OutlinedButton(
+                                  onPressed: (){
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PdfViewPage(
+
+                                      dinvoiceview:dinvoice,
+                                      dinvoicename:dinvoicename,
+
+                                    )),(route)=>false);
+
+                                  },
+                                  child: Text("View Invoice"),
+                                ),
+                              )
+                            ],
                           ),
-                          Text(
-                            "Brand - $disbrand",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
+                          Divider(
+                            color: Colors.blueGrey,
+                          ),
+                          Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                              children: <Widget>[
+                                Text(
+                                  "Product - $disproduct",
+
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                                Text(
+                                  "Brand - $disbrand",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                                Text(
+                                  "Item - $disitem",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                                Text(
+                                  "Qty - $disquantity",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                                Text(
+                                  "Price - $disprice",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                                Text(
+                                  "Amount - $disamount",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            "Item - $disitem",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
-                            ),
-                          ),
-                          Text(
-                            "Qty - $disquantity",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
-                            ),
-                          ),
-                          Text(
-                            "Price - $disprice",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
-                            ),
-                          ),
-                          Text(
-                            "Amount - $disamount",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
-                            ),
-                          ),
+                          )
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
 
-          Container(
-            padding: EdgeInsets.all(16),
-            child: Card(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-
-                      child: Text(
-                        'Specification',
-
-                        style: TextStyle(
-
-                            fontSize: 18,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.blueGrey,
-                    ),
-                    Container(
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: <Widget>[
-                          Text(
-                            "$specificationdetails",
+                          Container(
 
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
+                            child: Text(
+                              'Specification',
+
+                              style: TextStyle(
+
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
+                          Divider(
+                            color: Colors.blueGrey,
+                          ),
+                          Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
 
+                              children: <Widget>[
+                                Text(
+                                  "$specificationdetails",
+
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
 
-          Container(
-            padding: EdgeInsets.all(16),
-            child: Card(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-
-                      child: Text(
-                        'Shipping Details',
-
-                        style: TextStyle(
-
-                            fontSize: 18,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.blueGrey,
-                    ),
-                    Container(
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Card(
+                    elevation: 10,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: <Widget>[
-                          Text(
-                            "$shippingdetails",
+                          Container(
 
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff333333),
+                            child: Text(
+                              'Shipping Details',
+
+                              style: TextStyle(
+
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
+                          Divider(
+                            color: Colors.blueGrey,
+                          ),
+                          Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                              children: <Widget>[
+                                Text(
+                                  "$shippingdetails",
+
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff333333),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+          ))
+              :NoInternet();
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
           ),
-        ],
-      ),
+        );
+      },
     );
+
+
   }
 }
 

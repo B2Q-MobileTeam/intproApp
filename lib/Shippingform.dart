@@ -5,9 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'NoInternet.dart';
 import 'Url.dart';
+import 'addtocart.dart';
+import 'connectivity_provider.dart';
+import 'dashboard.dart';
 import 'instamojo/nextstep.dart';
 class ShippingForm extends StatefulWidget {
   String ship_brandid,ship_productid,ship_price_id,ship_quantity,
@@ -119,13 +124,13 @@ class _ShippingFormState extends State<ShippingForm> {
         var redirecturlinsta = resJsonship['payment_request']['redirect_url'];
         print('redirecturlinsta $redirecturlinsta');
 
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
                 builder: (context) => Nextstep(
                   paymenturl: paymentprocess,
                   redirect: redirecturlinsta,
-                )));
+                )),(route)=>false);
 
       });
     }else if(pay_checkmode=="buynow"){
@@ -165,14 +170,13 @@ class _ShippingFormState extends State<ShippingForm> {
       var redirecturlinsta = resJsonship['payment_request']['redirect_url'];
       print('redirecturlinsta $redirecturlinsta');
 
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
               builder: (context) => Nextstep(
                 paymenturl: paymentprocess,
                 redirect: redirecturlinsta,
-              )));
-
+              )),(route)=>false);
     });}
   }
 
@@ -224,46 +228,84 @@ class _ShippingFormState extends State<ShippingForm> {
 
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getEmail();
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomSheet:Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(10),
-        child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-          ),
-          onPressed: (){
-            setState(() {
-              validateshipping();
-            });
+    return
+      Consumer<ConnectivityProvider>(
+        builder: (context,model,child){
+          if(model.isOnline!=null){
+            return model.isOnline?
 
-            print('values ${shipname.text} ${shipemail.text} ${shipaddress.text} ${shippincode.text} ${shipmobno.text}');
-          },
-          child: Text("Proceed to pay"),
-        ),
-      ),
-      appBar: AppBar(
-        title: Text("Shipping Details"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+            WillPopScope(
+                onWillPop: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Cart(),
+                      ),(route)=>false
+                  );
+                },
+          child:  Scaffold(
+                bottomSheet:Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+                    ),
+                    onPressed: (){
+                      setState(() {
+                        validateshipping();
+                      });
 
-            children: [
-        Container(
-            child:_isvisible?Center(
+                      print('values ${shipname.text} ${shipemail.text} ${shipaddress.text} ${shippincode.text} ${shipmobno.text}');
+                    },
+                    child: Text("Proceed to pay"),
+                  ),
+                ),
+                appBar: AppBar(
+                  title: Text("Shipping Details"),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: (){
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Homee(),
+                          ),(route)=>false
+                      );
+                    },
+                  ),
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+
+                      children: [
+                        Container(
+                            child:_isvisible?Center(
+                              child: CircularProgressIndicator(),
+                            ):Container(
+                                child:shipping_status?OldShippingAddress():NewShippingAddress()
+                            )
+                        ),
+
+
+                      ]),
+                )))
+                :
+            NoInternet();
+          }
+          return Container(
+            child: Center(
               child: CircularProgressIndicator(),
-            ):Container(
-                child:shipping_status?OldShippingAddress():NewShippingAddress()
-            )
-        ),
+            ),
+          );
+        },
+      );
 
-
-      ]),
-    ));
   }
   Widget OldShippingAddress(){
     return Container(
@@ -456,4 +498,6 @@ if(shipmodestatus=="old"){
 
 
 }
+
+
 

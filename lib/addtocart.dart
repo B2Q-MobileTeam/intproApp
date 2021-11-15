@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intpro_app/Url.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'NoInternet.dart';
 import 'Shippingform.dart';
+import 'connectivity_provider.dart';
 import 'dashboard.dart';
 import 'drawer.dart';
 import 'listofbrands.dart';
@@ -386,6 +389,7 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
     getEmail();
     super.initState();
   }
@@ -422,310 +426,325 @@ class _CartState extends State<Cart> {
     String ship_qty = _count.toString();
     String payAmnt = totalprice;
     String ship_purpose = remaining_woods;
-    return  WillPopScope(
-        onWillPop: () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Homee(),
-        ),
-      );
-    },
-
-
-     child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0.0,
-          title: Text('Add to cart',
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 22.0,
-                  color: Colors.white)),
-          actions: [
-            Stack(
-              children: <Widget>[
-                new IconButton(
-                  icon: new Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => MyOrder()));
-                    print('cartcount $cartcount');
-                  },
-                ),
-                cartcount == 0
-                    ? new Container()
-                    : new Positioned(
-                        child: new Stack(
-                        children: <Widget>[
-                          new Icon(Icons.brightness_1,
-                              size: 25.0, color: Colors.red[800]),
-                          new Positioned(
-                              top: 3.0,
-                              right: 5.0,
-                              child: new Center(
-                                child: Text(
-                                  cartcount.toString(),
-                                  style: new TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              )),
-                        ],
-                      )),
-              ],
-            ),
-          ],
-          centerTitle: true,
-        ),
-        drawer: Drawer_main(),
-        bottomSheet: Row(
-          children: <Widget>[
-            Expanded(
-              child: RaisedButton(
-                child: Text('Add to Cart'),
-                onPressed: () {
-                  validateprocess();
+    return
+      Consumer<ConnectivityProvider>(
+        builder: (context,model,child){
+          if(model.isOnline!=null){
+            return model.isOnline?
+            WillPopScope(
+                onWillPop: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Homee(),
+                    ),(route)=>false
+                  );
                 },
-              ),
-            ),
-            Expanded(
-                child: RaisedButton(
-              onPressed: () {
-                int totaltotalprice=int.parse(totalprice);
-                print("total $totaltotalprice");
-                if (typevalue == null) {
-                  Fluttertoast.showToast(
-                      msg: "Please select product type",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
-                      fontSize: 16.0);
-                } else if (selectedvalue == null) {
-                  Fluttertoast.showToast(
-                      msg: "Please select product thickness",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
-                      fontSize: 16.0);
-                } else if(totalprice==0){
-                  Fluttertoast.showToast(
-                      msg: "Please select shades",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 2,
-                      fontSize: 16.0);
-                }else if(totaltotalprice >=10000){
-                  Fluttertoast.showToast(
-                      msg: 'Your Maximum Limit 10000',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIos: 1,
-                      fontSize: 16.0);
 
-                }else{
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ShippingForm(
-                              ship_brandid: brandidcart,
-                              ship_productid: ship_proid,
-                              ship_price_id: ship_priceid,
-                              ship_quantity: ship_qty,
-                              ship_amt: payAmnt,
-                              shippurpose: ship_purpose,
-                              ship_mode: "buynow")));
 
-                  print('add to cart to $brandidcart $ship_proid $ship_priceid $ship_qty $payAmnt $ship_purpose');
-                }
-              },
-              child: Text("Buy Now"),
-              color: Theme.of(context).colorScheme.primary,
-              textColor: Colors.white,
-            )),
-          ],
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    img == null
-                        ? Center(child: CircularProgressIndicator())
-                        : Center(child: Image.network(img)),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            left: 30.0, top: 10.0, bottom: 20.0, right: 10),
-                        child: Center(
-                          child: Text("${remaining_woods}",
-                              style: TextStyle(
-                                  fontSize: 22.0, fontWeight: FontWeight.w800)),
-                        )),
-                    catcat_value == null
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, top: 5.0, bottom: 5.0),
-                            child: Text("${catcat_value}",
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.normal)),
-                          ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 30.0, top: 5.0, bottom: 10.0),
-                      child: Text("${brand_brandname}",
+                child: Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: AppBar(
+                      elevation: 0.0,
+                      title: Text('Add to cart',
                           style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w400)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 30.0, right: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: DropdownButton(
-                                isExpanded: true,
-                                value: selectedvalue,
-                                items: datapro.map((data) {
-                                  return DropdownMenuItem(
-                                      value: data['m_id'].toString(),
-                                      child: Text(data['pro_types']));
-                                }).toList(),
-                                hint: Text('Select  thickness'),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedvalue = value;
-                                    typevalue = null;
-                                    shadevalue=null;
-                                    totalprice = '0';
-                                    _count = 1;
-                                    fetchtype();
-                                    print('selected $selectedvalue');
-                                  });
-                                }),
-                          ),
-                          Container(
-                            child: DropdownButton(
-                                isExpanded: true,
-                                value: typevalue,
-                                items: typepro.map((item) {
-                                  return DropdownMenuItem(
-                                      onTap: () {
-                                        eg_pro_id = item['pro_id'];
-                                        eg_shade_id = item['shade_id'];
-                                      },
-                                      value: item['type_id'],
-                                      child: Text(item['type']));
-                                }).toList(),
-                                hint: Text('Select  type'),
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (Show_drop_down_type == "true") {
-                                      typevalue = value;
-                                      shadevalue=null;
-                                      _count = 1;
-                                      totalprice = '0';
-                                      fetchshades();
-                                    } else {
-                                      typevalue = value;
-                                      fetchprice();
-                                    }
-                                  });
-                                  print('typeid $typevalue');
-                                }),
-                          ),
-                          showthirddropdown
-                              ? Container(
-                                  child: DropdownButton(
-                                      isExpanded: true,
-                                      value: shadevalue,
-                                      items: shadespro.map((item) {
-                                        return DropdownMenuItem(
-                                            onTap: () {
-                                              eg_pro_id = item['pro_id'];
-                                              selectedvalue = item['m_id'];
-                                              re_brand_id = item['brand_id'];
-                                              typevalue = item['type_id'];
-                                            },
-                                            value: item['shade_id'],
-                                            child: Text(item['shade']));
-                                      }).toList(),
-                                      hint: Text('Select Shades'),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          shadevalue = value;
-                                          fetchprice();
-                                        });
-                                        print('typeid $typevalue');
-                                      }),
-                                )
-                              : Container()
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 30.0, top: 10.0, right: 20.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              fontFamily: 'Montserrat',
+                              fontSize: 22.0,
+                              color: Colors.white)),
+                      actions: [
+                        Stack(
                           children: <Widget>[
-                            Text('Price : $totalprice',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 20.0,
-                                    color: Colors.grey)),
-                            Container(
-                                height: 25.0, color: Colors.grey, width: 1.0),
-                            Container(
-                                width: 125.0,
-                                height: 40.0,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(17.0),
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                            new IconButton(
+                              icon: new Icon(
+                                Icons.shopping_cart,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) => MyOrder()),(route)=>false);
+                                print('cartcount $cartcount');
+                              },
+                            ),
+                            cartcount == 0
+                                ? new Container()
+                                : new Positioned(
+                                child: new Stack(
                                   children: <Widget>[
-                                    _count != 1
-                                        ? new IconButton(
-                                            icon: new Icon(Icons.remove),
-                                            onPressed: () {
-                                              decre();
-                                            },
-                                          )
-                                        : new Container(),
-                                    new Text(_count.toString()),
-                                    new IconButton(
-                                        icon: new Icon(Icons.add),
-                                        onPressed: () {
-                                          incre();
-                                        })
+                                    new Icon(Icons.brightness_1,
+                                        size: 25.0, color: Colors.red[800]),
+                                    new Positioned(
+                                        top: 3.0,
+                                        right: 5.0,
+                                        child: new Center(
+                                          child: Text(
+                                            cartcount.toString(),
+                                            style: new TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13.0,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        )),
                                   ],
-                                ))
-                          ]),
+                                )),
+                          ],
+                        ),
+                      ],
+                      centerTitle: true,
                     ),
-                  ],
-                ),
-              ),
-            ]),
-          ),
-        )));
+                    drawer: Drawer_main(),
+                    bottomSheet: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: RaisedButton(
+                            child: Text('Add to Cart'),
+                            onPressed: () {
+                              validateprocess();
+                            },
+                          ),
+                        ),
+                        Expanded(
+                            child: RaisedButton(
+                              onPressed: () {
+                                int totaltotalprice=int.parse(totalprice);
+                                print("total $totaltotalprice");
+                                if (typevalue == null) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select product type",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIos: 2,
+                                      fontSize: 16.0);
+                                } else if (selectedvalue == null) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select product thickness",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIos: 2,
+                                      fontSize: 16.0);
+                                } else if(totalprice==0){
+                                  Fluttertoast.showToast(
+                                      msg: "Please select shades",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIos: 2,
+                                      fontSize: 16.0);
+                                }else if(totaltotalprice >=10000){
+                                  Fluttertoast.showToast(
+                                      msg: 'Your Maximum Limit 10000',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.TOP,
+                                      timeInSecForIos: 1,
+                                      fontSize: 16.0);
+
+                                }else{
+                                  Navigator.pop(context);
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ShippingForm(
+                                              ship_brandid: brandidcart,
+                                              ship_productid: ship_proid,
+                                              ship_price_id: ship_priceid,
+                                              ship_quantity: ship_qty,
+                                              ship_amt: payAmnt,
+                                              shippurpose: ship_purpose,
+                                              ship_mode: "buynow")),(route)=>false);
+
+                                  print('add to cart to $brandidcart $ship_proid $ship_priceid $ship_qty $payAmnt $ship_purpose');
+                                }
+                              },
+                              child: Text("Buy Now"),
+                              color: Theme.of(context).colorScheme.primary,
+                              textColor: Colors.white,
+                            )),
+                      ],
+                    ),
+                    body: SafeArea(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(children: [
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                img == null
+                                    ? Center(child: CircularProgressIndicator())
+                                    : Center(child: Image.network(img)),
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30.0, top: 10.0, bottom: 20.0, right: 10),
+                                    child: Center(
+                                      child: Text("${remaining_woods}",
+                                          style: TextStyle(
+                                              fontSize: 22.0, fontWeight: FontWeight.w800)),
+                                    )),
+                                catcat_value == null
+                                    ? Container()
+                                    : Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30.0, top: 5.0, bottom: 5.0),
+                                  child: Text("${catcat_value}",
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.normal)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30.0, top: 5.0, bottom: 10.0),
+                                  child: Text("${brand_brandname}",
+                                      style: TextStyle(
+                                          fontSize: 18.0, fontWeight: FontWeight.w400)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0, right: 20.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            value: selectedvalue,
+                                            items: datapro.map((data) {
+                                              return DropdownMenuItem(
+                                                  value: data['m_id'].toString(),
+                                                  child: Text(data['pro_types']));
+                                            }).toList(),
+                                            hint: Text('Select  thickness'),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedvalue = value;
+                                                typevalue = null;
+                                                shadevalue=null;
+                                                totalprice = '0';
+                                                _count = 1;
+                                                fetchtype();
+                                                print('selected $selectedvalue');
+                                              });
+                                            }),
+                                      ),
+                                      Container(
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            value: typevalue,
+                                            items: typepro.map((item) {
+                                              return DropdownMenuItem(
+                                                  onTap: () {
+                                                    eg_pro_id = item['pro_id'];
+                                                    eg_shade_id = item['shade_id'];
+                                                  },
+                                                  value: item['type_id'],
+                                                  child: Text(item['type']));
+                                            }).toList(),
+                                            hint: Text('Select  type'),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                if (Show_drop_down_type == "true") {
+                                                  typevalue = value;
+                                                  shadevalue=null;
+                                                  _count = 1;
+                                                  totalprice = '0';
+                                                  fetchshades();
+                                                } else {
+                                                  typevalue = value;
+                                                  fetchprice();
+                                                }
+                                              });
+                                              print('typeid $typevalue');
+                                            }),
+                                      ),
+                                      showthirddropdown
+                                          ? Container(
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            value: shadevalue,
+                                            items: shadespro.map((item) {
+                                              return DropdownMenuItem(
+                                                  onTap: () {
+                                                    eg_pro_id = item['pro_id'];
+                                                    selectedvalue = item['m_id'];
+                                                    re_brand_id = item['brand_id'];
+                                                    typevalue = item['type_id'];
+                                                  },
+                                                  value: item['shade_id'],
+                                                  child: Text(item['shade']));
+                                            }).toList(),
+                                            hint: Text('Select Shades'),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                shadevalue = value;
+                                                fetchprice();
+                                              });
+                                              print('typeid $typevalue');
+                                            }),
+                                      )
+                                          : Container()
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30.0, top: 10.0, right: 20.0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('Price : $totalprice',
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 20.0,
+                                                color: Colors.grey)),
+                                        Container(
+                                            height: 25.0, color: Colors.grey, width: 1.0),
+                                        Container(
+                                            width: 125.0,
+                                            height: 40.0,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(17.0),
+                                                color:
+                                                Theme.of(context).colorScheme.primary),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                              children: <Widget>[
+                                                _count != 1
+                                                    ? new IconButton(
+                                                  icon: new Icon(Icons.remove),
+                                                  onPressed: () {
+                                                    decre();
+                                                  },
+                                                )
+                                                    : new Container(),
+                                                new Text(_count.toString()),
+                                                new IconButton(
+                                                    icon: new Icon(Icons.add),
+                                                    onPressed: () {
+                                                      incre();
+                                                    })
+                                              ],
+                                            ))
+                                      ]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]),
+                      ),
+                    )))
+                :NoInternet();
+          }
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+
   }
 }
