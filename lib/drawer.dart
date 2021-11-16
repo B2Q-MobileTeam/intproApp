@@ -7,6 +7,7 @@ import 'package:intpro_app/model/myorderlist.dart';
 import 'package:intpro_app/order_detail.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 import 'dashboard.dart';
 import 'main.dart';
@@ -105,11 +106,9 @@ class Drawer_main extends StatelessWidget {
               title: new Text("Rate Us",),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Rate()
-                    )
+                StoreRedirect.redirect(
+                  androidAppId: 'com.intpro.intpro_app',
+                  iOSAppId: '',
                 );
               },
             ),

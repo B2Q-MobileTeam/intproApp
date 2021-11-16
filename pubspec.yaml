@@ -36,7 +36,7 @@ dependencies:
   shared_preferences:
   flutter_webview_plugin: ^0.3.11
   webview_flutter: ^0.3.3
-  url_launcher: ^5.7.5
+  url_launcher:
   connectivity:
   advance_pdf_viewer:
   dio: any
@@ -45,6 +45,7 @@ dependencies:
   ext_storage:
   permission_handler: 4.4.0
   provider:
+  store_redirect: ^2.0.0
 
 
 dev_dependencies:

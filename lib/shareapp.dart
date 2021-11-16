@@ -23,10 +23,10 @@ class _ShareAppState extends State<ShareApp> {
   String token;
   shares(BuildContext context)  {
     FlutterShare.share(
-        title: 'Share our app',
-        text: 'Share the App',
-        linkUrl: 'https://flutter.dev/',
-        chooserTitle: 'Example Chooser Title');
+        title: 'Intpro',
+        text: 'Intpro',
+        linkUrl: 'https://play.google.com/store/apps/details?id=com.intpro.intpro_app',
+        );
   }
 
 
@@ -71,7 +71,7 @@ class _ShareAppState extends State<ShareApp> {
     getEmail();
   }
 
-  var cartcount;
+  var cartcount="0";
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityProvider>(

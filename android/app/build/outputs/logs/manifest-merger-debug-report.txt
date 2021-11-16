@@ -16,6 +16,7 @@ MERGED from [:flutter_share] E:\Flutter_Projects\intpro_app\build\flutter_share\
 MERGED from [:path_provider] E:\Flutter_Projects\intpro_app\build\path_provider\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:connectivity] E:\Flutter_Projects\intpro_app\build\connectivity\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:permission_handler] E:\Flutter_Projects\intpro_app\build\permission_handler\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:store_redirect] E:\Flutter_Projects\intpro_app\build\store_redirect\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences] E:\Flutter_Projects\intpro_app\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\This PC\.gradle\caches\transforms-2\files-2.1\f419bf2442c9ba50831eeba89000c9a9\appcompat-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.webkit:webkit:1.0.0] C:\Users\This PC\.gradle\caches\transforms-2\files-2.1\cbbb6921b2521959953b0c781fe5c304\webkit-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -153,6 +154,8 @@ MERGED from [:connectivity] E:\Flutter_Projects\intpro_app\build\connectivity\in
 MERGED from [:connectivity] E:\Flutter_Projects\intpro_app\build\connectivity\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:permission_handler] E:\Flutter_Projects\intpro_app\build\permission_handler\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:permission_handler] E:\Flutter_Projects\intpro_app\build\permission_handler\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:store_redirect] E:\Flutter_Projects\intpro_app\build\store_redirect\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:store_redirect] E:\Flutter_Projects\intpro_app\build\store_redirect\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] E:\Flutter_Projects\intpro_app\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] E:\Flutter_Projects\intpro_app\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\This PC\.gradle\caches\transforms-2\files-2.1\f419bf2442c9ba50831eeba89000c9a9\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41

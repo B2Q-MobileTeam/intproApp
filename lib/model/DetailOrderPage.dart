@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../NoInternet.dart';
 import '../PdfViewPge.dart';
@@ -23,7 +25,14 @@ class DetailOrderPageState extends State<DetailOrderPage> {
 
   var shipping_data;
 
-
+  _launchURL() async {
+    const url = 'https://flutter.io';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   @override
   void initState() {
     Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
@@ -114,12 +123,9 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-
                                 child: Text(
                                   'Product Details',
-
                                   style: TextStyle(
-
                                       fontSize: 18,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500),
@@ -127,7 +133,12 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                               ),
                               Container(
                                 child:OutlinedButton(
-                                  onPressed: (){
+                                  onPressed:() {
+
+                                    //(){
+                                    // print('yes hgj bh g gb ygyuungu tyunyghuygh ghugnuyujmyu guygnhgnfgjhug');
+                                   // _launchURL();
+
                                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PdfViewPage(
 
                                       dinvoiceview:dinvoice,
@@ -135,6 +146,7 @@ class DetailOrderPageState extends State<DetailOrderPage> {
 
                                     )),(route)=>false);
 
+                                    // },
                                   },
                                   child: Text("View Invoice"),
                                 ),
@@ -145,6 +157,7 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                             color: Colors.blueGrey,
                           ),
                           Container(
+                            padding: EdgeInsets.fromLTRB(10, 5, 2, 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,6 +241,7 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                             color: Colors.blueGrey,
                           ),
                           Container(
+                            padding: EdgeInsets.fromLTRB(10, 5, 2, 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,6 +291,7 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                             color: Colors.blueGrey,
                           ),
                           Container(
+                            padding: EdgeInsets.fromLTRB(10, 5, 2, 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,4 +329,5 @@ class DetailOrderPageState extends State<DetailOrderPage> {
 
   }
 }
+
 

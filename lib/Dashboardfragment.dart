@@ -58,7 +58,7 @@ class DashboardFragmentState extends State<DashboardFragment> {
 
 
   Future<List<DashboardProducts>> _products;
-  String user_id,cartcount;
+  String user_id,cartcount="0";
   int counter = 0;
   String token = "";
 

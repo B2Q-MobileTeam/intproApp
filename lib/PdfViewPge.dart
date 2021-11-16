@@ -10,9 +10,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intpro_app/model/DetailOrderPage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'NoInternet.dart';
 import 'connectivity_provider.dart';
+import 'model/myorderlist.dart';
 
 class PdfViewPage extends StatefulWidget {
   String dinvoiceview,dinvoicename;
@@ -32,7 +34,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
 
   bool _isLoading = true;
   PDFDocument _pdf;
-  final imgUrl="https://www.binary2quantumsolutions.com/intpro/uploaded/invoice.pdf";
+//  final imgUrl="https://www.binary2quantumsolutions.com/intpro/uploaded/invoice.pdf";
   var dio=Dio();
 
 //print({widget.dinvoiceview});
@@ -76,7 +78,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailOrderPage(),
+                      builder: (context) => MyOrderListprocess(),
                     ),(route)=>false
                 );
               },
@@ -90,7 +92,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailOrderPage(),
+                        builder: (context) => MyOrderListprocess(),
                       ),(route)=>false
                   );
                 },
@@ -99,7 +101,9 @@ class _PdfViewPageState extends State<PdfViewPage> {
             body:  Container(
                 child: _isLoading
                     ? Center(child: CircularProgressIndicator())
-                    : PDFViewer(document: _pdf)),
+                    :
+                PDFViewer(document: _pdf)
+            ),
             floatingActionButton: FloatingActionButton(
               onPressed: ()async{
 
@@ -169,19 +173,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
 
   }
 
-  void showdownloginprogress(received,total){
 
-    // if(total !=-1){
-    //   _isLoading=true;
-    //   print((received/total*100).toStringAsFixed(0)+"%");
-    //   progress=((received/total*100).toStringAsFixed(0)+"%");
-    //   if(progress==100){
-    //     setState(() {
-    //       print("download completed");
-    //     });
-    //   }
-    // }
-  }
 }
 
 

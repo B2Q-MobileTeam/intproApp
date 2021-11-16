@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:store_redirect/store_redirect.dart';
+
+
 
 import 'NoInternet.dart';
 import 'connectivity_provider.dart';
@@ -11,19 +13,22 @@ class Rate extends StatefulWidget {
 
 class _RateState extends State<Rate> {
   @override
+  void initState() {
+    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
+    //getrateusprocess();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return
       Consumer<ConnectivityProvider>(
         builder: (context,model,child){
           if(model.isOnline!=null){
             return model.isOnline?
-            WebView(
-              initialUrl: 'https://www.binary2quantumsolutions.com/B2Qproduct/intproweb',
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-
-              },
-
+            StoreRedirect.redirect(
+              androidAppId: 'com.intpro.intpro_app',
+              iOSAppId: '',
             )
                 :NoInternet();
           }
@@ -38,9 +43,6 @@ class _RateState extends State<Rate> {
 
   }
 
-  @override
-  void initState() {
-    Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
 
-  }
+
 }
