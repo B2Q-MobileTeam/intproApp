@@ -51,13 +51,13 @@ class NextStates extends State<Nextsteps> {
           payment_status = uri.queryParameters['status'];
           print("payment_status $payment_status");
           payment_order_id = uri.queryParameters['orderid'];
-          payment_message="Message sent to $email_pay";
+          payment_message="Invoice sent to $email_pay";
           payment_transaction_id = uri.queryParameters['transactionid'];
           payment_amount = uri.queryParameters['amount'];
           payment_transaction_date = uri.queryParameters['transaction_date'];
           payment_buyername= name_pay;
           payment_invoice = "https://www.binary2quantumsolutions.com/intpro/uploaded/${payment_order_id}.pdf";
-          // print("aa $aa $bb $cc $dd $ee $ff $gg");
+
 
           print("values pay,meny $payment_status $payment_message $payment_order_id $payment_transaction_id "
               "$payment_transaction_date $payment_amount $payment_buyername $payment_invoice");

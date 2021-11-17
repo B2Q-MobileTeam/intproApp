@@ -41,6 +41,7 @@ class _ShippingFormState extends State<ShippingForm> {
   String sh_mob="";
   String userid, name_pay, mobileno_pay, email_pay, pricefinal_pay;
   String pay_shippingstatus;
+  bool pay_pay_process=false;
 
   TextEditingController shipname = new TextEditingController();
   TextEditingController shipemail = new TextEditingController();
@@ -71,8 +72,10 @@ class _ShippingFormState extends State<ShippingForm> {
 
     print('url $name_pay');
     String pay_brandid = widget.ship_brandid;
-    String pay_proid=widget.ship_productid;
-    String pay_priceid=widget.ship_price_id;
+    String pay_proid=widget.ship_price_id;
+    print('pro_id shipping $pay_proid');
+    String pay_priceid=widget.ship_productid;
+    print('price _id shipping $pay_priceid');
     String pay_quantity=widget.ship_quantity;
     print('$pay_brandid,$pay_proid,$pay_priceid,$pay_quantity');
     String pay_amount=widget.ship_amt;
@@ -111,7 +114,7 @@ class _ShippingFormState extends State<ShippingForm> {
             "userName":name_pay,
             "userEmail":email_pay,
             "payAmount":pay_amnt.toString(),
-            "purpose": "Product Buy From Intpro",
+            "purpose":"Product Buy From Intpro",
           }).then((res) {
             var resdec = res.body;
             print("response before decode $resdec");
@@ -244,7 +247,7 @@ class _ShippingFormState extends State<ShippingForm> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Cart(),
+                        builder: (context) => Homee(),
                       ),(route)=>false
                   );
                 },
@@ -259,6 +262,7 @@ class _ShippingFormState extends State<ShippingForm> {
                     onPressed: (){
                       setState(() {
                         validateshipping();
+                        _isvisible=true;
                       });
 
                       print('values ${shipname.text} ${shipemail.text} ${shipaddress.text} ${shippincode.text} ${shipmobno.text}');
@@ -373,7 +377,7 @@ class _ShippingFormState extends State<ShippingForm> {
   Widget NewShippingAddress(){
     bool _validate = false;
     return Container(
-      padding: EdgeInsets.only(top: 10,bottom: 10),
+      padding: EdgeInsets.only(top: 10,bottom: 50),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -208,6 +208,7 @@ class _CartState extends State<Cart> {
     print('price ${ApiCall.ProductPrice}');
 
     if (remaining_woods == "plywoods") {
+      print('plywood product price $selectedvalue $re_brand_id $typevalue $eg_pro_id');
       re_brand_id = widget.carttid;
       final http.Response response = await http.post(
         Uri.parse(ApiCall.ProductPrice),
@@ -283,6 +284,7 @@ class _CartState extends State<Cart> {
     selectedvalue = null;
     typevalue = null;
     totalprice = "0";
+    shadevalue=null;
     _count = 1;
   }
 

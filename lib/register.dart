@@ -119,15 +119,14 @@ class signupnext extends State<Signup> {
                             )),
                         TextFormField(
                           autovalidate: false,
-                          validator: (val) => val.isEmpty ? 'Enter an Username' : null,
+                          validator: (val) => val.isEmpty ? 'Enter your Name' : null,
                           controller: userrname,
                           autofocus: true,
                           textCapitalization: TextCapitalization.words,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                            labelText: "Username",
+                            labelText: "Name",
                             prefixIcon: Icon(Icons.supervised_user_circle),
-                            hintText: "e.g Sampath",
                           ),
                           // onSaved: (name) => _username = name,
                         ),
@@ -162,7 +161,7 @@ class signupnext extends State<Signup> {
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.mail_outline),
                             labelText: "Email",
-                            hintText: "e.g abc@gmail.com",
+
                           ),
                           // onSaved: (email) => _email = email,
                         ),

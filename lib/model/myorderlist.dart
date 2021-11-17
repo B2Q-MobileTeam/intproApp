@@ -109,17 +109,6 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                       fontSize: 22.0,
                       color: Colors.white)),
 
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: (){
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Homee(),
-                      ),(route)=>false
-                  );
-                },
-              ),
               actions: [
                 DashboardFragment()
               ],
@@ -135,6 +124,7 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                       itemCount: listModel.length,
                       itemBuilder: (context, i){
                         final nDataList = listModel[i];
+
                         return Container(
                           child: InkWell(
                             onTap: (){
@@ -188,7 +178,7 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                                         color: Colors.black45),
                                     ),
                                     SizedBox(height: 5,),
-                                    Text("${nDataList.item}", style: TextStyle(
+                                    Text("${nDataList.item==null?"":nDataList.item}", style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black45),
                                     ),

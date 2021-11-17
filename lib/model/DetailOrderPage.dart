@@ -45,7 +45,7 @@ class DetailOrderPageState extends State<DetailOrderPage> {
     String distransactionid = widget.dtransactionid;
     String distransactiondate = widget.dtransactiondate;
     String disbrand = widget.dbrand;
-    String disitem = widget.ditem;
+    String disitems = widget.ditem;
     String disprice = widget.dprice;
     String disquantity = widget.dquantity;
     String disamount = widget.damount;
@@ -55,6 +55,10 @@ class DetailOrderPageState extends State<DetailOrderPage> {
 
     var shippingdetails="";
     var specificationdetails="";
+    String disitem;
+    if(disitems ==null){
+      disitem= "No";
+    }
     var shipping_data = widget.dshipping;
     String splitingdata_ship = shipping_data;
     var shipping_values = splitingdata_ship.split("+");

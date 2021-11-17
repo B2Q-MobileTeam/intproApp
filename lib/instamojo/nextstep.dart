@@ -63,7 +63,7 @@ class NextState extends State<Nextstep> {
           payment_status = uri.queryParameters['status'];
           print("payment_status $payment_status");
           payment_order_id = uri.queryParameters['orderid'];
-          payment_message="Message sent to $email_pay";
+          payment_message="Invoice sent to $email_pay";
           payment_transaction_id = uri.queryParameters['transactionid'];
           payment_amount = uri.queryParameters['amount'];
           payment_transaction_date = uri.queryParameters['transaction_date'];

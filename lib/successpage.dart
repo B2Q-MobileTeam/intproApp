@@ -83,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ListView(shrinkWrap: true, children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
 
                       children: [
                         Align(
@@ -236,7 +237,7 @@ class _FailurescreeenState extends State<Failurescreeen> {
                 padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
                 child: ListView(shrinkWrap: true, children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
 
                     children: [

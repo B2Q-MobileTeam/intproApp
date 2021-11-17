@@ -104,15 +104,16 @@ class BrandsSubState extends State<Brands> {
     print('items product $cartcart');
     setState(() {
       cartcount = cartcart;
-    });
-    fetchbrand().then((value) {
-      setState(() {
-        _isLoading = false;
-        _brandss.addAll(value);
-        _brandssdisplay = _brandss;
-        print(_brandssdisplay.length);
+      fetchbrand().then((value) {
+        setState(() {
+          _isLoading = false;
+          _brandss.addAll(value);
+          _brandssdisplay = _brandss;
+          print(_brandssdisplay.length);
+        });
       });
     });
+
     print('item cart 3');
 
     print('items count $cartcount');
@@ -232,13 +233,13 @@ class BrandsSubState extends State<Brands> {
       child:Card(
         child:  TextField(
           autofocus: false,
-          onChanged: (searchText) {
-            searchText = searchText.toLowerCase();
+          onChanged: (searchTexts) {
+            searchTexts = searchTexts.toLowerCase();
             setState(() {
               _brandssdisplay = _brandss.where((u) {
-                var fName = u.brandsname.toLowerCase();
+                var fNames = u.brandsname.toLowerCase();
 
-                return fName.contains(searchText) ;
+                return fNames.contains(searchTexts) ;
               }).toList();
             });
           },

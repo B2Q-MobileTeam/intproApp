@@ -251,7 +251,7 @@ setState(() {
                 backgroundColor: Colors.white,
                 appBar: AppBar(
                   elevation: 0.0,
-                  title: Text('Products',
+                  title: Text('My Cart',
                       style: TextStyle(
                           fontFamily: 'Montserrat', fontSize: 22.0, color: Colors.white)),
                   actions: [
@@ -375,6 +375,7 @@ setState(() {
                     ),
                   )
                       :Container(
+                    padding: EdgeInsets.only(bottom: 50),
                     child: FutureBuilder<List<Listbands>>(
                         future: _carddet,
                         builder: (context, snapshot) {
