@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.intpro.intpro_app"
-    android:versionCode="2"
+    android:versionCode="3"
     android:versionName="1.0.0" >
 
     <uses-sdk
@@ -14,9 +14,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:icon="@mipmap/ic_launcher"
-        android:label="Intpro" >
+        android:label="Intpro"
+        android:usesCleartextTraffic="true" >
         <activity
             android:name="com.example.intpro_app.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

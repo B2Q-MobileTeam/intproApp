@@ -1,11 +1,8 @@
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'NoInternet.dart';
 import 'Url.dart';
 import 'brands.dart';
@@ -234,7 +231,6 @@ var cartcount="0";
             setState(() {
               _usersDisplay = _users.where((u) {
                 var fName = u.brandnames.toLowerCase();
-
                 return fName.contains(searchText) ;
               }).toList();
             });

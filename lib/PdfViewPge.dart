@@ -40,6 +40,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
 //print({widget.dinvoiceview});
 
   void _loadFile() async {
+    getPermission();
     String pdfurl = widget.dinvoiceview;
     _pdf = await PDFDocument.fromURL(
         pdfurl);
@@ -106,7 +107,6 @@ class _PdfViewPageState extends State<PdfViewPage> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: ()async{
-
                 String path = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
                 String fullpath = "$path/$invoice_name";
                 print(fullpath);

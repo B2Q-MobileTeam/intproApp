@@ -65,7 +65,7 @@ class _MyCustomSplashScreenState extends State<MyCustomSplashScreen>
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 3));
 
-    animation1 = Tween<double>(begin: 60, end: 20).animate(CurvedAnimation(
+    animation1 = Tween<double>(begin: 40, end: 20).animate(CurvedAnimation(
         parent: _controller, curve: Curves.fastLinearToSlowEaseIn))
       ..addListener(() {
         setState(() {

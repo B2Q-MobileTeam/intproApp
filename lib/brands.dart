@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -50,16 +48,15 @@ class BrandsSubState extends State<Brands> {
   String brandename;
   List<Brandss> _brandss = <Brandss>[];
   List<Brandss> _brandssdisplay = <Brandss>[];
-   String cartcount="0";
+  String cartcount="0";
   bool _isLoading = true;
   String token;
 
     Future<List<Brandss>> fetchbrand() async {
-    //var url = 'https://www.binary2quantumsolutions.com/intpro/products.php';
+   // var url = 'https://www.binary2quantumsolutions.com/intpro/products.php';
     print('url ${ApiCall.Products}');
     var empty = widget.brandid;
     print(' empty $empty');
-
 
     final http.Response response = await http.post(
       Uri.parse(ApiCall.Products),
@@ -110,6 +107,7 @@ class BrandsSubState extends State<Brands> {
           _brandss.addAll(value);
           _brandssdisplay = _brandss;
           print(_brandssdisplay.length);
+          print(_brandssdisplay);
         });
       });
     });
@@ -237,7 +235,7 @@ class BrandsSubState extends State<Brands> {
             searchTexts = searchTexts.toLowerCase();
             setState(() {
               _brandssdisplay = _brandss.where((u) {
-                var fNames = u.brandsname.toLowerCase();
+                var fNames = u.product_name.toLowerCase();
 
                 return fNames.contains(searchTexts) ;
               }).toList();
