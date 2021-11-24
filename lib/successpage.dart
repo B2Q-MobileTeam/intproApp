@@ -4,6 +4,7 @@ import 'package:intpro_app/connectivity_provider.dart';
 import 'package:provider/provider.dart';
 import 'Dashboardfragment.dart';
 import 'NoInternet.dart';
+import 'Url.dart';
 import 'dashboard.dart';
 import 'model/myorderlist.dart';
 import 'order_detail.dart';
@@ -86,11 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         Align(
                           alignment: Alignment.center,
-                          child: Image.asset(
-                            'assets/succtwo.gif',
+                          child: Image.network(ApiCall.successimg,
                             height: MediaQuery.of(context).size.height/5,
-                            width: 400.0,
-                          ),
+                            width: 400.0,)
+                          // Image.asset(
+                          //   'assets/succtwo.gif',
+                          //   height: MediaQuery.of(context).size.height/5,
+                          //   width: 400.0,
+                          // ),
                         ),
                         Align(
                           alignment: Alignment.center,
@@ -241,11 +245,14 @@ class _FailurescreeenState extends State<Failurescreeen> {
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Image.asset(
-                          'assets/error_img.gif',
-                          height: MediaQuery.of(context).size.height/3,
-                          width: 400.0,
-                        ),
+                        child:Image.network(ApiCall.failureimg,
+                          height: MediaQuery.of(context).size.height/3, width: 400.0,
+                        )
+                        // Image.asset(
+                        //   'assets/error_img.gif',
+                        //   height: MediaQuery.of(context).size.height/3,
+                        //   width: 400.0,
+                        // ),
                       ),
                       Align(
                         alignment: Alignment.center,

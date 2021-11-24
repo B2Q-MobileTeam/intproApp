@@ -126,13 +126,14 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                           children: [
                             Container(
                               padding: EdgeInsets.only(top:20),
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("assets/myorders.png"),
-                                    colorFilter: ColorFilter.mode(
-                                        Colors.white.withOpacity(0.8), BlendMode.dstATop),
-
-                                  )),
+                              child: Image.network(ApiCall.myorders),
+                              // decoration: BoxDecoration(
+                              //     image: DecorationImage(
+                              //       image: AssetImage("assets/myorders.png"),
+                              //       colorFilter: ColorFilter.mode(
+                              //           Colors.white.withOpacity(0.8), BlendMode.dstATop),
+                              //
+                              //     )),
                               height: MediaQuery
                                   .of(context)
                                   .size

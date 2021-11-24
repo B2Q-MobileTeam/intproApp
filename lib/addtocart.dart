@@ -67,7 +67,14 @@ class _CartState extends State<Cart> {
   String eg_shade_id;
   var eg_pro_id;
   bool showthirddropdown = false;
+  bool showtotalprice = false;
   String add_cart_brandid,add_cart_proid;
+  int table_amount;
+  var table_qty,table_tot_amount;
+  String Gst ="GST",gst_per="18%";
+  double table_tot_gst_amount;
+  double final_tot_amount;
+  var pri,qty;
 
   List datapro = List();
   List typepro = List();
@@ -286,6 +293,7 @@ class _CartState extends State<Cart> {
     totalprice = "0";
     shadevalue=null;
     _count = 1;
+    showtotalprice=false;
   }
 
   //cart api
@@ -296,7 +304,7 @@ class _CartState extends State<Cart> {
       userid = (prefs.getString('token'));
       print('userid $userid');
     });
-    print('values in add to cart $add_cart_brandid $priceid $userid $pro_id $totalprice ${_count.toString()} ');
+    print('values in add to cart $add_cart_brandid $priceid $userid $pro_id $final_tot_amount ${_count.toString()} ');
     final http.Response response = await http.post(
       Uri.parse(ApiCall.AddToCart),
       body: {
@@ -304,7 +312,7 @@ class _CartState extends State<Cart> {
         'brand_id':add_cart_brandid,
         'pro_id':priceid,
         'price_id': pro_id,
-        'amount': totalprice,
+        'amount': final_tot_amount.toString(),
         'quantity': _count.toString(),
         'user_id': userid
       },
@@ -398,11 +406,26 @@ class _CartState extends State<Cart> {
 
   calculationpart() {
     print('val is (($amount)*($_count))');
-    var pri = amount;
-    var qty = _count;
+     pri = amount;
+     qty = _count;
     var c = int.parse(pri) * qty;
     totalprice = c.toString();
     print('value is $c');
+    table_amount=c;
+    print(c);
+   // int g_amount = table_amount.toInt();
+    table_qty=qty;
+    table_tot_amount=c;
+    //gst
+    double gstvalue=0.18;
+    double table_tot_gst_amounts =table_amount*gstvalue;
+    table_tot_gst_amount=double.parse(table_tot_gst_amounts.toStringAsFixed(2)) ;
+    print('2 $table_tot_gst_amount');
+    double final_tot_amounts=table_amount+table_tot_gst_amount;
+    final_tot_amount =double.parse(final_tot_amounts.toStringAsFixed(2)) ;
+    print('final_tot_amount$final_tot_amount');
+
+    showtotalprice=true;
   }
 
   decre() {
@@ -569,6 +592,7 @@ class _CartState extends State<Cart> {
                         scrollDirection: Axis.vertical,
                         child: Column(children: [
                           Container(
+                            padding: EdgeInsets.only(bottom: 50),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -623,6 +647,7 @@ class _CartState extends State<Cart> {
                                                 shadevalue=null;
                                                 totalprice = '0';
                                                 _count = 1;
+                                                showtotalprice=false;
                                                 fetchtype();
                                                 print('selected $selectedvalue');
                                               });
@@ -732,6 +757,47 @@ class _CartState extends State<Cart> {
                                             ))
                                       ]),
                                 ),
+
+
+                               showtotalprice?
+                               Container(
+                                 child: InkWell(
+                                   child: Container(
+                                       margin: EdgeInsets.all(15),
+                                       decoration: BoxDecoration(
+                                           border: Border.all(color: Colors.blueGrey[200])
+                                       ),
+                                       padding: EdgeInsets.only(top: 10,left: 5,right:5),
+                                       child: DataTable(
+                                         columns: [
+                                           DataColumn(label: Text("Price")),
+                                           DataColumn(label: Text("Quantity")),
+                                           DataColumn(label: Text("Amount")),
+                                         ],
+                                         rows: [
+                                           DataRow(cells: [
+                                             DataCell(Text('$pri')),
+                                             DataCell(Text('$qty')),
+                                             DataCell(Text('₹$table_tot_amount')),
+                                           ]),
+                                           DataRow(cells: [
+                                             DataCell(Text('$Gst')),
+                                             DataCell(Text('$gst_per')),
+                                             DataCell(Text('₹$table_tot_gst_amount')),
+                                           ]),
+                                           DataRow(cells: [
+                                             DataCell(Text('Total Cost')),
+                                             DataCell(Text('-')),
+                                             DataCell(Text('₹$final_tot_amount')),
+                                           ]),
+                                         ],
+                                       )
+                                   ),
+                                 ),
+                               ):
+                                   Container()
+
+
                               ],
                             ),
                           ),

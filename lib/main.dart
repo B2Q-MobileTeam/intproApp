@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginPage.dart';
+import 'Url.dart';
 import 'connectivity_provider.dart';
 import 'dashboard.dart';
 
@@ -157,7 +158,8 @@ setState(() {
                   width: _width / _containerSize,
                   alignment: Alignment.center,
                   // child: Image.asset('assets/images/file_name.png')
-                  child:Image.asset("assets/logo1.png"),
+                  child:Image.network(ApiCall.logo1,)
+                  // Image.asset("assets/logo1.png"),
                 ),
               ),
             ),

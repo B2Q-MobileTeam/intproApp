@@ -100,10 +100,12 @@ class Forgotte extends State<Forgot> {
                                       ],
                                     )),
                                 Container(
-                                  child: Image.asset(
-                                    'assets/frgt.png',
-                                    height: 150.0,
-                                  ),
+                                  child: Image.network(ApiCall.forgetpw,
+                                  height: 150,)
+                                  // Image.asset(
+                                  //   'assets/frgt.png',
+                                  //   height: 150.0,
+                                  // ),
                                 ),
                                 SizedBox(
                                   height: 100.0,

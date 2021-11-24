@@ -24,6 +24,7 @@ class Listbands {
   String proimg;
   String amount;
   String cartid;
+  String qun_dis;
 
   Listbands(
       {this.id,
@@ -32,7 +33,8 @@ class Listbands {
       this.catname,
       this.title,
       this.proimg,
-      this.amount});
+      this.amount,
+      this.qun_dis});
   factory Listbands.fromJson(Map<String, dynamic> json) {
     return Listbands(
         id: json['user_id'],
@@ -40,7 +42,9 @@ class Listbands {
         title: json['pro_types'],
         proimg: json['cat_img'],
         amount: json['amount'],
-        cartid: json['cart_id']);
+        cartid: json['cart_id'],
+        qun_dis: json['quantity'],
+    );
   }
 }
 
@@ -351,13 +355,14 @@ setState(() {
                       children: [
                         Container(
                           padding: EdgeInsets.only(top:20),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("assets/addtocart.png"),
-                                colorFilter: ColorFilter.mode(
-                                    Colors.white.withOpacity(0.8), BlendMode.dstATop),
-
-                              )),
+                          child: Image.network(ApiCall.Addtocartimg),
+                          // decoration: BoxDecoration(
+                          //     image: DecorationImage(
+                          //       image: AssetImage("assets/addtocart.png"),
+                          //       colorFilter: ColorFilter.mode(
+                          //           Colors.white.withOpacity(0.8), BlendMode.dstATop),
+                          //
+                          //     )),
                           height: MediaQuery
                               .of(context)
                               .size
@@ -421,7 +426,9 @@ setState(() {
                                                       _carddet;
                                                     }),
                                                 subtitle: Text(
-                                                    'Particulars :  ${snapshot.data[index].title} \n Order Id :  ${snapshot.data[index].id}\n price : ${item.amount}'),
+                                                    'Particulars :  ${snapshot.data[index].title}\n'
+                                                        'Quantity : ${snapshot.data[index].qun_dis}\n'
+                                                        'Price : ${item.amount}'),
                                               ),
                                             ]));
                                   }));

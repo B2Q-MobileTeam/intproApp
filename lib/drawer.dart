@@ -9,6 +9,7 @@ import 'package:intpro_app/order_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
 
+import 'Url.dart';
 import 'dashboard.dart';
 import 'main.dart';
 import 'rate.dart';
@@ -31,13 +32,16 @@ class Drawer_main extends StatelessWidget {
                   DrawerHeader(
                       child: Container(
                         height: 600,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                "assets/logo1.png",
-                              ),
-                            )),
-                      )),
+                        child: Image.network(ApiCall.logo1),
+                        // decoration: BoxDecoration(
+                        //     image: DecorationImage(
+                        //       image: AssetImage(
+                        //         "assets/logo1.png",
+                        //       ),
+                        //     )),
+
+                      )
+                  ),
 
                 ],
               ),

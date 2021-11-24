@@ -116,11 +116,15 @@ class loginext extends State<Login> {
                       child: ListView(
                         children: [
                           Center(
-                              child: Image.asset(
-                                'assets/logo1.png',
+                              child: Image.network(ApiCall.logo1,
                                 height: 180.0,
-                                alignment: Alignment.center,
-                              )),
+                              alignment: Alignment.center,)
+                              // Image.asset(
+                              //   'assets/logo1.png',
+                              //   height: 180.0,
+                              //   alignment: Alignment.center,
+                              // )
+                          ),
                           SizedBox(
                             height: 40.0,
                           ),
