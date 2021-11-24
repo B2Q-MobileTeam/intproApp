@@ -49,20 +49,20 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
     final ordersdata  =data['orders'];
     print("data $ordersdata");
 
-  if(order_status=="true"){
-    setState(() {
-      for(Map i in ordersdata){
-        listModel.add(Order.fromJson(i));
-      }
-      loading = false;
-      _iswaiting=false;
-    });
-  }else{
-    setState(() {
-      _iswaiting=false;
-    });
+    if(order_status=="true"){
+      setState(() {
+        for(Map i in ordersdata){
+          listModel.add(Order.fromJson(i));
+        }
+        loading = false;
+        _iswaiting=false;
+      });
+    }else{
+      setState(() {
+        _iswaiting=false;
+      });
 
-  }
+    }
 
   }
 
@@ -99,133 +99,162 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                     ),(route)=>false
                 );
               },
-        child:  Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              elevation: 0.0,
-              title: Text('Your Orders',
-                  style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 22.0,
-                      color: Colors.white)),
+              child:  Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  elevation: 0.0,
+                  title: Text('Your Orders',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 22.0,
+                          color: Colors.white)),
 
-              actions: [
-                DashboardFragment()
-              ],
-              centerTitle: true,
-            ),
-            drawer: Drawer_main(),
-            body:SafeArea(
-                child:_iswaiting?Center(
-                  child: CircularProgressIndicator(),
-                ):Container(
-                  color: Colors.grey[300],
-                  child: loading ? Center (child: Text("There is no order list")) : ListView.builder(
-                      itemCount: listModel.length,
-                      itemBuilder: (context, i){
-                        final nDataList = listModel[i];
+                  actions: [
+                    DashboardFragment()
+                  ],
+                  centerTitle: true,
+                ),
+                drawer: Drawer_main(),
+                body:SafeArea(
+                    child:_iswaiting?Center(
+                      child: CircularProgressIndicator(),
+                    ):Container(
+                      color: Colors.white,
+                      child: loading ?
+                      Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(top:20),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("assets/myorders.png"),
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.white.withOpacity(0.8), BlendMode.dstATop),
 
-                        return Container(
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
-                                  dorderid:nDataList.orderid,
-                                  dtransactionid:nDataList.transactionid,
-                                  dtransactiondate:nDataList.transaction_date,
-                                  dproduct:nDataList.product,
-                                  dbrand:nDataList.brand,
-                                  ditem:nDataList.item,
-                                  dprice:nDataList.price,
-                                  dquantity:nDataList.quantity,
-                                  damount:nDataList.amount,
-                                  dshipping: nDataList.shipping,
-                                  dspecification:nDataList.specification,
-                                  dinvoice:nDataList.invoice,
-                                  dinvoicename:nDataList.invoicename
-                              )),(route)=>false);
-                            },
-                            child: Card(
-                              elevation: 10,
-                              color: Colors.white,
-                              margin: EdgeInsets.all(15),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blueAccent)
-                                ),
-                                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Order ID -${nDataList.orderid}", style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54),
+                                  )),
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height/2,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: Text("There is no order list",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 22),),
+                            ),
+                          ],
+                        ),
+                      )
+                          : ListView.builder(
+                          itemCount: listModel.length,
+                          itemBuilder: (context, i){
+                            final nDataList = listModel[i];
+
+                            return Container(
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
+                                      dorderid:nDataList.orderid,
+                                      dtransactionid:nDataList.transactionid,
+                                      dtransactiondate:nDataList.transaction_date,
+                                      dproduct:nDataList.product,
+                                      dbrand:nDataList.brand,
+                                      ditem:nDataList.item,
+                                      dprice:nDataList.price,
+                                      dquantity:nDataList.quantity,
+                                      damount:nDataList.amount,
+                                      dshipping: nDataList.shipping,
+                                      dspecification:nDataList.specification,
+                                      dinvoice:nDataList.invoice,
+                                      dinvoicename:nDataList.invoicename
+                                  )),(route)=>false);
+                                },
+                                child: Card(
+                                  elevation: 10,
+                                  color: Colors.white,
+                                  margin: EdgeInsets.all(15),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blueAccent)
+                                    ),
+                                    padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Order ID -${nDataList.orderid}", style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black54),
+                                            ),
+
+                                            Icon(Icons.arrow_right,color: Colors.grey,size: 25,),
+                                          ],
                                         ),
+                                        Divider(color: Colors.grey[300],thickness: 1,),
+                                        Text("${nDataList.product}", style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black87),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("${nDataList.brand}", style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black45),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("${nDataList.item==null?"":nDataList.item}", style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black45),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("₹ ${nDataList.amount}", style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black),
 
-                                        Icon(Icons.arrow_right,color: Colors.grey,size: 25,),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Container(
+                                            alignment: Alignment.bottomRight,
+                                            child:ElevatedButton(
+                                                onPressed: (){
+                                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
+                                                      dorderid:nDataList.orderid,
+                                                      dtransactionid:nDataList.transactionid,
+                                                      dtransactiondate:nDataList.transaction_date,
+                                                      dproduct:nDataList.product,
+                                                      dbrand:nDataList.brand,
+                                                      ditem:nDataList.item,
+                                                      dprice:nDataList.price,
+                                                      dquantity:nDataList.quantity,
+                                                      damount:nDataList.amount,
+                                                      dshipping: nDataList.shipping,
+                                                      dspecification:nDataList.specification,
+                                                      dinvoice:nDataList.invoice,
+                                                      dinvoicename:nDataList.invoicename
+
+                                                  )),(route)=>false);
+                                                },
+                                                child:Text("More Details")
+
+                                            )
+                                        )
                                       ],
                                     ),
-                                    Divider(color: Colors.grey[300],thickness: 1,),
-                                    Text("${nDataList.product}", style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black87),
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Text("${nDataList.brand}", style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black45),
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Text("${nDataList.item==null?"":nDataList.item}", style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black45),
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Text("₹ ${nDataList.amount}", style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black),
-
-                                    ),
-                                    SizedBox(height: 10,),
-                                    Container(
-                                        alignment: Alignment.bottomRight,
-                                        child:ElevatedButton(
-                                            onPressed: (){
-                                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DetailOrderPage(
-                                                  dorderid:nDataList.orderid,
-                                                  dtransactionid:nDataList.transactionid,
-                                                  dtransactiondate:nDataList.transaction_date,
-                                                  dproduct:nDataList.product,
-                                                  dbrand:nDataList.brand,
-                                                  ditem:nDataList.item,
-                                                  dprice:nDataList.price,
-                                                  dquantity:nDataList.quantity,
-                                                  damount:nDataList.amount,
-                                                  dshipping: nDataList.shipping,
-                                                  dspecification:nDataList.specification,
-                                                  dinvoice:nDataList.invoice,
-                                                  dinvoicename:nDataList.invoicename
-
-                                              )),(route)=>false);
-                                            },
-                                            child:Text("More Details")
-
-                                        )
-                                    )
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      }
-                  ),
-                )
-            ),
-          ))
+                            );
+                          }
+                      ),
+                    )
+                ),
+              ))
               :NoInternet();
         }
         return Container(

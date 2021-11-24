@@ -101,7 +101,7 @@ class _ShareAppState extends State<ShareApp> {
                         );
                       },
                     ),
-                    cartcount==0 ? new Container() :
+                    cartcount=="0" ? new Container() :
                     new Positioned(
 
                         child: new Stack(
@@ -134,7 +134,7 @@ class _ShareAppState extends State<ShareApp> {
               padding: EdgeInsets.only(top:20),
               decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/Sharelink-pana.png"),
+                    image: AssetImage("assets/Sharelink_pana.png"),
                     colorFilter: ColorFilter.mode(
                         Colors.white.withOpacity(0.8), BlendMode.dstATop),
 

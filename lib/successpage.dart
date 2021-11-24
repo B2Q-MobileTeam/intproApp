@@ -79,19 +79,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               body: Container(
-                  padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
-                  child: ListView(shrinkWrap: true, children: [
+                  padding: EdgeInsets.only(top:20,left: 10,right: 10,bottom: 10),
+                  child:
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Align(
                           alignment: Alignment.center,
                           child: Image.asset(
-                            'assets/succimg.jpg',
-                            height: 120.0,
-                            width: 120.0,
+                            'assets/succtwo.gif',
+                            height: MediaQuery.of(context).size.height/5,
+                            width: 400.0,
                           ),
                         ),
                         Align(
@@ -175,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ],
 
-                    )])),
+                    )),
             ))
 
                 :NoInternet();
@@ -234,19 +232,19 @@ class _FailurescreeenState extends State<Failurescreeen> {
               ),
             ),
             body: Container(
-                padding: EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 10),
-                child: ListView(shrinkWrap: true, children: [
+                padding: EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
+                child:
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
 
                     children: [
                       Align(
                         alignment: Alignment.center,
                         child: Image.asset(
-                          'assets/down.png',
-                          height: 160.0,
-                          width: 140.0,
+                          'assets/error_img.gif',
+                          height: MediaQuery.of(context).size.height/3,
+                          width: 400.0,
                         ),
                       ),
                       Align(
@@ -309,7 +307,7 @@ class _FailurescreeenState extends State<Failurescreeen> {
                       )
                     ],
 
-                  )])),
+                  )),
           ))
               :NoInternet();
         }

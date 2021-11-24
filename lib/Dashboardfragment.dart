@@ -154,9 +154,8 @@ class DashboardFragmentState extends State<DashboardFragment> {
                   );
                 },
               ),
-              cartcount==0 ? new Container() :
+              cartcount=="0" ? new Container() :
               new Positioned(
-
                   child: new Stack(
                     children: <Widget>[
                       new Icon(

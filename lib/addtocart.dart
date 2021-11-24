@@ -470,7 +470,7 @@ class _CartState extends State<Cart> {
                                 print('cartcount $cartcount');
                               },
                             ),
-                            cartcount == 0
+                            cartcount == "0"
                                 ? new Container()
                                 : new Positioned(
                                 child: new Stack(

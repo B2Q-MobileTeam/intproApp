@@ -49,11 +49,11 @@ class Drawer_main extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
 
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => Homee()
-                    )
+                    ),(route) => false,
                 );
                 // Navigator.pushNamed(context, Homee.routeName);
               },

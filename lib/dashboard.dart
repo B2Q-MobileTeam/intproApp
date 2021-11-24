@@ -194,7 +194,7 @@ class JsonImageListWidget extends State {
                         print('cartcount $cartcount');
                       },
                     ),
-                    cartcount == 0
+                    cartcount == "0"
                         ? new Container()
                         : new Positioned(
                         child: new Stack(

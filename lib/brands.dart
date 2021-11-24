@@ -158,7 +158,7 @@ class BrandsSubState extends State<Brands> {
 
                               },
                             ),
-                            cartcount == 0 ? new Container() :
+                            cartcount == "0" ? new Container() :
                             new Positioned(
                                 child: new Stack(
                                   children: <Widget>[
