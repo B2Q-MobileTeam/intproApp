@@ -212,7 +212,7 @@ class MyOrderListprocessState extends State<MyOrderListprocess> {
                                             fontSize: 14,
                                             color: Colors.black45),
                                         ),
-                                        SizedBox(height: 5,),
+                                        SizedBox(height:5,),
                                         Text("₹ ${nDataList.amount}", style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w700,

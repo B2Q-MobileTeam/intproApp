@@ -24,6 +24,7 @@ class DetailOrderPage extends StatefulWidget {
 class DetailOrderPageState extends State<DetailOrderPage> {
 
   var shipping_data;
+  bool hideitem= false;
 
   _launchURL() async {
     const url = 'https://flutter.io';
@@ -59,7 +60,9 @@ class DetailOrderPageState extends State<DetailOrderPage> {
     String disitem;
     if(disitems == null){
       disitem= "No";
+      hideitem = false;
     }else{
+      hideitem = true;
       disitem=disitems;
     }
     var shipping_data = widget.dshipping;
@@ -185,8 +188,15 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                                     color: Color(0xff333333),
                                   ),
                                 ),
+                             hideitem==true?   Text(
+                               "Item - $disitem",
+                               style: TextStyle(
+                                 fontSize: 15,
+                                 color: Color(0xff333333),
+                               ),
+                             ):Container(),
                                 Text(
-                                  "Item - $disitem",
+                                  "Price - $disprice",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Color(0xff333333),
@@ -200,12 +210,13 @@ class DetailOrderPageState extends State<DetailOrderPage> {
                                   ),
                                 ),
                                 Text(
-                                  "Price - $disprice",
+                                  "GST - 18%",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Color(0xff333333),
                                   ),
                                 ),
+
                                 Text(
                                   "Amount - $disamount",
                                   style: TextStyle(

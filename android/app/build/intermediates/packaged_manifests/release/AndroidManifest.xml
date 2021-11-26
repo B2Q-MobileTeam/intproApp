@@ -18,6 +18,7 @@
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:icon="@mipmap/ic_launcher"
         android:label="Intpro"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true" >
         <activity
             android:name="com.example.intpro_app.MainActivity"

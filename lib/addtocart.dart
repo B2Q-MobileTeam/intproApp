@@ -449,7 +449,7 @@ class _CartState extends State<Cart> {
     String ship_proid = pro_id;
     String ship_priceid = priceid;
     String ship_qty = _count.toString();
-    String payAmnt = totalprice;
+    String payAmnt = final_tot_amount.toString();
     String ship_purpose = remaining_woods;
     return
       Consumer<ConnectivityProvider>(
@@ -465,8 +465,6 @@ class _CartState extends State<Cart> {
                     ),(route)=>false
                   );
                 },
-
-
                 child: Scaffold(
                     backgroundColor: Colors.white,
                     appBar: AppBar(
@@ -761,6 +759,7 @@ class _CartState extends State<Cart> {
 
                                showtotalprice?
                                Container(
+                                 padding: EdgeInsets.only(top: 10,left: 5,right:5),
                                  child: InkWell(
                                    child: Container(
                                        margin: EdgeInsets.all(15),

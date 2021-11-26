@@ -7,9 +7,10 @@
    <application
         android:label="Intpro"
         android:icon="@mipmap/ic_launcher"
-       android:usesCleartextTraffic="true"
-       android:allowBackup="true"
-       tools:targetApi="m"
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
+        tools:targetApi="m"
        >
         <activity
             android:name=".MainActivity"

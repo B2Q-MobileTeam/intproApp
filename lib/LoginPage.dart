@@ -39,6 +39,7 @@ class loginext extends State<Login> {
 
   }
 
+
   void cleardatalogin() {
     mob.clear();
     pass.clear();
@@ -101,29 +102,30 @@ class loginext extends State<Login> {
   Widget build(BuildContext context) {
     return
       Consumer<ConnectivityProvider>(
-        builder: (context,model,child){
-          if(model.isOnline!=null){
-            return model.isOnline?
+        builder: (context, model, child) {
+          if (model.isOnline != null) {
+            return model.isOnline ?
             SafeArea(
               child: Scaffold(
                   body: Container(
                     padding: EdgeInsets.only(left: 15.0, right: 15.0),
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage("assets/login3.jpg"), fit: BoxFit.cover)),
-                    child:Form(
+                            image: AssetImage("assets/login3.jpg"),
+                            fit: BoxFit.cover)),
+                    child: Form(
                       key: _formKey,
                       child: ListView(
                         children: [
                           Center(
                               child: Image.network(ApiCall.logo1,
                                 height: 180.0,
-                              alignment: Alignment.center,)
-                              // Image.asset(
-                              //   'assets/logo1.png',
-                              //   height: 180.0,
-                              //   alignment: Alignment.center,
-                              // )
+                                alignment: Alignment.center,)
+                            // Image.asset(
+                            //   'assets/logo1.png',
+                            //   height: 180.0,
+                            //   alignment: Alignment.center,
+                            // )
                           ),
                           SizedBox(
                             height: 40.0,
@@ -139,7 +141,8 @@ class loginext extends State<Login> {
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                  borderSide: new BorderSide(color: Colors.yellow)),
+                                  borderSide: new BorderSide(
+                                      color: Colors.yellow)),
                               labelText: "Mobile No",
                               labelStyle: TextStyle(color: Colors.black),
                               counterText: "",
@@ -152,13 +155,17 @@ class loginext extends State<Login> {
                           ),
                           TextFormField(
                             autovalidate: _autovalidate,
-                            validator: (val) => val.length < 6 ? 'Enter a password' : null,
+                            validator: (val) =>
+                            val.length < 6
+                                ? 'Enter a password'
+                                : null,
                             controller: pass,
                             keyboardType: TextInputType.text,
                             obscureText: _obscureText,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                  borderSide: new BorderSide(color: Colors.yellow)),
+                                  borderSide: new BorderSide(
+                                      color: Colors.yellow)),
                               prefixIcon: Icon(Icons.lock),
                               labelText: "Password",
                               suffixIcon: GestureDetector(
@@ -169,43 +176,33 @@ class loginext extends State<Login> {
                             ),
                             // onSaved: (password) => _password = password,
                           ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) => Forgot()
-                                    )
-                                );
-                              },
-                              child: Text(
-                                'Forgot Password ?',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          ),
-                          Container(
-                              padding: EdgeInsets.only(
-                                left: 50.0,
-                                right: 50.0,
-                              ),
-                              child: TextField(
-                                  textAlign: TextAlign.center,
-                                  decoration: InputDecoration(
-                                      hintText: 'Reference ID',
-                                      hintStyle: TextStyle(
-                                        color: Colors.blueAccent,
-                                      )))),
-                          SizedBox(
-                            height: 8.0,
-                          ),
-                          Text(
-                            'eg : 9159028571',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.blueAccent),
-                          ),
+                         Padding(
+                           padding: EdgeInsets.only(top: 10),
+                           child: Align(
+                             alignment: Alignment.topRight,
+                             child: InkWell(
+                               onTap: () {
+                                 print('forget password');
+                                 showDialog(
+                                     context: context,
+                                     builder: (BuildContext context) {
+                                       return ForgetPassword();
+                                     });
+                                 // Navigator.pushReplacement(
+                                 //     context,
+                                 //     MaterialPageRoute(
+                                 //         builder: (BuildContext context) =>
+                                 //             Forgot()
+                                 //     )
+                                 // );
+                               },
+                               child: Text(
+                                 'Forgot Password ?',
+                                 style: TextStyle(color: Colors.blue),
+                               ),
+                             ),
+                           ),
+                         ),
                           SizedBox(
                             height: 20.0,
                           ),
@@ -226,16 +223,19 @@ class loginext extends State<Login> {
                                   }
                                 },
                               )),
-                          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                            Text('Already Have an Account ?'),
-                            FlatButton(
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => Signup()));
-                                },
-                                child: Text('SignUp',
-                                    style: TextStyle(color: Colors.blue, fontSize: 18.0))),
-                          ]),
+                          Row(mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('Already Have an Account ?'),
+                                FlatButton(
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Signup()));
+                                    },
+                                    child: Text('SignUp',
+                                        style: TextStyle(color: Colors.blue,
+                                            fontSize: 18.0))),
+                              ]),
                         ],
                       ),
                     ),
@@ -251,10 +251,90 @@ class loginext extends State<Login> {
           );
         },
       );
+  }}
+
+class ForgetPassword extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0)
+        ),
+        child: Stack(
+          overflow: Overflow.visible,
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height/2,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      radius: 40,
+                      child: Image.asset("assets/frgtimg.jpeg"),
+                    ),
+                    Text('Forget Password !!!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          primaryColor: Colors.redAccent,
+                        ),
+                        child: TextFormField(
 
 
+
+                          keyboardType: TextInputType.number,
+                          decoration: new InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(12.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0)),
+                                borderSide:
+                                BorderSide(color: Colors.red)),
+                            labelText: 'Mobile Number',
+                            prefixIcon: Icon(
+                              Icons.phone_android_sharp,
+                              color: Colors.red,
+                            ),
+                            hintText: "9876543212",
+                            labelStyle: TextStyle(color: Colors.black),
+                          ),
+                          autofocus: true,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    RaisedButton(onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                      color: Colors.redAccent,
+                      child: Text('Submit', style: TextStyle(color: Colors.white),),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // Positioned(
+            //     top: -60,
+            //     child: CircleAvatar(
+            //       backgroundColor: Colors.blue,
+            //       radius: 60,
+            //       child: Icon(Icons.vpn_key, color: Colors.white, size: 50,),
+            //     )
+            // ),
+          ],
+        )
+    );
   }
-
-
-
 }
+
+
+
