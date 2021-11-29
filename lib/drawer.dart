@@ -9,6 +9,7 @@ import 'package:intpro_app/order_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
 
+import 'ResetPassword.dart';
 import 'Url.dart';
 import 'dashboard.dart';
 import 'main.dart';
@@ -104,6 +105,7 @@ class Drawer_main extends StatelessWidget {
                 );
               },
             ),
+
             ListTile(
               selectedTileColor: Colors.grey[200],
               leading: new Icon(Icons.star,),
@@ -113,6 +115,20 @@ class Drawer_main extends StatelessWidget {
                 StoreRedirect.redirect(
                   androidAppId: 'com.intpro.intpro_app',
                   iOSAppId: '',
+                );
+              },
+            ),
+            ListTile(
+              selectedTileColor: Colors.grey[200],
+              leading: new Icon(Icons.lock,),
+              title: new Text("Change Password",),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => ResetPassword()
+                    )
                 );
               },
             ),

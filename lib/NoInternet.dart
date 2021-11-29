@@ -17,7 +17,7 @@ class NoInternet extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.only(top:20),
-            child: Image.network(ApiCall.logo1,),
+            child: Image.network(ApiCall.NoConnection,),
             // decoration: BoxDecoration(
             //     image: DecorationImage(
             //       image: AssetImage("assets/Noconnection.png"),

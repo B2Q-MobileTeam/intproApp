@@ -21,17 +21,17 @@ class Forgot extends StatefulWidget {
 
 class Forgotte extends State<Forgot> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController email = new TextEditingController();
+  TextEditingController mob_num = new TextEditingController();
 
   void chck() async {
-    String eemail = email.text;
+    String Mob_Mob = mob_num.text;
 
-
+print('get mobnumber $Mob_Mob');
     print('get ${ApiCall.ForgetPassword}');
     var response = await http.post(
         Uri.parse(ApiCall.ForgetPassword),
         body: {
-      "email_id": eemail,
+      "email_id": Mob_Mob,
     });
     var data = jsonDecode(response.body);
 
@@ -117,13 +117,10 @@ class Forgotte extends State<Forgot> {
                                       primaryColor: Colors.redAccent,
                                     ),
                                     child: TextFormField(
-                                      controller: email,
+                                      controller: mob_num,
                                       autovalidate: _autovalidate,
-                                      validator: (val) =>
-                                      !EmailValidator.validate(val, true)
-                                          ? 'Enter an email'
-                                          : null,
-                                      keyboardType: TextInputType.emailAddress,
+                                      keyboardType: TextInputType.number,
+                                      maxLength: 10,
                                       decoration: new InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius:
@@ -134,13 +131,14 @@ class Forgotte extends State<Forgot> {
                                                 Radius.circular(10.0)),
                                             borderSide:
                                             BorderSide(color: Colors.red)),
-                                        labelText: 'Email',
+                                        labelText:'Mobile Number',
                                         prefixIcon: Icon(
-                                          Icons.mail_outline,
+                                          Icons.phone_android_sharp,
                                           color: Colors.red,
                                         ),
-                                        hintText: "e.g abc@gmail.com",
+                                        hintText: "9876543210",
                                         labelStyle: TextStyle(color: Colors.black),
+                                        counterText: ""
                                       ),
                                       autofocus: true,
                                     ),
@@ -148,7 +146,7 @@ class Forgotte extends State<Forgot> {
                                 ),
                                 Container(
                                     child: Text(
-                                      'Reset your password with email',
+                                      'Reset your password with Mobile Number',
                                       style: TextStyle(
                                         fontSize: 15.0,
                                       ),
@@ -160,8 +158,10 @@ class Forgotte extends State<Forgot> {
                                 Container(
                                   height: 50.0,
                                   child: RaisedButton(
+                                    color: Colors.blue,
                                     elevation: 2.0,
                                     onPressed: () {
+                                      print("hello");
                                       chck();
                                     },
                                     shape: RoundedRectangleBorder(

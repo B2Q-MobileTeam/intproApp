@@ -23,6 +23,7 @@ class loginext extends State<Login> {
   bool _obscureText = true;
   bool _autovalidate = false;
 
+
   String _password;
 
   // Toggles the password show status
@@ -38,6 +39,7 @@ class loginext extends State<Login> {
     Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
 
   }
+
 
 
   void cleardatalogin() {
@@ -183,18 +185,13 @@ class loginext extends State<Login> {
                              child: InkWell(
                                onTap: () {
                                  print('forget password');
-                                 showDialog(
-                                     context: context,
-                                     builder: (BuildContext context) {
-                                       return ForgetPassword();
-                                     });
-                                 // Navigator.pushReplacement(
-                                 //     context,
-                                 //     MaterialPageRoute(
-                                 //         builder: (BuildContext context) =>
-                                 //             Forgot()
-                                 //     )
-                                 // );
+                                 Navigator.pushReplacement(
+                                     context,
+                                     MaterialPageRoute(
+                                         builder: (BuildContext context) =>
+                                             Forgot()
+                                     )
+                                 );
                                },
                                child: Text(
                                  'Forgot Password ?',
@@ -253,88 +250,7 @@ class loginext extends State<Login> {
       );
   }}
 
-class ForgetPassword extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0)
-        ),
-        child: Stack(
-          overflow: Overflow.visible,
-          alignment: Alignment.topCenter,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height/2,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      radius: 40,
-                      child: Image.asset("assets/frgtimg.jpeg"),
-                    ),
-                    Text('Forget Password !!!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          primaryColor: Colors.redAccent,
-                        ),
-                        child: TextFormField(
-
-
-
-                          keyboardType: TextInputType.number,
-                          decoration: new InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(12.0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(10.0)),
-                                borderSide:
-                                BorderSide(color: Colors.red)),
-                            labelText: 'Mobile Number',
-                            prefixIcon: Icon(
-                              Icons.phone_android_sharp,
-                              color: Colors.red,
-                            ),
-                            hintText: "9876543212",
-                            labelStyle: TextStyle(color: Colors.black),
-                          ),
-                          autofocus: true,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20,),
-                    RaisedButton(onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                      color: Colors.redAccent,
-                      child: Text('Submit', style: TextStyle(color: Colors.white),),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // Positioned(
-            //     top: -60,
-            //     child: CircleAvatar(
-            //       backgroundColor: Colors.blue,
-            //       radius: 60,
-            //       child: Icon(Icons.vpn_key, color: Colors.white, size: 50,),
-            //     )
-            // ),
-          ],
-        )
-    );
-  }
-}
 
 
 
