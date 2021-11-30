@@ -252,24 +252,48 @@ class _ShippingFormState extends State<ShippingForm> {
                   );
                 },
           child:  Scaffold(
-                bottomSheet:Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-                    ),
-                    onPressed: (){
-                      setState(() {
-                        validateshipping();
-                        _isvisible=true;
-                      });
+                bottomSheet:Container(child:
+                Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width/2,
+                      padding: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        ),
+                        onPressed: (){
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Homee(),
+                              ),(route)=>false
+                          );
 
-                      print('values ${shipname.text} ${shipemail.text} ${shipaddress.text} ${shippincode.text} ${shipmobno.text}');
-                    },
-                    child: Text("Proceed to pay"),
-                  ),
-                ),
+                          },
+                        child: Text("Continue shopping"),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width/2,
+                      padding: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.lightGreen),
+                        ),
+                        onPressed: (){
+                          setState(() {
+                            validateshipping();
+
+                          });
+
+                          print('values ${shipname.text} ${shipemail.text} ${shipaddress.text} ${shippincode.text} ${shipmobno.text}');
+                        },
+                        child: Text("Proceed to pay"),
+                      ),
+                    ),
+                  ],
+                )),
                 appBar: AppBar(
                   title: Text("Shipping Details"),
                   leading: IconButton(
@@ -486,7 +510,8 @@ class _ShippingFormState extends State<ShippingForm> {
 if(shipmodestatus=="old"){
   shippingformsubmit();
 }else{
-  if((shipname.text.isEmpty)||(shipemail.text.isEmpty)||(shipaddress.text.isEmpty)||(shippincode.text.isEmpty)||(shipmobno.text.isEmpty)){
+  if((shipname.text.isEmpty)||
+      (shipemail.text.isEmpty)||(shipaddress.text.isEmpty)||(shippincode.text.isEmpty)||(shipmobno.text.isEmpty)){
     Fluttertoast.showToast(
         msg: "Please fill all the fields",
         toastLength: Toast.LENGTH_SHORT,
@@ -495,6 +520,7 @@ if(shipmodestatus=="old"){
         fontSize: 16.0);
   }else{
     shippingformsubmit();
+    _isvisible=true;
   }
 }
 
