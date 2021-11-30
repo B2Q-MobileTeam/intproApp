@@ -12,19 +12,18 @@ class NoInternet extends StatelessWidget {
     body:Container(
       color: Colors.white,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.only(top:20),
-            child: Image.network(ApiCall.NoConnection,),
-            // decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //       image: AssetImage("assets/Noconnection.png"),
-            //       colorFilter: ColorFilter.mode(
-            //           Colors.white.withOpacity(0.8), BlendMode.dstATop),
-            //
-            //     )),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/Noconnection.png"),
+                  colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(0.8), BlendMode.dstATop),
+
+                )),
             height: MediaQuery
                 .of(context)
                 .size

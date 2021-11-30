@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,10 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
 
   final _formKey = GlobalKey<FormState>();
+  void clear_reset_values() {
+    new_pass.clear();
+    con_new_pass.clear();
+  }
   @override
   void initState() {
     Provider.of<ConnectivityProvider>(context,listen: false).startMonitoring();
@@ -40,7 +45,43 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   TextEditingController new_pass = new TextEditingController();
+  TextEditingController con_new_pass = new TextEditingController();
+  void changepassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     String mobileno_pay = (prefs.getString('mobileno'));
+    print('mobileno $mobileno_pay');
+    String Change_pass = new_pass.text;
 
+    print('get mobnumber $Change_pass $mobileno_pay');
+    print('get ${ApiCall.ChangePassword}');
+    var response = await http.post(
+        Uri.parse(ApiCall.ChangePassword),
+        body: {
+          "mobileno":mobileno_pay,
+          "password": Change_pass,
+        });
+    var data = jsonDecode(response.body);
+var resres = response.body;
+print('res res $resres');
+    var value = data['success'];
+    print('value $value');
+
+    if (value == 1) {
+      print('yes');
+      Fluttertoast.showToast(
+          msg: "Password Changed Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green[300],
+          fontSize: 16.0);
+      clear_reset_values();
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } else {
+
+      print('no');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityProvider>(
@@ -111,6 +152,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               if (val.isEmpty) return 'Enter the  correct password';
                               if (val != new_pass.text) return 'Password is not match';
                             },
+                            controller: con_new_pass,
                             keyboardType: TextInputType.text,
                             obscureText: _obsecure,
                             decoration: InputDecoration(
@@ -141,6 +183,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   setState(() {
                                     if (_formKey.currentState.validate()) {
                                      print("checked");
+                                     changepassword();
                                     }
                                   });
                                 },

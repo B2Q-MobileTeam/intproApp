@@ -137,7 +137,6 @@ class Drawer_main extends StatelessWidget {
               leading: new Icon(Icons.exit_to_app,),
               title: new Text("Logout",),
               onTap: ()async {
-
                   SharedPreferences preferences = await SharedPreferences.getInstance();
                   preferences.remove('token');
                   Fluttertoast.showToast(
@@ -145,7 +144,7 @@ class Drawer_main extends StatelessWidget {
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIos: 1,
-                      backgroundColor: Colors.amber,
+                      backgroundColor: Colors.red,
                       textColor: Colors.white,
                       fontSize: 16.0);
                   Navigator.pushAndRemoveUntil(

@@ -21,6 +21,8 @@ class ApiCall{
  static String PaymentProcessPay = InitialUrl +"pay.php";
  static String DeleteCart = InitialUrl +"delete_cart.php";
  static String ShippingProcess = InitialUrl +"shipping.php";
+ static String ChangePassword = InitialUrl +"changepassword.php";
+
  //images
  static String myorders =InitialImageUrl+"myorders.png";
  static String bg1 =InitialImageUrl+"bg1.jpg";

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'LoginPage.dart';
@@ -20,6 +21,7 @@ class Forgot extends StatefulWidget {
 }
 
 class Forgotte extends State<Forgot> {
+  String Message_content;
   final _formKey = GlobalKey<FormState>();
   TextEditingController mob_num = new TextEditingController();
 
@@ -31,19 +33,59 @@ print('get mobnumber $Mob_Mob');
     var response = await http.post(
         Uri.parse(ApiCall.ForgetPassword),
         body: {
-      "email_id": Mob_Mob,
+      "mobileno":Mob_Mob,
     });
     var data = jsonDecode(response.body);
-
+var resp =response.body;
+    print('value $resp');
     var value = data['success'];
-    print('value $value');
+    Message_content = data['message'];
+
 
     if (value == true) {
       print('yes');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+     showpassword_Dialog(context);
+
     } else {
+
       print('no');
     }
+  }
+  void clearprocess() {
+    mob_num.clear();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+
+  }
+  void showpassword_Dialog(BuildContext context) {
+    print('message inside dialog $Message_content');
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+        clearprocess();
+
+
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("$Message_content"),
+      // content: Text("This is my message."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -58,9 +100,7 @@ print('get mobnumber $Mob_Mob');
       builder: (context,model,child){
         if(model.isOnline!=null){
           return model.isOnline?
-          MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: Scaffold(
+         Scaffold(
                   appBar: PreferredSize(
                     child: AppBar(
                       backgroundColor: Colors.black,
@@ -86,7 +126,8 @@ print('get mobnumber $Mob_Mob');
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => Login()));
-                                        })
+                                        }
+                                        )
                                   ],
                                 ),
                                 Container(
@@ -187,7 +228,7 @@ print('get mobnumber $Mob_Mob');
                                 ),
                               ],
                             )),
-                      ))))
+                      )))
               :NoInternet();
         }
         return Container(
@@ -202,3 +243,5 @@ print('get mobnumber $Mob_Mob');
 
   }
 }
+
+

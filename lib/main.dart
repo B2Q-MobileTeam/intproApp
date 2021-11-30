@@ -158,8 +158,8 @@ setState(() {
                   width: _width / _containerSize,
                   alignment: Alignment.center,
                   // child: Image.asset('assets/images/file_name.png')
-                  child:Image.network(ApiCall.logo1,)
-                  // Image.asset("assets/logo1.png"),
+                  child:
+                   Image.asset("assets/logo1.png"),
                 ),
               ),
             ),
